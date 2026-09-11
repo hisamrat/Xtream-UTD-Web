@@ -1,0 +1,602 @@
+Modify the existing Xtream UTD UI/UX design into a premium, immersive product-catalogue website for a gadget and accessories business.
+
+The website represents Xtream UTD, a business selling trendy gadgets, desk accessories, lifestyle accessories, tech products, decorative products, and useful everyday items.
+
+This is not a creative-agency portfolio website.
+
+Replace all references to:
+
+* Projects
+* Portfolio
+* Case studies
+* Clients
+* Creative work
+
+With relevant product-commerce terminology such as:
+
+* Products
+* Product catalogue
+* Product details
+* Categories
+* Featured products
+* New arrivals
+* Best sellers
+* Product specifications
+
+The website should allow visitors to explore products visually, view all products in a conventional catalogue, open individual product pages, see prices, and contact Xtream UTD to place an order.
+
+Do not create production code yet.
+
+Create a complete, editable, developer-ready UI/UX design.
+
+# 1. PRIMARY WEBSITE GOAL
+
+The website should help customers:
+
+* Discover Xtream UTD
+* Explore products through an immersive 3D product view
+* Browse all available products
+* Filter products by category
+* View product prices
+* Open individual product detail pages
+* Check product features and specifications
+* Contact the business
+* Place an order through Messenger, WhatsApp, phone, or another configurable order method
+
+The website should feel:
+
+* Premium
+* Modern
+* Trendy
+* Trustworthy
+* Product-focused
+* Minimal
+* Visually engaging
+* Easy to navigate
+* Mobile-friendly
+* Suitable for a gadget and accessories store
+
+# 2. HEADER DESIGN
+
+Create a fixed or floating header.
+
+Place the company name or wordmark at the far-left corner:
+
+Xtream UTD
+
+Immediately beside the company name, show the main navigation options:
+
+* Home
+* All Products
+* Categories
+* About
+* Contact
+
+On the right side, include:
+
+* Search button
+* Theme switcher
+* Mobile menu button
+* Optional shopping bag or order-list icon
+
+The Xtream UTD wordmark should always return the user to the homepage.
+
+The Home button should be visibly active when the visitor is on the homepage.
+
+Use a compact, premium header that does not cover important products in the interactive view.
+
+# 3. HOMEPAGE — INTERACTIVE PRODUCT VIEW
+
+The homepage should contain an interactive three-dimensional product world inspired by the reference video.
+
+Instead of portfolio projects, display actual product cards distributed around a virtual sphere or spatial environment.
+
+Each floating product card should contain:
+
+* Product image
+* Short product title
+* Price
+* Optional discount badge
+* Availability status
+
+Products should appear at different sizes and depths.
+
+Users should be able to:
+
+* Drag to rotate the product world
+* Scroll to zoom in and out
+* Pinch to zoom on mobile
+* Hover over products
+* Tap products on mobile
+* Select a product
+* Open its product-detail page
+
+Keep the controls, header, and bottom navigation fixed while the product world moves.
+
+# 4. HOMEPAGE TOP CONTENT
+
+At the upper-left portion of the homepage, include:
+
+Xtream UTD
+
+Add a short editable introduction such as:
+
+“Trending gadgets and accessories for your desk, home and everyday life.”
+
+Below or beside the introduction, show a small trust statement such as:
+
+* Quality products
+* Affordable prices
+* Delivery across Bangladesh
+
+All wording must remain editable.
+
+Do not let the introduction occupy too much space.
+
+# 5. HOMEPAGE BOTTOM NAVIGATION
+
+Create a floating pill-shaped navigation control at the bottom centre of the screen.
+
+Include two primary options:
+
+* Explore Products
+* View All Products
+
+Explore Products should keep the visitor inside the interactive 3D product view.
+
+View All Products should redirect the visitor to the complete product catalogue page.
+
+The active option should be clearly visible through typography, background, indicator, or underline.
+
+Recommended behaviour:
+
+* Explore Products → `/`
+* View All Products → `/products`
+
+On mobile, keep the control large enough for comfortable tapping.
+
+# 6. PRODUCT HOVER STATE
+
+When a visitor hovers over a product in the interactive view:
+
+* Slightly enlarge the product card
+* Move it subtly toward the viewer
+* Dim surrounding product cards
+* Display the full product title
+* Display the price
+* Display the product category
+* Show availability
+* Show a “View Details” action
+* Change the cursor to indicate clickability
+
+Example hover information:
+
+Portable Folding Laptop Stand
+Desk Accessories
+৳255
+In stock
+View Details →
+
+Use Bangladeshi taka formatting:
+
+৳255
+৳1,250
+৳2,499
+
+# 7. PRODUCT CLICK BEHAVIOUR
+
+When a visitor clicks a product card:
+
+1. Distinguish the click from a drag action.
+2. Highlight the selected product.
+3. Dim surrounding products.
+4. Show a short transition.
+5. Redirect the visitor to that product’s detail page.
+
+Use a route structure such as:
+
+`/products/portable-folding-laptop-stand`
+
+When the visitor returns to the homepage, restore their previous rotation, zoom level, and browsing position where technically possible.
+
+# 8. VIEW ALL PRODUCTS PAGE
+
+Create a complete catalogue page titled:
+
+All Products
+
+Display products in responsive cards.
+
+Desktop layout:
+
+* Four columns on large desktop
+* Three columns on smaller desktop
+* Two columns on tablet
+* Two columns or one column on mobile
+
+Each product card must contain:
+
+* Product image
+* Product title
+* Current price
+* Previous price when discounted
+* Discount percentage or sale badge
+* Category
+* Stock status
+* Short optional description
+* View Details button
+
+Example card:
+
+Portable Folding Laptop Stand
+Desk Accessories
+৳255
+In stock
+View Details
+
+Cards should have:
+
+* Default state
+* Hover state
+* Keyboard-focus state
+* Selected state
+* Loading state
+* Out-of-stock state
+* Sale state
+
+Clicking anywhere on the product card should open the product detail page.
+
+# 9. PRODUCT CATEGORIES
+
+Create editable product categories such as:
+
+* All Products
+* New Arrivals
+* Best Sellers
+* Mobile Accessories
+* Computer Accessories
+* Desk Accessories
+* Home and Lifestyle
+* Decorative Lights
+* Audio Products
+* Smart Gadgets
+* Travel Accessories
+* Gift Items
+
+Allow categories to be changed later.
+
+Create a desktop filter panel and mobile filter bottom sheet.
+
+Filters should support:
+
+* Category
+* Price range
+* Availability
+* New arrivals
+* Best sellers
+* Discounted products
+* Sort by newest
+* Sort by price, low to high
+* Sort by price, high to low
+
+Display the number of matching products.
+
+Include:
+
+* Clear filters
+* Apply filters
+* No-results state
+
+# 10. SEARCH FUNCTIONALITY
+
+Add product search.
+
+Search should match:
+
+* Product title
+* Product category
+* Product description
+* Product features
+* Product tags
+
+Create:
+
+* Search button
+* Search overlay
+* Search input
+* Suggested products
+* Recent searches
+* No-results state
+* Search-results page or panel
+
+# 11. PRODUCT DETAILS PAGE
+
+Every product must have a dedicated details page.
+
+Include:
+
+* Product image gallery
+* Main product image
+* Thumbnail images
+* Optional product video
+* Product title
+* Current price
+* Previous price
+* Discount amount
+* Stock status
+* Short summary
+* Product features
+* Specifications
+* Available colours
+* Available sizes or variants
+* Quantity selector if needed
+* Delivery information
+* Return or replacement information
+* Order button
+* Messenger button
+* WhatsApp button when configured
+* Share button
+* Related products
+* Recently viewed products
+* Back to All Products
+
+Example page information:
+
+Portable Folding Laptop Stand
+
+৳255
+
+Compact, foldable laptop stand designed for a cleaner and more comfortable desk setup.
+
+Features:
+
+* Foldable and portable
+* Adjustable viewing angle
+* Anti-slip support
+* Lightweight construction
+* Suitable for laptops and tablets
+
+The order method must remain editable.
+
+Do not create a full payment checkout unless specifically requested later.
+
+# 12. ORDER ACTION
+
+Create one strong primary call-to-action:
+
+Order Now
+
+The button can later connect to:
+
+* Facebook Messenger
+* WhatsApp
+* Phone
+* Contact form
+* E-commerce checkout
+
+For the current design, prepare a Messenger-first ordering flow while keeping the destination editable.
+
+Create an order inquiry modal containing:
+
+* Product name
+* Selected variant
+* Quantity
+* Customer name
+* Phone number
+* Delivery address
+* Additional note
+* Submit inquiry button
+
+Also create success and validation-error states.
+
+# 13. ABOUT PAGE
+
+Create an About Xtream UTD page containing:
+
+* Brand introduction
+* What Xtream UTD sells
+* Brand promise
+* Product-quality statement
+* Affordable-pricing statement
+* Delivery information
+* Customer-support information
+* Facebook page link
+* Contact call-to-action
+
+Use editable sample content, not Lorem Ipsum.
+
+# 14. CONTACT PAGE
+
+Create a contact page containing:
+
+* Facebook Messenger contact
+* Phone number placeholder
+* WhatsApp placeholder
+* Email placeholder
+* Dhaka location
+* Business hours
+* Customer inquiry form
+* Order-support form
+* Social-media links
+
+Do not invent permanent contact information.
+
+Use clearly marked editable placeholders where verified details are unavailable.
+
+# 15. MOBILE EXPERIENCE
+
+On mobile:
+
+* Use a compact header
+* Keep the Xtream UTD wordmark visible
+* Use a menu button
+* Make the conventional product catalogue the default on lower-performance devices
+* Keep the interactive World view optional
+* Use fewer floating products
+* Replace hover with tap
+* Use large touch targets
+* Place filters in a bottom sheet
+* Keep the bottom Explore Products / View All Products switch visible
+* Prevent horizontal page scrolling
+* Keep prices and order buttons easy to see
+
+# 16. PRODUCT DATA STRUCTURE
+
+Prepare the UI to support this editable product structure:
+
+* Product ID
+* Slug
+* Product title
+* Category
+* Subcategory
+* Short description
+* Full description
+* Current price
+* Previous price
+* Discount percentage
+* Currency
+* Stock status
+* Quantity available
+* Main product image
+* Gallery images
+* Product video
+* Features
+* Specifications
+* Colours
+* Sizes or variants
+* Featured status
+* New-arrival status
+* Best-seller status
+* Product tags
+* Related products
+* Order link
+* Facebook post link
+
+Use at least 20 realistic placeholder products.
+
+# 17. REQUIRED SCREENS
+
+Create editable designs for:
+
+1. Homepage — World View Default
+2. Homepage — Product Hover
+3. Homepage — Product Selected
+4. Homepage — Zoomed Product World
+5. Homepage — Dragging State
+6. Homepage — Loading State
+7. Homepage — WebGL Fallback
+8. All Products — Default
+9. All Products — Filter Open
+10. All Products — Search Results
+11. All Products — No Results
+12. Product Card — All States
+13. Product Details — Desktop
+14. Product Details — Mobile
+15. Order Inquiry Modal
+16. Order Success State
+17. About Page
+18. Contact Page
+19. Mobile Menu Open
+20. Mobile Filter Bottom Sheet
+21. Dark Theme
+22. Light Theme
+23. Error Page
+24. Offline State
+
+# 18. DESIGN SYSTEM
+
+Create an editable design system for:
+
+* Colours
+* Typography
+* Spacing
+* Responsive grids
+* Buttons
+* Product cards
+* Price styles
+* Sale badges
+* Stock indicators
+* Navigation
+* Form fields
+* Icons
+* Modals
+* Bottom sheets
+* Loading indicators
+* Empty states
+* Focus states
+* Error states
+
+Use reusable components, variables, variants, and Auto Layout.
+
+# 19. VISUAL DIRECTION
+
+Use a dark-first premium product-showcase style.
+
+Suggested direction:
+
+* Near-black background
+* Warm-white typography
+* Muted-grey secondary text
+* Restrained orange or electric-lime accent
+* Product photography as the primary source of colour
+* Minimal borders
+* Clean product cards
+* Subtle motion
+* Strong price visibility
+
+Avoid:
+
+* Gaming-style graphics
+* Cryptocurrency aesthetics
+* Excessive neon
+* Excessive glass effects
+* Unnecessary gradients
+* Generic marketplace templates
+* Overcrowded cards
+
+# 20. DEVELOPER HANDOFF
+
+Document:
+
+* All routes
+* Product-card click behaviour
+* World-view interactions
+* Search behaviour
+* Filter behaviour
+* Product data structure
+* Pricing format
+* Stock states
+* Order-button behaviour
+* Responsive rules
+* Loading states
+* Error states
+* Mobile fallbacks
+* Animation timing
+* Accessibility rules
+* Asset export requirements
+
+Recommended routes:
+
+* `/`
+* `/products`
+* `/products/[slug]`
+* `/about`
+* `/contact`
+
+# FINAL REQUIREMENT
+
+The final result must be an original, editable UI/UX system for Xtream UTD that combines:
+
+* An immersive 3D product-discovery homepage
+* A practical All Products catalogue
+* Individual product-detail pages
+* Clearly visible titles and prices
+* Simple order actions
+* Mobile accessibility
+* Developer-ready documentation
+
+Do not describe the products as projects.
+
+Use “View All Products,” not “View All Projects.”
+
+Do not generate production code yet.

@@ -1,0 +1,4813 @@
+[
+  {
+    "id": "prd-sony-a7-iv",
+    "slug": "sony-a7-iv",
+    "title": "Sony A7 IV",
+    "category": "Cameras & Optics",
+    "subcategory": "Mirrorless Camera",
+    "price": 235000,
+    "old_price": 250000,
+    "stock": "In stock",
+    "badge": "Flagship",
+    "accent": "#00E5FF",
+    "kind": "camera",
+    "short": "33MP full-frame mirrorless hybrid camera with 4K 60p 10-bit recording.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 6,
+    "quantity_available": 12,
+    "main_image": "/products/sony-a7-iv/main.webp",
+    "gallery_images": [
+      "/products/sony-a7-iv/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "33MP Full-Frame Exmor R CMOS Sensor",
+      "4K 60p 10-Bit 4:2:2 Video",
+      "759-Point Fast Hybrid AF with Real-time Eye AF"
+    ],
+    "specifications": {
+      "Sensor": "33MP Full-Frame",
+      "Mount": "Sony E-mount",
+      "Video": "4K 60p 10-bit"
+    },
+    "colours": [
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Body Only",
+      "Kit Lens"
+    ],
+    "new_arrival": true,
+    "best_seller": true,
+    "tags": [
+      "sony",
+      "camera",
+      "mirrorless",
+      "4k",
+      "full frame"
+    ],
+    "related_products": [
+      "canon-eos-r5",
+      "sigma-24-70mm-f2-8",
+      "dji-rs-3-pro"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-dji-rs-3-pro",
+    "slug": "dji-rs-3-pro",
+    "title": "DJI RS 3 Pro",
+    "category": "Gimbals & Stabilizers",
+    "subcategory": "Gimbal Stabilizer",
+    "price": 89000,
+    "old_price": 95000,
+    "stock": "In stock",
+    "badge": "Pro gear",
+    "accent": "#38BDF8",
+    "kind": "gimbal",
+    "short": "Pro 3-axis carbon fiber gimbal stabilizer with 4.5kg payload capacity.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 6,
+    "quantity_available": 18,
+    "main_image": "/products/dji-rs-3-pro/main.webp",
+    "gallery_images": [
+      "/products/dji-rs-3-pro/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Automated Axis Locks",
+      "Extended Carbon Fiber Axis Arms",
+      "4.5kg Tested Payload"
+    ],
+    "specifications": {
+      "Payload": "4.5 kg",
+      "Battery Life": "12 Hours"
+    },
+    "colours": [
+      "Matte Black"
+    ],
+    "sizes_or_variants": [
+      "Standard Combo",
+      "Pro Combo"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "dji",
+      "gimbal",
+      "stabilizer"
+    ],
+    "related_products": [
+      "sony-a7-iv",
+      "canon-eos-r5"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-sennheiser-hd-660s",
+    "slug": "sennheiser-hd-660s",
+    "title": "Sennheiser HD 660S",
+    "category": "Audio Products",
+    "subcategory": "Studio Headphones",
+    "price": 46000,
+    "old_price": 49500,
+    "stock": "In stock",
+    "badge": "Audiophile",
+    "accent": "#F59E0B",
+    "kind": "headphones",
+    "short": "Open-back dynamic studio reference headphones for precision audio monitoring.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 7,
+    "quantity_available": 10,
+    "main_image": "/products/sennheiser-hd-660s/main.webp",
+    "gallery_images": [
+      "/products/sennheiser-hd-660s/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Open-back acoustic design",
+      "Transducers selected for tight matching tolerance",
+      "150-ohm nominal impedance"
+    ],
+    "specifications": {
+      "Frequency Response": "10 - 41,000 Hz",
+      "Impedance": "150 Ohms"
+    },
+    "colours": [
+      "Matte Anthracite"
+    ],
+    "sizes_or_variants": [
+      "Standard Cable Pack"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "sennheiser",
+      "headphones",
+      "studio monitor"
+    ],
+    "related_products": [
+      "rode-wireless-go-ii"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-blackmagic-cinema-6k",
+    "slug": "blackmagic-pocket-cinema-6k",
+    "title": "Blackmagic",
+    "category": "Cameras & Optics",
+    "subcategory": "Pocket Cinema 6K",
+    "price": 195000,
+    "old_price": 215000,
+    "stock": "In stock",
+    "badge": "Cinema 6K",
+    "accent": "#10B981",
+    "kind": "camera",
+    "short": "Super 35 HDR sensor cinema camera with EF mount, 13 stops dynamic range.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 9,
+    "quantity_available": 6,
+    "main_image": "/products/blackmagic-pocket-cinema-6k/main.webp",
+    "gallery_images": [
+      "/products/blackmagic-pocket-cinema-6k/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "6144 x 3456 Super 35 HDR Sensor",
+      "Blackmagic RAW 12-bit recording",
+      "Dual Native ISO up to 25,600"
+    ],
+    "specifications": {
+      "Sensor": "Super 35 HDR",
+      "Mount": "Canon EF"
+    },
+    "colours": [
+      "Black Carbon Composite"
+    ],
+    "sizes_or_variants": [
+      "Body Only"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "blackmagic",
+      "cinema camera",
+      "6k"
+    ],
+    "related_products": [
+      "sigma-24-70mm-f2-8",
+      "atomos-ninja-v"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-rode-wireless-go-ii",
+    "slug": "rode-wireless-go-ii",
+    "title": "RØDE Wireless GO II",
+    "category": "Audio Products",
+    "subcategory": "Wireless Microphone",
+    "price": 28500,
+    "old_price": 32000,
+    "stock": "In stock",
+    "badge": "Best seller",
+    "accent": "#EC4899",
+    "kind": "mic",
+    "short": "Dual-channel compact wireless microphone system with built-in recording.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 11,
+    "quantity_available": 24,
+    "main_image": "/products/rode-wireless-go-ii/main.webp",
+    "gallery_images": [
+      "/products/rode-wireless-go-ii/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Dual-channel recording for two speakers",
+      "Up to 200m range",
+      "40+ hours backup recording"
+    ],
+    "specifications": {
+      "Frequency": "2.4GHz Digital",
+      "Range": "200m"
+    },
+    "colours": [
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Dual Channel Set"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "rode",
+      "wireless mic",
+      "audio"
+    ],
+    "related_products": [
+      "sennheiser-hd-660s",
+      "sony-a7-iv"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-godox-sl60w",
+    "slug": "godox-sl60w",
+    "title": "Godox SL90W",
+    "category": "Studio Lighting",
+    "subcategory": "LED Video Light",
+    "price": 16500,
+    "old_price": 18500,
+    "stock": "In stock",
+    "badge": "High CRI",
+    "accent": "#D946EF",
+    "kind": "light",
+    "short": "Daylight LED continuous video light with Bowens mount and quiet cooling fan.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 11,
+    "quantity_available": 30,
+    "main_image": "/products/godox-sl60w/main.webp",
+    "gallery_images": [
+      "/products/godox-sl60w/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "5600K Daylight Balanced",
+      "CRI 96 / TLCI 97",
+      "Wireless remote control"
+    ],
+    "specifications": {
+      "Power": "90W",
+      "Color Temp": "5600K"
+    },
+    "colours": [
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Standard Kit"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "godox",
+      "lighting",
+      "led"
+    ],
+    "related_products": [
+      "aputure-120d-ii",
+      "manfrotto-tripod-mt055"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-manfrotto-monitor-rig",
+    "slug": "manfrotto-monitor-mount",
+    "title": "Manftoge Trigurd",
+    "category": "Tripods & Support",
+    "subcategory": "Monitor Recorder",
+    "price": 21500,
+    "old_price": 24000,
+    "stock": "In stock",
+    "badge": "Pro Rig",
+    "accent": "#FBBF24",
+    "kind": "stand",
+    "short": "Articulated magic friction arm with camera hot-shoe and monitor mount bracket.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 10,
+    "quantity_available": 22,
+    "main_image": "/products/manfrotto-monitor-mount/main.webp",
+    "gallery_images": [
+      "/products/manfrotto-monitor-mount/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Variable friction control",
+      "Universal 1/4-inch attachments",
+      "Anti-rotation pins"
+    ],
+    "specifications": {
+      "Payload": "3 kg",
+      "Material": "Aluminum"
+    },
+    "colours": [
+      "Black and Gold"
+    ],
+    "sizes_or_variants": [
+      "Standard Arm"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "manfrotto",
+      "rigging",
+      "monitor mount"
+    ],
+    "related_products": [
+      "atomos-ninja-v",
+      "manfrotto-tripod-mt055"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-aputure-120d-ii",
+    "slug": "aputure-120d-ii",
+    "title": "Aputure 120D II",
+    "category": "Studio Lighting",
+    "subcategory": "LED Light",
+    "price": 68000,
+    "old_price": 74000,
+    "stock": "In stock",
+    "badge": "High output",
+    "accent": "#EF4444",
+    "kind": "light",
+    "short": "Daylight balanced 180W COB LED studio light with DMX and Bowens mount.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 8,
+    "quantity_available": 15,
+    "main_image": "/products/aputure-120d-ii/main.webp",
+    "gallery_images": [
+      "/products/aputure-120d-ii/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "CRI 96+ / TLCI 97+",
+      "140,000 lux @ 0.5m with Fresnel",
+      "Seamless 0-100% Dimming"
+    ],
+    "specifications": {
+      "Color Temp": "5500K Daylight",
+      "Power": "180W Max"
+    },
+    "colours": [
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Standard V-Mount Kit"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "aputure",
+      "lighting",
+      "led"
+    ],
+    "related_products": [
+      "godox-sl60w",
+      "manfrotto-tripod-mt055"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-canon-eos-r5",
+    "slug": "canon-eos-r5",
+    "title": "Canon EOS R5",
+    "category": "Cameras & Optics",
+    "subcategory": "Mirrorless Camera",
+    "price": 340000,
+    "old_price": 360000,
+    "stock": "In stock",
+    "badge": "Cinema grade",
+    "accent": "#F43F5E",
+    "kind": "camera",
+    "short": "45MP full-frame mirrorless camera capable of 8K RAW internal video recording.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 5,
+    "quantity_available": 8,
+    "main_image": "/products/canon-eos-r5/main.webp",
+    "gallery_images": [
+      "/products/canon-eos-r5/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "45MP Full-Frame Dual Pixel CMOS Sensor",
+      "8K 30P RAW Internal Video",
+      "In-Body 5-Axis Image Stabilization"
+    ],
+    "specifications": {
+      "Resolution": "45 Megapixels",
+      "Video": "8K RAW"
+    },
+    "colours": [
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Body Only"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "canon",
+      "eos",
+      "8k",
+      "mirrorless"
+    ],
+    "related_products": [
+      "sony-a7-iv",
+      "sigma-24-70mm-f2-8"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-atomos-ninja-v",
+    "slug": "atomos-ninja-v",
+    "title": "Zoom Ninje V",
+    "category": "Monitors & Recorders",
+    "subcategory": "Monitor Recorder",
+    "price": 54000,
+    "old_price": 59000,
+    "stock": "In stock",
+    "badge": "HDR 1000nit",
+    "accent": "#06B6D4",
+    "kind": "monitor",
+    "short": "5.2-inch 4K HDMI HDR monitor-recorder with 1000 nits daylight-viewable screen.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 8,
+    "quantity_available": 16,
+    "main_image": "/products/atomos-ninja-v/main.webp",
+    "gallery_images": [
+      "/products/atomos-ninja-v/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "10-bit HDR processing with 1000 nits brightness",
+      "ProRes RAW recording over HDMI",
+      "SSD support"
+    ],
+    "specifications": {
+      "Screen": "5.2-inch 1080p Touch",
+      "Brightness": "1000 cd/m2"
+    },
+    "colours": [
+      "Matte Black Aluminum"
+    ],
+    "sizes_or_variants": [
+      "Monitor Only"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "atomos",
+      "ninja v",
+      "monitor"
+    ],
+    "related_products": [
+      "sony-a7-iv",
+      "blackmagic-pocket-cinema-6k"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-sigma-24-70mm",
+    "slug": "sigma-24-70mm-f2-8",
+    "title": "Sigma 24-70mm",
+    "category": "Cameras & Optics",
+    "subcategory": "F2.8 DG DN",
+    "price": 108000,
+    "old_price": 115000,
+    "stock": "In stock",
+    "badge": "Art series",
+    "accent": "#3B82F6",
+    "kind": "lens",
+    "short": "Pro standard zoom lens with constant F2.8 aperture and outstanding optical clarity.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 6,
+    "quantity_available": 14,
+    "main_image": "/products/sigma-24-70mm-f2-8/main.webp",
+    "gallery_images": [
+      "/products/sigma-24-70mm-f2-8/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Constant f/2.8 maximum aperture",
+      "Dust and splash-proof construction",
+      "Nano Porous Coating"
+    ],
+    "specifications": {
+      "Focal Length": "24-70mm",
+      "Max Aperture": "f/2.8"
+    },
+    "colours": [
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Sony E-Mount"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "sigma",
+      "lens",
+      "24-70mm"
+    ],
+    "related_products": [
+      "sony-a7-iv",
+      "canon-eos-r5"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-aputure-1200-ji",
+    "slug": "aputure-1200-ji",
+    "title": "Aputure 1200 3I",
+    "category": "Studio Lighting",
+    "subcategory": "Pocket Reccoro6",
+    "price": 290000,
+    "old_price": 310000,
+    "stock": "In stock",
+    "badge": "Ultra High Power",
+    "accent": "#8B5CF6",
+    "kind": "light",
+    "short": "1200W daylight point-source LED fixture with industry-leading output and weather resistance.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 6,
+    "quantity_available": 5,
+    "main_image": "/products/aputure-1200-ji/main.webp",
+    "gallery_images": [
+      "/products/aputure-1200-ji/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "1200W Daylight Point-Source LED",
+      "CRI 96 / TLCI 98",
+      "Weather-Resistant IP54 Design"
+    ],
+    "specifications": {
+      "Power Consumption": "1440W Max",
+      "Color Temp": "5600K"
+    },
+    "colours": [
+      "Black and Red"
+    ],
+    "sizes_or_variants": [
+      "Standard Production Kit"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "aputure",
+      "1200d",
+      "cinema lighting"
+    ],
+    "related_products": [
+      "aputure-120d-ii",
+      "godox-sl60w"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-manfrotto-mt055",
+    "slug": "manfrotto-tripod-mt055",
+    "title": "Manfrotto Tripod",
+    "category": "Tripods & Support",
+    "subcategory": "MT09EXPK03",
+    "price": 32000,
+    "old_price": 36000,
+    "stock": "In stock",
+    "badge": "Heavy duty",
+    "accent": "#A855F7",
+    "kind": "tripod",
+    "short": "Aluminum 3-section tripod with 90-degree horizontal center column mechanism.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 11,
+    "quantity_available": 20,
+    "main_image": "/products/manfrotto-tripod-mt055/main.webp",
+    "gallery_images": [
+      "/products/manfrotto-tripod-mt055/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "90-degree center column mechanism",
+      "Quick Power Lock levers",
+      "Easy Link connector"
+    ],
+    "specifications": {
+      "Safety Payload": "9 kg",
+      "Max Height": "170 cm"
+    },
+    "colours": [
+      "Black and Silver"
+    ],
+    "sizes_or_variants": [
+      "Tripod Legs with Head"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "manfrotto",
+      "tripod"
+    ],
+    "related_products": [
+      "sony-a7-iv",
+      "godox-sl60w"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "mini-01",
+    "slug": "mini-badge-rec",
+    "title": "Rec Dot",
+    "category": "Creator",
+    "subcategory": "Indicator",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Live",
+    "accent": "#EF4444",
+    "kind": "plug",
+    "short": "Rec status",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-01/main.webp",
+    "gallery_images": [
+      "/products/mini-01/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Status"
+    ],
+    "specifications": {},
+    "colours": [
+      "Red"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-02",
+    "slug": "mini-badge-audio",
+    "title": "Audio Link",
+    "category": "Creator",
+    "subcategory": "Audio",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Audio",
+    "accent": "#06B6D4",
+    "kind": "cable",
+    "short": "Audio status",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-02/main.webp",
+    "gallery_images": [
+      "/products/mini-02/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Audio"
+    ],
+    "specifications": {},
+    "colours": [
+      "Cyan"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-03",
+    "slug": "mini-badge-slate",
+    "title": "Cinema Slate",
+    "category": "Creator",
+    "subcategory": "Video",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Slate",
+    "accent": "#38BDF8",
+    "kind": "gimbal",
+    "short": "Slate status",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-03/main.webp",
+    "gallery_images": [
+      "/products/mini-03/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Slate"
+    ],
+    "specifications": {},
+    "colours": [
+      "Blue"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-04",
+    "slug": "mini-badge-dot-1",
+    "title": "Amber Dot",
+    "category": "Creator",
+    "subcategory": "Light",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Amber",
+    "accent": "#FBBF24",
+    "kind": "watch",
+    "short": "Status",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-04/main.webp",
+    "gallery_images": [
+      "/products/mini-04/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Status"
+    ],
+    "specifications": {},
+    "colours": [
+      "Amber"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-05",
+    "slug": "mini-badge-dot-2",
+    "title": "Amber Dot 2",
+    "category": "Creator",
+    "subcategory": "Light",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Amber",
+    "accent": "#FBBF24",
+    "kind": "watch",
+    "short": "Status",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-05/main.webp",
+    "gallery_images": [
+      "/products/mini-05/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Status"
+    ],
+    "specifications": {},
+    "colours": [
+      "Amber"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-06",
+    "slug": "mini-badge-dot-blue",
+    "title": "Blue Dot",
+    "category": "Creator",
+    "subcategory": "Light",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Blue",
+    "accent": "#3B82F6",
+    "kind": "powerbank",
+    "short": "Status",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-06/main.webp",
+    "gallery_images": [
+      "/products/mini-06/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Status"
+    ],
+    "specifications": {},
+    "colours": [
+      "Blue"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-07",
+    "slug": "mini-badge-dot-red",
+    "title": "Red Dot",
+    "category": "Creator",
+    "subcategory": "Light",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Red",
+    "accent": "#EF4444",
+    "kind": "plug",
+    "short": "Status",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-07/main.webp",
+    "gallery_images": [
+      "/products/mini-07/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Status"
+    ],
+    "specifications": {},
+    "colours": [
+      "Red"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-08",
+    "slug": "mini-badge-mic-green",
+    "title": "Mic Dot",
+    "category": "Creator",
+    "subcategory": "Audio",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Mic",
+    "accent": "#10B981",
+    "kind": "mic",
+    "short": "Audio",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-08/main.webp",
+    "gallery_images": [
+      "/products/mini-08/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Mic"
+    ],
+    "specifications": {},
+    "colours": [
+      "Green"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-09",
+    "slug": "mini-badge-lamp-orange",
+    "title": "Lamp Dot",
+    "category": "Creator",
+    "subcategory": "Light",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Lamp",
+    "accent": "#F97316",
+    "kind": "lamp",
+    "short": "Light",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-09/main.webp",
+    "gallery_images": [
+      "/products/mini-09/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Lamp"
+    ],
+    "specifications": {},
+    "colours": [
+      "Orange"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-10",
+    "slug": "mini-badge-headset",
+    "title": "Headset Dot",
+    "category": "Creator",
+    "subcategory": "Audio",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Audio",
+    "accent": "#E2E8F0",
+    "kind": "headphones",
+    "short": "Audio",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-10/main.webp",
+    "gallery_images": [
+      "/products/mini-10/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Audio"
+    ],
+    "specifications": {},
+    "colours": [
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-11",
+    "slug": "mini-badge-stand",
+    "title": "Stand Dot",
+    "category": "Creator",
+    "subcategory": "Support",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Stand",
+    "accent": "#10B981",
+    "kind": "stand",
+    "short": "Support",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-11/main.webp",
+    "gallery_images": [
+      "/products/mini-11/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Stand"
+    ],
+    "specifications": {},
+    "colours": [
+      "Green"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-12",
+    "slug": "mini-badge-cam-cyan",
+    "title": "Cam Dot",
+    "category": "Creator",
+    "subcategory": "Camera",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Camera",
+    "accent": "#06B6D4",
+    "kind": "camera",
+    "short": "Cam",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-12/main.webp",
+    "gallery_images": [
+      "/products/mini-12/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Camera"
+    ],
+    "specifications": {},
+    "colours": [
+      "Cyan"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-13",
+    "slug": "mini-badge-desk-orange",
+    "title": "Glow Dot",
+    "category": "Creator",
+    "subcategory": "Desk",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Glow",
+    "accent": "#F97316",
+    "kind": "deskmat",
+    "short": "Glow",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-13/main.webp",
+    "gallery_images": [
+      "/products/mini-13/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Glow"
+    ],
+    "specifications": {},
+    "colours": [
+      "Orange"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-14",
+    "slug": "mini-badge-video-cyan",
+    "title": "Video Dot",
+    "category": "Creator",
+    "subcategory": "Video",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Video",
+    "accent": "#38BDF8",
+    "kind": "monitor",
+    "short": "Video",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-14/main.webp",
+    "gallery_images": [
+      "/products/mini-14/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Video"
+    ],
+    "specifications": {},
+    "colours": [
+      "Cyan"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-15",
+    "slug": "mini-badge-mic-pink",
+    "title": "Pink Mic",
+    "category": "Creator",
+    "subcategory": "Audio",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Mic",
+    "accent": "#EC4899",
+    "kind": "mic",
+    "short": "Mic",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-15/main.webp",
+    "gallery_images": [
+      "/products/mini-15/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Mic"
+    ],
+    "specifications": {},
+    "colours": [
+      "Pink"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-16",
+    "slug": "mini-badge-cinema-purple",
+    "title": "Cinema Dot",
+    "category": "Creator",
+    "subcategory": "Cinema",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Cinema",
+    "accent": "#818CF8",
+    "kind": "camera",
+    "short": "Cinema",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-16/main.webp",
+    "gallery_images": [
+      "/products/mini-16/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Cinema"
+    ],
+    "specifications": {},
+    "colours": [
+      "Purple"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-17",
+    "slug": "mini-badge-monitor-cyan",
+    "title": "Monitor Dot",
+    "category": "Creator",
+    "subcategory": "Monitor",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Monitor",
+    "accent": "#00F5D4",
+    "kind": "monitor",
+    "short": "Monitor",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-17/main.webp",
+    "gallery_images": [
+      "/products/mini-17/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Monitor"
+    ],
+    "specifications": {},
+    "colours": [
+      "Cyan"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-18",
+    "slug": "mini-badge-lamp-yellow",
+    "title": "Yellow Lamp",
+    "category": "Creator",
+    "subcategory": "Light",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Light",
+    "accent": "#FBBF24",
+    "kind": "lamp",
+    "short": "Light",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-18/main.webp",
+    "gallery_images": [
+      "/products/mini-18/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Light"
+    ],
+    "specifications": {},
+    "colours": [
+      "Yellow"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-19",
+    "slug": "mini-badge-tripod-blue",
+    "title": "Blue Tripod",
+    "category": "Creator",
+    "subcategory": "Tripod",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Tripod",
+    "accent": "#3B82F6",
+    "kind": "tripod",
+    "short": "Tripod",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-19/main.webp",
+    "gallery_images": [
+      "/products/mini-19/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Tripod"
+    ],
+    "specifications": {},
+    "colours": [
+      "Blue"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-20",
+    "slug": "mini-badge-tripod-purple",
+    "title": "Purple Tripod",
+    "category": "Creator",
+    "subcategory": "Tripod",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Tripod",
+    "accent": "#A855F7",
+    "kind": "tripod",
+    "short": "Tripod",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-20/main.webp",
+    "gallery_images": [
+      "/products/mini-20/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Tripod"
+    ],
+    "specifications": {},
+    "colours": [
+      "Purple"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-21",
+    "slug": "mini-badge-bulb-green",
+    "title": "Green Plant",
+    "category": "Creator",
+    "subcategory": "Light",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Plant",
+    "accent": "#84CC16",
+    "kind": "lamp",
+    "short": "Plant",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-21/main.webp",
+    "gallery_images": [
+      "/products/mini-21/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Plant"
+    ],
+    "specifications": {},
+    "colours": [
+      "Green"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "mini-22",
+    "slug": "mini-badge-msg-green",
+    "title": "Chat Dot",
+    "category": "Creator",
+    "subcategory": "Hub",
+    "price": 990,
+    "old_price": 1200,
+    "stock": "In stock",
+    "badge": "Chat",
+    "accent": "#22C55E",
+    "kind": "hub",
+    "short": "Chat",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 50,
+    "main_image": "/products/mini-22/main.webp",
+    "gallery_images": [
+      "/products/mini-22/01.webp"
+    ],
+    "video": null,
+    "features": [
+      "Chat"
+    ],
+    "specifications": {},
+    "colours": [
+      "Green"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mini"
+    ],
+    "related_products": [],
+    "order_link": "URL",
+    "facebook_post_link": "URL"
+  },
+  {
+    "id": "prd-01",
+    "slug": "portable-folding-laptop-stand",
+    "title": "Portable Folding Laptop Stand",
+    "category": "Desk Accessories",
+    "subcategory": "Laptop Stands",
+    "price": 255,
+    "old_price": 350,
+    "stock": "In stock",
+    "badge": "Best seller",
+    "accent": "#FF7354",
+    "kind": "stand",
+    "short": "Compact adjustable support for laptops and tablets.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 27,
+    "quantity_available": 25,
+    "main_image": "/products/portable-folding-laptop-stand/main.webp",
+    "gallery_images": [
+      "/products/portable-folding-laptop-stand/01.webp",
+      "/products/portable-folding-laptop-stand/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "desk accessories",
+      "laptop stands",
+      "gadget"
+    ],
+    "related_products": [
+      "aurora-sunset-projector-lamp",
+      "mini-wireless-earbuds"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-02",
+    "slug": "aurora-sunset-projector-lamp",
+    "title": "Aurora Sunset Projector Lamp",
+    "category": "Decorative Lights",
+    "subcategory": "Ambient Lighting",
+    "price": 890,
+    "old_price": 1090,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#F2C94C",
+    "kind": "lamp",
+    "short": "Warm atmospheric lighting for rooms and content creation.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 18,
+    "quantity_available": 26,
+    "main_image": "/products/aurora-sunset-projector-lamp/main.webp",
+    "gallery_images": [
+      "/products/aurora-sunset-projector-lamp/01.webp",
+      "/products/aurora-sunset-projector-lamp/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "ambient lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "mini-wireless-earbuds",
+      "magnetic-phone-holder"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-03",
+    "slug": "mini-wireless-earbuds",
+    "title": "Mini Wireless Earbuds",
+    "category": "Audio Products",
+    "subcategory": "Earbuds",
+    "price": 1290,
+    "old_price": 1590,
+    "stock": "In stock",
+    "badge": "Sale",
+    "accent": "#6C7BFF",
+    "kind": "earbuds",
+    "short": "Pocket-size wireless audio with a compact charging case.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 19,
+    "quantity_available": 27,
+    "main_image": "/products/mini-wireless-earbuds/main.webp",
+    "gallery_images": [
+      "/products/mini-wireless-earbuds/01.webp",
+      "/products/mini-wireless-earbuds/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "audio products",
+      "earbuds",
+      "gadget"
+    ],
+    "related_products": [
+      "magnetic-phone-holder",
+      "rechargeable-mini-fan"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-04",
+    "slug": "magnetic-phone-holder",
+    "title": "Magnetic Phone Holder",
+    "category": "Mobile Accessories",
+    "subcategory": "Phone Holders",
+    "price": 420,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#40C3A7",
+    "kind": "holder",
+    "short": "A secure magnetic stand for desk or bedside use.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 28,
+    "main_image": "/products/magnetic-phone-holder/main.webp",
+    "gallery_images": [
+      "/products/magnetic-phone-holder/01.webp",
+      "/products/magnetic-phone-holder/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "phone holders",
+      "gadget"
+    ],
+    "related_products": [
+      "rechargeable-mini-fan",
+      "slim-power-bank-10000mah"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-05",
+    "slug": "rechargeable-mini-fan",
+    "title": "Rechargeable Mini Fan",
+    "category": "Home and Lifestyle",
+    "subcategory": "Cooling",
+    "price": 750,
+    "old_price": 890,
+    "stock": "Low stock",
+    "badge": "Popular",
+    "accent": "#FF9C7A",
+    "kind": "fan",
+    "short": "Portable personal cooling with adjustable speed.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 16,
+    "quantity_available": 4,
+    "main_image": "/products/rechargeable-mini-fan/main.webp",
+    "gallery_images": [
+      "/products/rechargeable-mini-fan/01.webp",
+      "/products/rechargeable-mini-fan/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "home and lifestyle",
+      "cooling",
+      "gadget"
+    ],
+    "related_products": [
+      "slim-power-bank-10000mah",
+      "compact-bluetooth-keyboard"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-06",
+    "slug": "slim-power-bank-10000mah",
+    "title": "Slim Power Bank 10000mAh",
+    "category": "Smart Gadgets",
+    "subcategory": "Power",
+    "price": 1390,
+    "old_price": 1650,
+    "stock": "In stock",
+    "badge": "Sale",
+    "accent": "#9A6BFF",
+    "kind": "powerbank",
+    "short": "Reliable everyday charging in a slim travel-ready body.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 16,
+    "quantity_available": 30,
+    "main_image": "/products/slim-power-bank-10000mah/main.webp",
+    "gallery_images": [
+      "/products/slim-power-bank-10000mah/01.webp",
+      "/products/slim-power-bank-10000mah/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "smart gadgets",
+      "power",
+      "gadget"
+    ],
+    "related_products": [
+      "compact-bluetooth-keyboard",
+      "smart-fitness-watch"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-07",
+    "slug": "compact-bluetooth-keyboard",
+    "title": "Compact Bluetooth Keyboard",
+    "category": "Computer Accessories",
+    "subcategory": "Keyboards",
+    "price": 1650,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#2FB8D1",
+    "kind": "keyboard",
+    "short": "Minimal wireless keyboard for tablets, phones and computers.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 31,
+    "main_image": "/products/compact-bluetooth-keyboard/main.webp",
+    "gallery_images": [
+      "/products/compact-bluetooth-keyboard/01.webp",
+      "/products/compact-bluetooth-keyboard/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "computer accessories",
+      "keyboards",
+      "gadget"
+    ],
+    "related_products": [
+      "smart-fitness-watch",
+      "touch-desk-light"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-08",
+    "slug": "smart-fitness-watch",
+    "title": "Smart Fitness Watch",
+    "category": "Smart Gadgets",
+    "subcategory": "Wearables",
+    "price": 2190,
+    "old_price": 2490,
+    "stock": "In stock",
+    "badge": "Best seller",
+    "accent": "#E76BA8",
+    "kind": "watch",
+    "short": "Daily activity, call and notification tracking.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 12,
+    "quantity_available": 32,
+    "main_image": "/products/smart-fitness-watch/main.webp",
+    "gallery_images": [
+      "/products/smart-fitness-watch/01.webp",
+      "/products/smart-fitness-watch/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "smart gadgets",
+      "wearables",
+      "gadget"
+    ],
+    "related_products": [
+      "touch-desk-light",
+      "silicone-cable-organizer"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-09",
+    "slug": "touch-desk-light",
+    "title": "Touch Desk Light",
+    "category": "Desk Accessories",
+    "subcategory": "Lighting",
+    "price": 980,
+    "old_price": 1150,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#E5E8EB",
+    "kind": "desklight",
+    "short": "Adjustable task light with touch control and clean styling.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 15,
+    "quantity_available": 33,
+    "main_image": "/products/touch-desk-light/main.webp",
+    "gallery_images": [
+      "/products/touch-desk-light/01.webp",
+      "/products/touch-desk-light/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "silicone-cable-organizer",
+      "portable-bluetooth-speaker"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-10",
+    "slug": "silicone-cable-organizer",
+    "title": "Silicone Cable Organizer",
+    "category": "Desk Accessories",
+    "subcategory": "Cable Management",
+    "price": 180,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#3977F6",
+    "kind": "cable",
+    "short": "Keep charging and data cables tidy and within reach.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 34,
+    "main_image": "/products/silicone-cable-organizer/main.webp",
+    "gallery_images": [
+      "/products/silicone-cable-organizer/01.webp",
+      "/products/silicone-cable-organizer/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "cable management",
+      "gadget"
+    ],
+    "related_products": [
+      "portable-bluetooth-speaker",
+      "rgb-light-bar-pair"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-11",
+    "slug": "portable-bluetooth-speaker",
+    "title": "Portable Bluetooth Speaker",
+    "category": "Audio Products",
+    "subcategory": "Speakers",
+    "price": 1480,
+    "old_price": 1690,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#80A96C",
+    "kind": "speaker",
+    "short": "Compact wireless sound for home, desk and travel.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 12,
+    "quantity_available": 35,
+    "main_image": "/products/portable-bluetooth-speaker/main.webp",
+    "gallery_images": [
+      "/products/portable-bluetooth-speaker/01.webp",
+      "/products/portable-bluetooth-speaker/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "audio products",
+      "speakers",
+      "gadget"
+    ],
+    "related_products": [
+      "rgb-light-bar-pair",
+      "foldable-phone-tripod"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-12",
+    "slug": "rgb-light-bar-pair",
+    "title": "RGB Light Bar Pair",
+    "category": "Decorative Lights",
+    "subcategory": "RGB Lighting",
+    "price": 1790,
+    "old_price": 2050,
+    "stock": "In stock",
+    "badge": "Sale",
+    "accent": "#FFB000",
+    "kind": "lightbar",
+    "short": "Colourful ambient lighting for gaming and media setups.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 13,
+    "quantity_available": 36,
+    "main_image": "/products/rgb-light-bar-pair/main.webp",
+    "gallery_images": [
+      "/products/rgb-light-bar-pair/01.webp",
+      "/products/rgb-light-bar-pair/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "rgb lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "foldable-phone-tripod",
+      "usb-c-multiport-hub"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-13",
+    "slug": "foldable-phone-tripod",
+    "title": "Foldable Phone Tripod",
+    "category": "Mobile Accessories",
+    "subcategory": "Tripods",
+    "price": 690,
+    "old_price": 790,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#C94C4C",
+    "kind": "tripod",
+    "short": "Stable portable support for photos, video and live sessions.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 13,
+    "quantity_available": 37,
+    "main_image": "/products/foldable-phone-tripod/main.webp",
+    "gallery_images": [
+      "/products/foldable-phone-tripod/01.webp",
+      "/products/foldable-phone-tripod/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "tripods",
+      "gadget"
+    ],
+    "related_products": [
+      "usb-c-multiport-hub",
+      "silent-wireless-mouse"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-14",
+    "slug": "usb-c-multiport-hub",
+    "title": "USB-C Multiport Hub",
+    "category": "Computer Accessories",
+    "subcategory": "Hubs",
+    "price": 1850,
+    "old_price": 2190,
+    "stock": "Low stock",
+    "badge": "Sale",
+    "accent": "#6C63FF",
+    "kind": "hub",
+    "short": "Expand USB-C devices with display, data and card ports.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 16,
+    "quantity_available": 4,
+    "main_image": "/products/usb-c-multiport-hub/main.webp",
+    "gallery_images": [
+      "/products/usb-c-multiport-hub/01.webp",
+      "/products/usb-c-multiport-hub/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "computer accessories",
+      "hubs",
+      "gadget"
+    ],
+    "related_products": [
+      "silent-wireless-mouse",
+      "extended-desk-mat"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-15",
+    "slug": "silent-wireless-mouse",
+    "title": "Silent Wireless Mouse",
+    "category": "Computer Accessories",
+    "subcategory": "Mouse",
+    "price": 640,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#00A6A6",
+    "kind": "mouse",
+    "short": "Quiet clicks and a comfortable shape for work or study.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 39,
+    "main_image": "/products/silent-wireless-mouse/main.webp",
+    "gallery_images": [
+      "/products/silent-wireless-mouse/01.webp",
+      "/products/silent-wireless-mouse/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "computer accessories",
+      "mouse",
+      "gadget"
+    ],
+    "related_products": [
+      "extended-desk-mat",
+      "mini-air-humidifier"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-16",
+    "slug": "extended-desk-mat",
+    "title": "Extended Desk Mat",
+    "category": "Desk Accessories",
+    "subcategory": "Desk Mats",
+    "price": 720,
+    "old_price": 850,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#F28482",
+    "kind": "deskmat",
+    "short": "A smooth protective surface for keyboard, mouse and desk.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 15,
+    "quantity_available": 40,
+    "main_image": "/products/extended-desk-mat/main.webp",
+    "gallery_images": [
+      "/products/extended-desk-mat/01.webp",
+      "/products/extended-desk-mat/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "desk mats",
+      "gadget"
+    ],
+    "related_products": [
+      "mini-air-humidifier",
+      "insulated-travel-bottle"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-17",
+    "slug": "mini-air-humidifier",
+    "title": "Mini Air Humidifier",
+    "category": "Home and Lifestyle",
+    "subcategory": "Wellness",
+    "price": 990,
+    "old_price": 1190,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#84A59D",
+    "kind": "humidifier",
+    "short": "Compact mist humidifier for a more comfortable room or desk.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 41,
+    "main_image": "/products/mini-air-humidifier/main.webp",
+    "gallery_images": [
+      "/products/mini-air-humidifier/01.webp",
+      "/products/mini-air-humidifier/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "home and lifestyle",
+      "wellness",
+      "gadget"
+    ],
+    "related_products": [
+      "insulated-travel-bottle",
+      "tech-travel-organizer"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-18",
+    "slug": "insulated-travel-bottle",
+    "title": "Insulated Travel Bottle",
+    "category": "Travel Accessories",
+    "subcategory": "Drinkware",
+    "price": 780,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#F6BD60",
+    "kind": "bottle",
+    "short": "Reusable insulated bottle for hot or cold drinks.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 42,
+    "main_image": "/products/insulated-travel-bottle/main.webp",
+    "gallery_images": [
+      "/products/insulated-travel-bottle/01.webp",
+      "/products/insulated-travel-bottle/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "travel accessories",
+      "drinkware",
+      "gadget"
+    ],
+    "related_products": [
+      "tech-travel-organizer",
+      "clip-on-ring-light"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-19",
+    "slug": "tech-travel-organizer",
+    "title": "Tech Travel Organizer",
+    "category": "Travel Accessories",
+    "subcategory": "Organization",
+    "price": 890,
+    "old_price": 1050,
+    "stock": "In stock",
+    "badge": "Sale",
+    "accent": "#4D908E",
+    "kind": "organizer",
+    "short": "Organize chargers, cables and small accessories while travelling.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 15,
+    "quantity_available": 43,
+    "main_image": "/products/tech-travel-organizer/main.webp",
+    "gallery_images": [
+      "/products/tech-travel-organizer/01.webp",
+      "/products/tech-travel-organizer/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "travel accessories",
+      "organization",
+      "gadget"
+    ],
+    "related_products": [
+      "clip-on-ring-light",
+      "smart-wifi-plug"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-20",
+    "slug": "clip-on-ring-light",
+    "title": "Clip-on Ring Light",
+    "category": "Mobile Accessories",
+    "subcategory": "Lighting",
+    "price": 380,
+    "old_price": 450,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#B56576",
+    "kind": "ringlight",
+    "short": "Pocket-size lighting for selfies, video calls and content.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 16,
+    "quantity_available": 44,
+    "main_image": "/products/clip-on-ring-light/main.webp",
+    "gallery_images": [
+      "/products/clip-on-ring-light/01.webp",
+      "/products/clip-on-ring-light/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "smart-wifi-plug",
+      "mini-desktop-vacuum"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-21",
+    "slug": "smart-wifi-plug",
+    "title": "Smart Wi-Fi Plug",
+    "category": "Smart Gadgets",
+    "subcategory": "Smart Home",
+    "price": 1150,
+    "old_price": 1350,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#577590",
+    "kind": "plug",
+    "short": "Remote scheduling and power control for home devices.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 15,
+    "quantity_available": 45,
+    "main_image": "/products/smart-wifi-plug/main.webp",
+    "gallery_images": [
+      "/products/smart-wifi-plug/01.webp",
+      "/products/smart-wifi-plug/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "smart gadgets",
+      "smart home",
+      "gadget"
+    ],
+    "related_products": [
+      "mini-desktop-vacuum",
+      "fast-charging-adapter-25w"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-22",
+    "slug": "mini-desktop-vacuum",
+    "title": "Mini Desktop Vacuum",
+    "category": "Home and Lifestyle",
+    "subcategory": "Cleaning",
+    "price": 650,
+    "old_price": 790,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#90BE6D",
+    "kind": "vacuum",
+    "short": "Clean keyboard crumbs and desk dust with a compact vacuum.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 18,
+    "quantity_available": 46,
+    "main_image": "/products/mini-desktop-vacuum/main.webp",
+    "gallery_images": [
+      "/products/mini-desktop-vacuum/01.webp",
+      "/products/mini-desktop-vacuum/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "home and lifestyle",
+      "cleaning",
+      "gadget"
+    ],
+    "related_products": [
+      "fast-charging-adapter-25w",
+      "portable-neck-fan"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-23",
+    "slug": "fast-charging-adapter-25w",
+    "title": "Fast Charging Adapter 25W",
+    "category": "Mobile Accessories",
+    "subcategory": "Chargers",
+    "price": 850,
+    "old_price": 990,
+    "stock": "Out of stock",
+    "badge": "",
+    "accent": "#F94144",
+    "kind": "charger",
+    "short": "Compact fast charging for compatible phones and accessories.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 14,
+    "quantity_available": 0,
+    "main_image": "/products/fast-charging-adapter-25w/main.webp",
+    "gallery_images": [
+      "/products/fast-charging-adapter-25w/01.webp",
+      "/products/fast-charging-adapter-25w/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "chargers",
+      "gadget"
+    ],
+    "related_products": [
+      "portable-neck-fan",
+      "portable-folding-laptop-stand"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-24",
+    "slug": "portable-neck-fan",
+    "title": "Portable Neck Fan",
+    "category": "Travel Accessories",
+    "subcategory": "Cooling",
+    "price": 1450,
+    "old_price": 1690,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#43AA8B",
+    "kind": "neckfan",
+    "short": "Hands-free personal cooling for travel and outdoor use.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 14,
+    "quantity_available": 48,
+    "main_image": "/products/portable-neck-fan/main.webp",
+    "gallery_images": [
+      "/products/portable-neck-fan/01.webp",
+      "/products/portable-neck-fan/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Ivory"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "travel accessories",
+      "cooling",
+      "gadget"
+    ],
+    "related_products": [
+      "portable-folding-laptop-stand",
+      "aurora-sunset-projector-lamp"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-25",
+    "slug": "led-motion-sensor-night-light",
+    "title": "LED Motion Sensor Night Light",
+    "category": "Decorative Lights",
+    "subcategory": "Sensor Lighting",
+    "price": 520,
+    "old_price": 690,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#FFD166",
+    "kind": "desklight",
+    "short": "Compact automatic light for wardrobes, stairs and bedside corners.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 25,
+    "quantity_available": 30,
+    "main_image": "/products/led-motion-sensor-night-light/main.webp",
+    "gallery_images": [
+      "/products/led-motion-sensor-night-light/01.webp",
+      "/products/led-motion-sensor-night-light/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "White",
+      "Warm White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "sensor lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "magnetic-wall-lamp",
+      "three-d-led-digital-clock"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-26",
+    "slug": "magnetic-wall-lamp",
+    "title": "Magnetic Wall Lamp",
+    "category": "Decorative Lights",
+    "subcategory": "Wall Lighting",
+    "price": 1250,
+    "old_price": 1490,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#7BD389",
+    "kind": "lamp",
+    "short": "Rechargeable wall light with a simple magnetic mount.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 16,
+    "quantity_available": 24,
+    "main_image": "/products/magnetic-wall-lamp/main.webp",
+    "gallery_images": [
+      "/products/magnetic-wall-lamp/01.webp",
+      "/products/magnetic-wall-lamp/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Walnut",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "wall lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "three-d-led-digital-clock",
+      "keyboard-cleaning-kit"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-27",
+    "slug": "three-d-led-digital-clock",
+    "title": "3D LED Digital Clock",
+    "category": "Desk Accessories",
+    "subcategory": "Desk Clocks",
+    "price": 990,
+    "old_price": 1190,
+    "stock": "In stock",
+    "badge": "Sale",
+    "accent": "#72A7FF",
+    "kind": "desklight",
+    "short": "Minimal clock display for desks, shelves and media setups.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 20,
+    "main_image": "/products/three-d-led-digital-clock/main.webp",
+    "gallery_images": [
+      "/products/three-d-led-digital-clock/01.webp",
+      "/products/three-d-led-digital-clock/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "desk clocks",
+      "gadget"
+    ],
+    "related_products": [
+      "keyboard-cleaning-kit",
+      "silicone-folding-water-bottle"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-28",
+    "slug": "keyboard-cleaning-kit",
+    "title": "Keyboard Cleaning Kit",
+    "category": "Computer Accessories",
+    "subcategory": "Cleaning",
+    "price": 360,
+    "old_price": 450,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#4D908E",
+    "kind": "organizer",
+    "short": "Small brush and tool set for keyboards, screens and earbuds.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 20,
+    "quantity_available": 45,
+    "main_image": "/products/keyboard-cleaning-kit/main.webp",
+    "gallery_images": [
+      "/products/keyboard-cleaning-kit/01.webp",
+      "/products/keyboard-cleaning-kit/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Blue"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "computer accessories",
+      "cleaning",
+      "gadget"
+    ],
+    "related_products": [
+      "silicone-folding-water-bottle",
+      "mini-laptop-kickstand-pair"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-29",
+    "slug": "silicone-folding-water-bottle",
+    "title": "Silicone Folding Water Bottle",
+    "category": "Travel Accessories",
+    "subcategory": "Drinkware",
+    "price": 620,
+    "old_price": 750,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#06D6A0",
+    "kind": "bottle",
+    "short": "Collapsible bottle for travel bags, desks and everyday carry.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 35,
+    "main_image": "/products/silicone-folding-water-bottle/main.webp",
+    "gallery_images": [
+      "/products/silicone-folding-water-bottle/01.webp",
+      "/products/silicone-folding-water-bottle/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Blue",
+      "Pink"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "travel accessories",
+      "drinkware",
+      "gadget"
+    ],
+    "related_products": [
+      "mini-laptop-kickstand-pair",
+      "rgb-neon-rope-light"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-30",
+    "slug": "mini-laptop-kickstand-pair",
+    "title": "Mini Laptop Kickstand Pair",
+    "category": "Computer Accessories",
+    "subcategory": "Laptop Stands",
+    "price": 220,
+    "old_price": 320,
+    "stock": "In stock",
+    "badge": "Sale",
+    "accent": "#6A9FB5",
+    "kind": "stand",
+    "short": "Adhesive mini risers for laptop cooling and typing comfort.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 31,
+    "quantity_available": 38,
+    "main_image": "/products/mini-laptop-kickstand-pair/main.webp",
+    "gallery_images": [
+      "/products/mini-laptop-kickstand-pair/01.webp",
+      "/products/mini-laptop-kickstand-pair/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Silver",
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Pair"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "computer accessories",
+      "laptop stands",
+      "gadget"
+    ],
+    "related_products": [
+      "rgb-neon-rope-light",
+      "rechargeable-wall-sconce"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-31",
+    "slug": "rgb-neon-rope-light",
+    "title": "RGB Neon Rope Light",
+    "category": "Decorative Lights",
+    "subcategory": "RGB Lighting",
+    "price": 1350,
+    "old_price": 1590,
+    "stock": "Low stock",
+    "badge": "Sale",
+    "accent": "#EF476F",
+    "kind": "lightbar",
+    "short": "Flexible colour light strip for desks, shelves and wall edges.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 15,
+    "quantity_available": 5,
+    "main_image": "/products/rgb-neon-rope-light/main.webp",
+    "gallery_images": [
+      "/products/rgb-neon-rope-light/01.webp",
+      "/products/rgb-neon-rope-light/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "RGB",
+      "Warm White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "rgb lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "rechargeable-wall-sconce",
+      "transparent-desk-clock"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-32",
+    "slug": "rechargeable-wall-sconce",
+    "title": "Rechargeable Wall Sconce",
+    "category": "Decorative Lights",
+    "subcategory": "Wall Lighting",
+    "price": 1450,
+    "old_price": 1790,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#84A59D",
+    "kind": "lamp",
+    "short": "Soft wall lighting for bedrooms, corridors and reading corners.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 19,
+    "quantity_available": 26,
+    "main_image": "/products/rechargeable-wall-sconce/main.webp",
+    "gallery_images": [
+      "/products/rechargeable-wall-sconce/01.webp",
+      "/products/rechargeable-wall-sconce/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Walnut",
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "wall lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "transparent-desk-clock",
+      "k9-crystal-ball-night-light"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-33",
+    "slug": "transparent-desk-clock",
+    "title": "Transparent Desk Clock",
+    "category": "Desk Accessories",
+    "subcategory": "Desk Clocks",
+    "price": 1150,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#A5A58D",
+    "kind": "desklight",
+    "short": "Clear-body clock accent for modern desk and shelf setups.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 16,
+    "main_image": "/products/transparent-desk-clock/main.webp",
+    "gallery_images": [
+      "/products/transparent-desk-clock/01.webp",
+      "/products/transparent-desk-clock/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Transparent",
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "desk clocks",
+      "gadget"
+    ],
+    "related_products": [
+      "k9-crystal-ball-night-light",
+      "electric-milk-frother"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-34",
+    "slug": "k9-crystal-ball-night-light",
+    "title": "K9 Crystal Ball Night Light",
+    "category": "Decorative Lights",
+    "subcategory": "Ambient Lighting",
+    "price": 1290,
+    "old_price": 1590,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#B8F2E6",
+    "kind": "lamp",
+    "short": "Decorative crystal-style night light for desks and gift corners.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 19,
+    "quantity_available": 21,
+    "main_image": "/products/k9-crystal-ball-night-light/main.webp",
+    "gallery_images": [
+      "/products/k9-crystal-ball-night-light/01.webp",
+      "/products/k9-crystal-ball-night-light/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Clear",
+      "Warm White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "ambient lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "electric-milk-frother",
+      "perpetual-desk-calendar"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-35",
+    "slug": "electric-milk-frother",
+    "title": "Electric Milk Frother",
+    "category": "Home and Lifestyle",
+    "subcategory": "Kitchen Gadgets",
+    "price": 480,
+    "old_price": 590,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#F4A261",
+    "kind": "bottle",
+    "short": "Handheld mixer for coffee, milk and quick kitchen prep.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 19,
+    "quantity_available": 42,
+    "main_image": "/products/electric-milk-frother/main.webp",
+    "gallery_images": [
+      "/products/electric-milk-frother/01.webp",
+      "/products/electric-milk-frother/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "White",
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "home and lifestyle",
+      "kitchen gadgets",
+      "gadget"
+    ],
+    "related_products": [
+      "perpetual-desk-calendar",
+      "tulip-mirror-night-lamp"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-36",
+    "slug": "perpetual-desk-calendar",
+    "title": "Perpetual Desk Calendar",
+    "category": "Desk Accessories",
+    "subcategory": "Desk Tools",
+    "price": 390,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#ADB5BD",
+    "kind": "deskmat",
+    "short": "Compact reusable calendar accessory for desks and counters.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 33,
+    "main_image": "/products/perpetual-desk-calendar/main.webp",
+    "gallery_images": [
+      "/products/perpetual-desk-calendar/01.webp",
+      "/products/perpetual-desk-calendar/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Silver",
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "desk tools",
+      "gadget"
+    ],
+    "related_products": [
+      "tulip-mirror-night-lamp",
+      "laptop-cooling-feet"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-37",
+    "slug": "tulip-mirror-night-lamp",
+    "title": "Tulip Mirror Night Lamp",
+    "category": "Decorative Lights",
+    "subcategory": "Ambient Lighting",
+    "price": 1750,
+    "old_price": 2150,
+    "stock": "In stock",
+    "badge": "Best seller",
+    "accent": "#E76BA8",
+    "kind": "lamp",
+    "short": "Decorative flower-style lamp for bedrooms and gift displays.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 19,
+    "quantity_available": 18,
+    "main_image": "/products/tulip-mirror-night-lamp/main.webp",
+    "gallery_images": [
+      "/products/tulip-mirror-night-lamp/01.webp",
+      "/products/tulip-mirror-night-lamp/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Pink",
+      "Warm White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "decorative lights",
+      "ambient lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "laptop-cooling-feet",
+      "motion-cabinet-light"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-38",
+    "slug": "laptop-cooling-feet",
+    "title": "Laptop Cooling Feet",
+    "category": "Computer Accessories",
+    "subcategory": "Laptop Stands",
+    "price": 260,
+    "old_price": 360,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#FF7354",
+    "kind": "stand",
+    "short": "Low-profile laptop risers for airflow and everyday desk comfort.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 28,
+    "quantity_available": 40,
+    "main_image": "/products/laptop-cooling-feet/main.webp",
+    "gallery_images": [
+      "/products/laptop-cooling-feet/01.webp",
+      "/products/laptop-cooling-feet/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Silver"
+    ],
+    "sizes_or_variants": [
+      "Pair"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "computer accessories",
+      "laptop stands",
+      "gadget"
+    ],
+    "related_products": [
+      "motion-cabinet-light",
+      "phone-camera-cleaning-brush"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-39",
+    "slug": "motion-cabinet-light",
+    "title": "Motion Cabinet Light",
+    "category": "Decorative Lights",
+    "subcategory": "Sensor Lighting",
+    "price": 720,
+    "old_price": 850,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#F2C94C",
+    "kind": "desklight",
+    "short": "Rechargeable strip light for cabinets, shelves and dark corners.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 15,
+    "quantity_available": 27,
+    "main_image": "/products/motion-cabinet-light/main.webp",
+    "gallery_images": [
+      "/products/motion-cabinet-light/01.webp",
+      "/products/motion-cabinet-light/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Warm White",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "sensor lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "phone-camera-cleaning-brush",
+      "mini-portable-mixer"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-40",
+    "slug": "phone-camera-cleaning-brush",
+    "title": "Phone Camera Cleaning Brush",
+    "category": "Mobile Accessories",
+    "subcategory": "Cleaning",
+    "price": 340,
+    "old_price": 420,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#40C3A7",
+    "kind": "organizer",
+    "short": "Pocket cleaning tool for phone cameras, screens and small gaps.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 19,
+    "quantity_available": 50,
+    "main_image": "/products/phone-camera-cleaning-brush/main.webp",
+    "gallery_images": [
+      "/products/phone-camera-cleaning-brush/01.webp",
+      "/products/phone-camera-cleaning-brush/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "cleaning",
+      "gadget"
+    ],
+    "related_products": [
+      "mini-portable-mixer",
+      "three-d-moon-crystal-lamp"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-41",
+    "slug": "mini-portable-mixer",
+    "title": "Mini Portable Mixer",
+    "category": "Home and Lifestyle",
+    "subcategory": "Kitchen Gadgets",
+    "price": 550,
+    "old_price": 690,
+    "stock": "In stock",
+    "badge": "Sale",
+    "accent": "#FF9C7A",
+    "kind": "bottle",
+    "short": "Compact rechargeable mixer for drinks and quick prep.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 20,
+    "quantity_available": 23,
+    "main_image": "/products/mini-portable-mixer/main.webp",
+    "gallery_images": [
+      "/products/mini-portable-mixer/01.webp",
+      "/products/mini-portable-mixer/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "White",
+      "Mint"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "home and lifestyle",
+      "kitchen gadgets",
+      "gadget"
+    ],
+    "related_products": [
+      "three-d-moon-crystal-lamp",
+      "wireless-charging-pad"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-42",
+    "slug": "three-d-moon-crystal-lamp",
+    "title": "3D Moon Crystal Lamp",
+    "category": "Decorative Lights",
+    "subcategory": "Ambient Lighting",
+    "price": 980,
+    "old_price": 1250,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#E5E8EB",
+    "kind": "lamp",
+    "short": "Soft decorative moon-style lamp for display and gifting.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 22,
+    "quantity_available": 19,
+    "main_image": "/products/three-d-moon-crystal-lamp/main.webp",
+    "gallery_images": [
+      "/products/three-d-moon-crystal-lamp/01.webp",
+      "/products/three-d-moon-crystal-lamp/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Warm White",
+      "Cool White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "ambient lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "wireless-charging-pad",
+      "foldable-tablet-stand"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-43",
+    "slug": "wireless-charging-pad",
+    "title": "Wireless Charging Pad",
+    "category": "Mobile Accessories",
+    "subcategory": "Chargers",
+    "price": 890,
+    "old_price": 1090,
+    "stock": "Low stock",
+    "badge": "Sale",
+    "accent": "#6C7BFF",
+    "kind": "charger",
+    "short": "Slim charging pad for compatible phones and accessories.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 18,
+    "quantity_available": 5,
+    "main_image": "/products/wireless-charging-pad/main.webp",
+    "gallery_images": [
+      "/products/wireless-charging-pad/01.webp",
+      "/products/wireless-charging-pad/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "chargers",
+      "gadget"
+    ],
+    "related_products": [
+      "foldable-tablet-stand",
+      "bluetooth-cleaning-earbud-pen"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-44",
+    "slug": "foldable-tablet-stand",
+    "title": "Foldable Tablet Stand",
+    "category": "Desk Accessories",
+    "subcategory": "Tablet Stands",
+    "price": 760,
+    "old_price": 950,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#C94C4C",
+    "kind": "holder",
+    "short": "Adjustable stand for tablets, phones and small desk screens.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 20,
+    "quantity_available": 29,
+    "main_image": "/products/foldable-tablet-stand/main.webp",
+    "gallery_images": [
+      "/products/foldable-tablet-stand/01.webp",
+      "/products/foldable-tablet-stand/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "tablet stands",
+      "gadget"
+    ],
+    "related_products": [
+      "bluetooth-cleaning-earbud-pen",
+      "compact-selfie-stick-tripod"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-45",
+    "slug": "bluetooth-cleaning-earbud-pen",
+    "title": "Bluetooth Cleaning Earbud Pen",
+    "category": "Audio Products",
+    "subcategory": "Cleaning",
+    "price": 290,
+    "old_price": 390,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#2FB8D1",
+    "kind": "earbuds",
+    "short": "Small cleaning pen for earbud cases, tips and charging ports.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 26,
+    "quantity_available": 44,
+    "main_image": "/products/bluetooth-cleaning-earbud-pen/main.webp",
+    "gallery_images": [
+      "/products/bluetooth-cleaning-earbud-pen/01.webp",
+      "/products/bluetooth-cleaning-earbud-pen/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "White",
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "audio products",
+      "cleaning",
+      "gadget"
+    ],
+    "related_products": [
+      "compact-selfie-stick-tripod",
+      "smart-led-strip-controller"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-46",
+    "slug": "compact-selfie-stick-tripod",
+    "title": "Compact Selfie Stick Tripod",
+    "category": "Mobile Accessories",
+    "subcategory": "Tripods",
+    "price": 840,
+    "old_price": 990,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#F28482",
+    "kind": "tripod",
+    "short": "Portable tripod and selfie stick for daily content capture.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 15,
+    "quantity_available": 25,
+    "main_image": "/products/compact-selfie-stick-tripod/main.webp",
+    "gallery_images": [
+      "/products/compact-selfie-stick-tripod/01.webp",
+      "/products/compact-selfie-stick-tripod/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Silver"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "tripods",
+      "gadget"
+    ],
+    "related_products": [
+      "smart-led-strip-controller",
+      "rechargeable-wooden-night-light"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-47",
+    "slug": "smart-led-strip-controller",
+    "title": "Smart LED Strip Controller",
+    "category": "Smart Gadgets",
+    "subcategory": "Smart Home",
+    "price": 650,
+    "old_price": 790,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#9A6BFF",
+    "kind": "plug",
+    "short": "Compact controller for lighting scenes and room ambience.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 18,
+    "quantity_available": 31,
+    "main_image": "/products/smart-led-strip-controller/main.webp",
+    "gallery_images": [
+      "/products/smart-led-strip-controller/01.webp",
+      "/products/smart-led-strip-controller/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "smart gadgets",
+      "smart home",
+      "gadget"
+    ],
+    "related_products": [
+      "rechargeable-wooden-night-light",
+      "desk-cable-clip-set"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-48",
+    "slug": "rechargeable-wooden-night-light",
+    "title": "Rechargeable Wooden Night Light",
+    "category": "Decorative Lights",
+    "subcategory": "Sensor Lighting",
+    "price": 1190,
+    "old_price": 1450,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#80A96C",
+    "kind": "desklight",
+    "short": "Warm rechargeable night light with a clean wooden-style base.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 18,
+    "quantity_available": 22,
+    "main_image": "/products/rechargeable-wooden-night-light/main.webp",
+    "gallery_images": [
+      "/products/rechargeable-wooden-night-light/01.webp",
+      "/products/rechargeable-wooden-night-light/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Wood",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "decorative lights",
+      "sensor lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "desk-cable-clip-set",
+      "mini-key-switch-tester"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-49",
+    "slug": "desk-cable-clip-set",
+    "title": "Desk Cable Clip Set",
+    "category": "Desk Accessories",
+    "subcategory": "Cable Management",
+    "price": 160,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#3977F6",
+    "kind": "cable",
+    "short": "Small cable holders for chargers, mouse wires and USB leads.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 52,
+    "main_image": "/products/desk-cable-clip-set/main.webp",
+    "gallery_images": [
+      "/products/desk-cable-clip-set/01.webp",
+      "/products/desk-cable-clip-set/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Set"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "cable management",
+      "gadget"
+    ],
+    "related_products": [
+      "mini-key-switch-tester",
+      "travel-perfume-atomizer"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-50",
+    "slug": "mini-key-switch-tester",
+    "title": "Mini Key Switch Tester",
+    "category": "Computer Accessories",
+    "subcategory": "Keyboards",
+    "price": 430,
+    "old_price": 520,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#6C63FF",
+    "kind": "keyboard",
+    "short": "Compact switch tester for keyboard feel and desk fidget use.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 34,
+    "main_image": "/products/mini-key-switch-tester/main.webp",
+    "gallery_images": [
+      "/products/mini-key-switch-tester/01.webp",
+      "/products/mini-key-switch-tester/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Clear"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "computer accessories",
+      "keyboards",
+      "gadget"
+    ],
+    "related_products": [
+      "travel-perfume-atomizer",
+      "portable-handheld-fan"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-51",
+    "slug": "travel-perfume-atomizer",
+    "title": "Travel Perfume Atomizer",
+    "category": "Travel Accessories",
+    "subcategory": "Organization",
+    "price": 420,
+    "old_price": 550,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#B56576",
+    "kind": "bottle",
+    "short": "Compact refillable atomizer for bags, desks and daily carry.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 24,
+    "quantity_available": 43,
+    "main_image": "/products/travel-perfume-atomizer/main.webp",
+    "gallery_images": [
+      "/products/travel-perfume-atomizer/01.webp",
+      "/products/travel-perfume-atomizer/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Silver",
+      "Pink"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "travel accessories",
+      "organization",
+      "gadget"
+    ],
+    "related_products": [
+      "portable-handheld-fan",
+      "usb-reading-light"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-52",
+    "slug": "portable-handheld-fan",
+    "title": "Portable Handheld Fan",
+    "category": "Travel Accessories",
+    "subcategory": "Cooling",
+    "price": 880,
+    "old_price": 1050,
+    "stock": "Low stock",
+    "badge": "Sale",
+    "accent": "#43AA8B",
+    "kind": "fan",
+    "short": "Rechargeable handheld fan for travel, commute and desk use.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 16,
+    "quantity_available": 4,
+    "main_image": "/products/portable-handheld-fan/main.webp",
+    "gallery_images": [
+      "/products/portable-handheld-fan/01.webp",
+      "/products/portable-handheld-fan/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "White",
+      "Green"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "travel accessories",
+      "cooling",
+      "gadget"
+    ],
+    "related_products": [
+      "usb-reading-light",
+      "phone-lanyard-holder"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-53",
+    "slug": "usb-reading-light",
+    "title": "USB Reading Light",
+    "category": "Desk Accessories",
+    "subcategory": "Lighting",
+    "price": 260,
+    "old_price": 340,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#FFB000",
+    "kind": "desklight",
+    "short": "Flexible USB light for keyboards, books and small work areas.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 24,
+    "quantity_available": 47,
+    "main_image": "/products/usb-reading-light/main.webp",
+    "gallery_images": [
+      "/products/usb-reading-light/01.webp",
+      "/products/usb-reading-light/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "lighting",
+      "gadget"
+    ],
+    "related_products": [
+      "phone-lanyard-holder",
+      "type-c-braided-cable"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-54",
+    "slug": "phone-lanyard-holder",
+    "title": "Phone Lanyard Holder",
+    "category": "Mobile Accessories",
+    "subcategory": "Phone Holders",
+    "price": 190,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#90BE6D",
+    "kind": "holder",
+    "short": "Slim phone strap holder for easier carry and daily use.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 55,
+    "main_image": "/products/phone-lanyard-holder/main.webp",
+    "gallery_images": [
+      "/products/phone-lanyard-holder/01.webp",
+      "/products/phone-lanyard-holder/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Clear"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "phone holders",
+      "gadget"
+    ],
+    "related_products": [
+      "type-c-braided-cable",
+      "compact-card-reader"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-55",
+    "slug": "type-c-braided-cable",
+    "title": "Type-C Braided Cable",
+    "category": "Mobile Accessories",
+    "subcategory": "Chargers",
+    "price": 250,
+    "old_price": 320,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#00A6A6",
+    "kind": "cable",
+    "short": "Durable everyday charging and data cable for Type-C devices.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 22,
+    "quantity_available": 60,
+    "main_image": "/products/type-c-braided-cable/main.webp",
+    "gallery_images": [
+      "/products/type-c-braided-cable/01.webp",
+      "/products/type-c-braided-cable/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Blue"
+    ],
+    "sizes_or_variants": [
+      "1m",
+      "2m"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "chargers",
+      "gadget"
+    ],
+    "related_products": [
+      "compact-card-reader",
+      "mini-speaker-clock"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-56",
+    "slug": "compact-card-reader",
+    "title": "Compact Card Reader",
+    "category": "Computer Accessories",
+    "subcategory": "Hubs",
+    "price": 690,
+    "old_price": 850,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#577590",
+    "kind": "hub",
+    "short": "Small reader for memory cards, files and quick transfers.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 19,
+    "quantity_available": 32,
+    "main_image": "/products/compact-card-reader/main.webp",
+    "gallery_images": [
+      "/products/compact-card-reader/01.webp",
+      "/products/compact-card-reader/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Silver"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "computer accessories",
+      "hubs",
+      "gadget"
+    ],
+    "related_products": [
+      "mini-speaker-clock",
+      "smart-sensor-door-light"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-57",
+    "slug": "mini-speaker-clock",
+    "title": "Mini Speaker Clock",
+    "category": "Audio Products",
+    "subcategory": "Speakers",
+    "price": 1490,
+    "old_price": 1790,
+    "stock": "In stock",
+    "badge": "Sale",
+    "accent": "#F94144",
+    "kind": "speaker",
+    "short": "Compact desk speaker with a simple clock-style product profile.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 17,
+    "quantity_available": 17,
+    "main_image": "/products/mini-speaker-clock/main.webp",
+    "gallery_images": [
+      "/products/mini-speaker-clock/01.webp",
+      "/products/mini-speaker-clock/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Green"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "audio products",
+      "speakers",
+      "gadget"
+    ],
+    "related_products": [
+      "smart-sensor-door-light",
+      "desktop-press-coaster"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-58",
+    "slug": "smart-sensor-door-light",
+    "title": "Smart Sensor Door Light",
+    "category": "Smart Gadgets",
+    "subcategory": "Smart Home",
+    "price": 620,
+    "old_price": 760,
+    "stock": "In stock",
+    "badge": "New",
+    "accent": "#F6BD60",
+    "kind": "desklight",
+    "short": "Compact sensor light for doors, cabinets and utility spaces.",
+    "featured": true,
+    "currency": "BDT",
+    "discount_percentage": 18,
+    "quantity_available": 28,
+    "main_image": "/products/smart-sensor-door-light/main.webp",
+    "gallery_images": [
+      "/products/smart-sensor-door-light/01.webp",
+      "/products/smart-sensor-door-light/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "White",
+      "Warm White"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": true,
+    "best_seller": false,
+    "tags": [
+      "smart gadgets",
+      "smart home",
+      "gadget"
+    ],
+    "related_products": [
+      "desktop-press-coaster",
+      "magnetic-charging-cable-set"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-59",
+    "slug": "desktop-press-coaster",
+    "title": "Desktop Press Coaster",
+    "category": "Desk Accessories",
+    "subcategory": "Desk Tools",
+    "price": 280,
+    "old_price": 0,
+    "stock": "In stock",
+    "badge": "",
+    "accent": "#B08968",
+    "kind": "deskmat",
+    "short": "Small novelty-style coaster for cups, desks and work corners.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 0,
+    "quantity_available": 36,
+    "main_image": "/products/desktop-press-coaster/main.webp",
+    "gallery_images": [
+      "/products/desktop-press-coaster/01.webp",
+      "/products/desktop-press-coaster/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Green",
+      "Black"
+    ],
+    "sizes_or_variants": [
+      "Standard"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "desk accessories",
+      "desk tools",
+      "gadget"
+    ],
+    "related_products": [
+      "magnetic-charging-cable-set",
+      "portable-folding-laptop-stand"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  },
+  {
+    "id": "prd-60",
+    "slug": "magnetic-charging-cable-set",
+    "title": "Magnetic Charging Cable Set",
+    "category": "Mobile Accessories",
+    "subcategory": "Chargers",
+    "price": 390,
+    "old_price": 520,
+    "stock": "In stock",
+    "badge": "Popular",
+    "accent": "#BC6C25",
+    "kind": "cable",
+    "short": "Multi-tip magnetic cable set for everyday charging setups.",
+    "featured": false,
+    "currency": "BDT",
+    "discount_percentage": 25,
+    "quantity_available": 39,
+    "main_image": "/products/magnetic-charging-cable-set/main.webp",
+    "gallery_images": [
+      "/products/magnetic-charging-cable-set/01.webp",
+      "/products/magnetic-charging-cable-set/02.webp"
+    ],
+    "video": null,
+    "features": [
+      "Editable feature one",
+      "Editable feature two",
+      "Editable feature three"
+    ],
+    "specifications": {
+      "Material": "Editable",
+      "Compatibility": "Editable",
+      "Colour": "Editable"
+    },
+    "colours": [
+      "Black",
+      "Silver"
+    ],
+    "sizes_or_variants": [
+      "Set"
+    ],
+    "new_arrival": false,
+    "best_seller": false,
+    "tags": [
+      "mobile accessories",
+      "chargers",
+      "gadget"
+    ],
+    "related_products": [
+      "portable-folding-laptop-stand",
+      "aurora-sunset-projector-lamp"
+    ],
+    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
+    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+  }
+]
