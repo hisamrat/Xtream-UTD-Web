@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { Home, LayoutGrid, MessageCircle, RotateCw } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 
 export function BottomSwitch() {
@@ -13,6 +13,19 @@ export function BottomSwitch() {
   const onProducts = pathname.startsWith("/products");
   const onContact = pathname.startsWith("/contact");
   const [reloading, setReloading] = useState(false);
+  const [homeUIReady, setHomeUIReady] = useState(false);
+
+  // On the home page, hide until the fly-in animation completes
+  useEffect(() => {
+    if (!onHome) {
+      setHomeUIReady(true);
+      return;
+    }
+    setHomeUIReady(false);
+    const handler = () => setHomeUIReady(true);
+    window.addEventListener("xtream-utd:world-ui-ready", handler);
+    return () => window.removeEventListener("xtream-utd:world-ui-ready", handler);
+  }, [onHome]);
 
   const handleReload = useCallback(() => {
     setReloading(true);
@@ -29,6 +42,15 @@ export function BottomSwitch() {
     <nav
       className={`bottom-switch ${onHome ? "is-home" : "is-subpage"}`}
       aria-label="Navigation"
+      style={
+        onHome
+          ? {
+              opacity: homeUIReady ? 1 : 0,
+              pointerEvents: homeUIReady ? "auto" : "none",
+              transition: homeUIReady ? "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)" : "none"
+            }
+          : {}
+      }
     >
       {/* Slot 1 (Left) */}
       {isCenterHome ? (

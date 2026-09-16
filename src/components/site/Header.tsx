@@ -22,6 +22,8 @@ export function Header({ products }: HeaderProps) {
   const { openCart, totalCount } = useCart();
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
+  const [homeUIReady, setHomeUIReady] = useState(false);
+  const isHomePage = pathname === "/";
 
   useEffect(() => {
     document.body.classList.toggle("modal-open", menuOpen || searchOpen);
@@ -32,11 +34,28 @@ export function Header({ products }: HeaderProps) {
     setMenuOpen(false);
   }, [pathname]);
 
+  // Reset homeUIReady each time we navigate to (or away from) the home page
+  useEffect(() => {
+    if (!isHomePage) {
+      setHomeUIReady(true);
+      return;
+    }
+    setHomeUIReady(false);
+    const handler = () => setHomeUIReady(true);
+    window.addEventListener("xtream-utd:world-ui-ready", handler);
+    return () => window.removeEventListener("xtream-utd:world-ui-ready", handler);
+  }, [isHomePage]);
+
   const langBadge = language === "en" ? "BN" : "EN";
+  const headerStyle = isHomePage && !homeUIReady
+    ? { opacity: 0, pointerEvents: "none" as const, transition: "none" }
+    : isHomePage && homeUIReady
+    ? { opacity: 1, pointerEvents: "auto" as const, transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)" }
+    : {};
 
   return (
     <>
-      <header className="site-header">
+      <header className="site-header" style={headerStyle}>
         <div className="header-left">
           <Link href="/" className="wordmark" aria-label="Xtream UTD home">
             <span>{siteConfig.name}</span>

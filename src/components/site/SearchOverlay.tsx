@@ -3,7 +3,7 @@
 import { Search, X } from "lucide-react";
 import { useRouter } from "next/navigation";
 import { useEffect, useMemo, useRef, useState } from "react";
-import { ProductCard } from "@/components/products/ProductCard";
+import { ProductGrid } from "@/components/products/ProductGrid";
 import type { Product } from "@/lib/product-schema";
 import { filterProducts } from "@/lib/products";
 import { useLanguage } from "./LanguageProvider";
@@ -133,11 +133,11 @@ export function SearchOverlay({ products, open, onClose }: SearchOverlayProps) {
 
         {hasQuery ? (
           results.length ? (
-            <div className="search-results-list product-grid">
-              {results.map((product) => (
-                <ProductCard key={product.id} product={product} onClick={onClose} />
-              ))}
-            </div>
+            <ProductGrid
+              className="search-results-list product-grid"
+              products={results}
+              onProductClick={onClose}
+            />
           ) : (
             <div className="search-empty-state">
               <h2>{t("no_products_found")}</h2>

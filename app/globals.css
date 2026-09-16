@@ -207,10 +207,16 @@ min-height: 100vh;
   padding: 0 var(--page-x);
   background: linear-gradient(180deg, color-mix(in srgb, var(--canvas-950) 94%, transparent), transparent);
   backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
 }
 
 body:has(.home-main) .site-header {
-  background: linear-gradient(180deg, rgb(2 4 6 / 92%), rgb(2 4 6 / 58%) 54%, transparent);
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 body:has(.home-main) .wordmark,
@@ -641,14 +647,34 @@ body:has(.home-main) .world-set-count {
   padding: 16px;
   background: var(--surface-card);
   box-shadow: rgba(17, 17, 26, 0.08) 0px 4px 16px, rgba(17, 17, 26, 0.04) 0px 8px 24px;
-  transition: transform 220ms ease, box-shadow 220ms ease;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: transform, opacity;
+  transition: transform 220ms cubic-bezier(0.16, 1, 0.3, 1);
   overflow: hidden;
   text-decoration: none;
 }
 
+.product-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  box-shadow: rgba(17, 17, 26, 0.16) 0px 8px 28px, rgba(17, 17, 26, 0.10) 0px 18px 48px;
+  opacity: 0;
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: opacity;
+  transition: opacity 220ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 .product-card:hover {
-  transform: translateY(-4px);
-  box-shadow: rgba(17, 17, 26, 0.12) 0px 8px 24px, rgba(17, 17, 26, 0.08) 0px 16px 40px;
+  transform: translate3d(0, -4px, 0);
+}
+
+.product-card:hover::after {
+  opacity: 1;
 }
 
 .product-media {
@@ -5269,18 +5295,38 @@ radial-gradient(circle at 33% 50%, rgb(0 228 208 / 13%), transparent 21rem),
 radial-gradient(circle at 67% 50%, rgb(255 92 69 / 11%), transparent 22rem),
 radial-gradient(circle at 51% 72%, rgb(21 80 170 / 15%), transparent 24rem),
 linear-gradient(180deg, #04080a 0%, #030608 60%, #010203 100%);
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
+  cursor: grab;
+  touch-action: none;
+  background:
+    radial-gradient(circle at 50% 44%, rgb(25 33 43 / 78%), transparent 32rem),
+    radial-gradient(circle at 33% 50%, rgb(0 228 208 / 13%), transparent 21rem),
+    radial-gradient(circle at 67% 50%, rgb(255 92 69 / 11%), transparent 22rem),
+    radial-gradient(circle at 51% 72%, rgb(21 80 170 / 15%), transparent 24rem),
+    linear-gradient(180deg, #04080a 0%, #030608 60%, #010203 100%);
+}
+
+.world-shell.is-dragging {
+  cursor: grabbing !important;
 }
 
 .world-shell.reference-showcase::before {
 background:
 radial-gradient(ellipse at 50% 54%, rgb(255 255 255 / 9%), transparent 33rem),
 radial-gradient(ellipse at 50% 55%, transparent 0 40%, rgb(0 0 0 / 38%) 82%, rgb(0 0 0 / 72%) 100%);
+  background:
+    radial-gradient(ellipse at 50% 54%, rgb(255 255 255 / 9%), transparent 33rem),
+    radial-gradient(ellipse at 50% 55%, transparent 0 40%, rgb(0 0 0 / 38%) 82%, rgb(0 0 0 / 72%) 100%);
 }
 
 .world-shell.reference-showcase::after {
 background:
 radial-gradient(circle at 50% 47%, transparent 0 45%, rgb(0 0 0 / 36%) 78%, rgb(0 0 0 / 68%) 100%),
 linear-gradient(90deg, rgb(0 0 0 / 34%), transparent 20%, transparent 80%, rgb(0 0 0 / 34%));
+  background:
+    radial-gradient(circle at 50% 47%, transparent 0 45%, rgb(0 0 0 / 36%) 78%, rgb(0 0 0 / 68%) 100%),
+    linear-gradient(90deg, rgb(0 0 0 / 34%), transparent 20%, transparent 80%, rgb(0 0 0 / 34%));
 }
 
 .world-stage {
@@ -5293,6 +5339,25 @@ height: 0;
 transform: translateY(var(--world-stage-offset-y, -4px)) scale(var(--world-stage-scale, 1));
 transform-origin: 0 0;
 pointer-events: none;
+  position: absolute;
+  z-index: 2;
+  left: 50%;
+  top: 50%;
+  width: 0;
+  height: 0;
+  transform-style: preserve-3d;
+  transform:
+    translateY(var(--world-stage-offset-y, -4px))
+    scale(var(--world-stage-scale, 1));
+  transform-origin: 0 0;
+  pointer-events: none;
+  will-change: transform;
+  transition: transform 140ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.world-shell.is-dragging .world-stage,
+.world-shell.is-dragging .reference-world-card {
+  transition: none !important;
 }
 
 .reference-world-card {
@@ -5312,11 +5377,13 @@ pointer-events: none;
   overflow: hidden;
   pointer-events: auto;
   transform:
-    translate(-50%, -50%)
+    translate3d(-50%, -50%, var(--world-card-depth, 0px))
     rotate(var(--world-card-rotation, 0deg))
     scale(var(--world-card-scale, 1));
   transform-origin: center;
   border-radius: 0;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
   background:
     radial-gradient(circle at 50% 16%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 18%, transparent), transparent 46%),
     radial-gradient(circle at 50% 82%, rgb(255 255 255 / 7%), transparent 44%),
@@ -5328,20 +5395,67 @@ pointer-events: none;
   animation: reference-card-float var(--world-card-float-duration, 7.5s) ease-in-out infinite;
   animation-delay: var(--world-card-float-delay, 0s);
   transition:
-    transform 380ms cubic-bezier(0.2, 0.9, 0.3, 1.2),
-    box-shadow 380ms ease,
+    transform 320ms cubic-bezier(0.16, 1, 0.3, 1),
     opacity 250ms ease;
-  will-change: transform;
+}
+
+/* Pre-rendered glow/shadow on pseudo-element to animate ONLY opacity on GPU */
+.reference-world-card::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  pointer-events: none;
+  z-index: 1;
+  opacity: 0;
+  box-shadow:
+    0 44px 132px rgb(0 0 0 / 82%),
+    0 0 86px color-mix(in srgb, var(--world-card-accent, var(--accent)) 38%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 12%);
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  will-change: opacity;
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.reference-world-card.kind-hero::after {
+  box-shadow:
+    0 48px 140px rgb(0 0 0 / 86%),
+    0 0 96px color-mix(in srgb, var(--world-card-accent, var(--accent)) 46%, transparent),
+    inset 0 1px 0 rgb(255 255 255 / 14%);
+}
+
+.world-stage .reference-world-card.hovered::after,
+.world-stage .reference-world-card.selected::after {
+  opacity: 1;
+}
+
+.reference-world-card.is-flying-in::after {
+  opacity: 0 !important;
 }
 
 .reference-world-card.kind-mini {
   grid-template-rows: 1fr;
   gap: 0;
   border: none !important;
+  outline: none !important;
   border-radius: 0;
   background:
     radial-gradient(circle at 50% 48%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 24%, transparent), transparent 54%),
     linear-gradient(150deg, rgb(29 36 45 / 94%), rgb(13 17 23 / 98%));
+  contain: strict;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 !important;
+  background: linear-gradient(150deg, rgb(24 30 40 / 96%), rgb(11 15 21 / 99%)) !important;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 45%) !important;
+}
+
+.reference-world-card.kind-mini::before,
+.reference-world-card.kind-mini::after {
+  display: none !important;
+  content: none !important;
 }
 
 .reference-world-card.kind-medium {
@@ -5379,13 +5493,9 @@ pointer-events: none;
   outline: none !important;
   border-color: transparent !important;
   transform:
-    translate(-50%, calc(-50% - 10px))
+    translate3d(-50%, calc(-50% - 10px), 0)
     rotate(var(--world-card-rotation, 0deg))
     scale(var(--world-card-hover-scale, 1.18)) !important;
-  box-shadow:
-    0 44px 132px rgb(0 0 0 / 82%),
-    0 0 86px color-mix(in srgb, var(--world-card-accent, var(--accent)) 38%, transparent),
-    inset 0 1px 0 rgb(255 255 255 / 12%);
 }
 
 .world-stage .reference-world-card.kind-hero.hovered,
@@ -5393,7 +5503,7 @@ pointer-events: none;
   border: none !important;
   outline: none !important;
   transform:
-    translate(-50%, calc(-50% - 12px))
+    translate3d(-50%, calc(-50% - 12px), 0)
     rotate(var(--world-card-rotation, 0deg))
     scale(var(--world-card-hover-scale, 1.12)) !important;
 }
@@ -5433,27 +5543,20 @@ pointer-events: none;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 380ms cubic-bezier(0.2, 0.9, 0.3, 1.2), filter 380ms ease;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: transform;
+  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .world-stage .reference-world-card.hovered .product-art,
 .reference-world-card:hover .product-art {
-  transform: translateY(0) scale(1.18);
-  filter:
-    drop-shadow(0 28px 36px rgb(0 0 0 / 64%))
-    drop-shadow(0 0 32px color-mix(in srgb, var(--world-card-accent, var(--accent)) 48%, transparent));
+  transform: translate3d(0, 0, 0) scale(1.18);
 }
 
 .world-stage .reference-world-card.kind-mini.hovered .product-art,
 .reference-world-card.kind-mini:hover .product-art {
-  transform: scale(1.25);
-}
-
-.world-stage .reference-world-card.hovered .world-product-media,
-.reference-world-card:hover .world-product-media {
-  height: 100% !important;
-  flex: 1 1 100% !important;
-  aspect-ratio: auto !important;
+  transform: translate3d(0, 0, 0) scale(1.25);
 }
 
 .reference-world-card .world-card-copy {
@@ -5466,12 +5569,17 @@ pointer-events: none;
   padding: 5px 8px 7px;
   position: relative;
   z-index: 2;
-  transition: opacity 200ms ease;
+  transform: translate3d(0, 0, 0);
+  backface-visibility: hidden;
+  will-change: opacity, transform;
+  transition: opacity 180ms ease, transform 180ms ease;
 }
 
 .world-stage .reference-world-card.hovered .world-card-copy,
 .reference-world-card:hover .world-card-copy {
-  display: none !important;
+  opacity: 0;
+  pointer-events: none;
+  transform: translate3d(0, 4px, 0);
 }
 
 .reference-world-card.kind-mini .world-card-copy {
@@ -5536,24 +5644,171 @@ inset 0 1px 0 rgb(255 255 255 / 7%);
 }
 
 @keyframes reference-card-float {
-0%,
-100% {
-transform:
-translate(-50%, -50%)
-rotate(var(--world-card-rotation, 0deg))
-scale(var(--world-card-scale, 1));
+  0%,
+  100% {
+    transform:
+      translate3d(-50%, -50%, var(--world-card-depth, 0px))
+      rotateY(calc(-1 * var(--world-rotate-y, 0deg)))
+      rotateX(calc(-1 * var(--world-rotate-x, 0deg)))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(var(--world-card-scale, 1));
+  }
+  50% {
+    transform:
+      translate3d(
+        calc(-50% + var(--world-card-float-x, 0px)),
+        calc(-50% + var(--world-card-float-y, -6px)),
+        var(--world-card-depth, 0px)
+      )
+      rotateY(calc(-1 * var(--world-rotate-y, 0deg)))
+      rotateX(calc(-1 * var(--world-rotate-x, 0deg)))
+      rotate(calc(var(--world-card-rotation, 0deg) + var(--world-card-float-rotate, 0.28deg)))
+      scale(var(--world-card-scale, 1));
+  }
 }
 
-50% {
-transform:
-translate(
-calc(-50% + var(--world-card-float-x, 5px)),
-calc(-50% + var(--world-card-float-y, -8px))
-)
-rotate(calc(var(--world-card-rotation, 0deg) + var(--world-card-float-rotate, 0.28deg)))
-scale(var(--world-card-scale, 1));
+/* ============================================================
+   FLY-IN ENTRANCE ANIMATION SYSTEM
+   Cards stream in from off-screen edges with spring deceleration.
+   Triggered immediately on mount before UI chrome is shown.
+   ============================================================ */
+
+@keyframes world-fly-in-top {
+  0% {
+    transform:
+      translate3d(-50%, calc((-75vh / var(--world-stage-scale, 1)) - var(--world-card-y, 0px)), var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(calc(var(--world-card-scale, 1) * 0.9));
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform:
+      translate3d(-50%, -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(var(--world-card-scale, 1));
+    opacity: 1;
+  }
 }
+
+@keyframes world-fly-in-bottom {
+  0% {
+    transform:
+      translate3d(-50%, calc((75vh / var(--world-stage-scale, 1)) - var(--world-card-y, 0px)), var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(calc(var(--world-card-scale, 1) * 0.9));
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform:
+      translate3d(-50%, -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(var(--world-card-scale, 1));
+    opacity: 1;
+  }
 }
+
+@keyframes world-fly-in-left {
+  0% {
+    transform:
+      translate3d(calc((-75vw / var(--world-stage-scale, 1)) - var(--world-card-x, 0px)), -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(calc(var(--world-card-scale, 1) * 0.9));
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform:
+      translate3d(-50%, -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(var(--world-card-scale, 1));
+    opacity: 1;
+  }
+}
+
+@keyframes world-fly-in-right {
+  0% {
+    transform:
+      translate3d(calc((75vw / var(--world-stage-scale, 1)) - var(--world-card-x, 0px)), -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(calc(var(--world-card-scale, 1) * 0.9));
+    opacity: 0;
+  }
+  15% {
+    opacity: 1;
+  }
+  100% {
+    transform:
+      translate3d(-50%, -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(var(--world-card-scale, 1));
+    opacity: 1;
+  }
+}
+
+/* Disable base card transition during fly-in so it doesn't fight the animation */
+.reference-world-card.is-flying-in {
+  transition: none !important;
+  will-change: transform, opacity;
+  backface-visibility: hidden;
+  transform: translateZ(0);
+  pointer-events: none;
+}
+
+/* Fly-in animation: smooth 1200ms spring deceleration */
+.reference-world-card.is-flying-in[data-fly-in-origin="top"] {
+  animation: world-fly-in-top 1200ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.reference-world-card.is-flying-in[data-fly-in-origin="bottom"] {
+  animation: world-fly-in-bottom 1200ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.reference-world-card.is-flying-in[data-fly-in-origin="left"] {
+  animation: world-fly-in-left 1200ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+.reference-world-card.is-flying-in[data-fly-in-origin="right"] {
+  animation: world-fly-in-right 1200ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+/* Reduced motion: skip fly-in, appear instantly */
+@media (prefers-reduced-motion: reduce) {
+  .reference-world-card.is-flying-in {
+    animation: reference-card-float var(--world-card-float-duration, 7.5s) var(--world-card-float-delay, 0s) ease-in-out infinite !important;
+    opacity: 1 !important;
+  }
+}
+
+/* ============================================================
+   UI CHROME VISIBILITY GATES
+   Bottom dock, instructions hint, and set-controls all hide
+   during fly-in (ui-hidden), then fade in smoothly at the end (ui-ready).
+   ============================================================ */
+
+/* Hidden during fly-in — world-instructions and set-controls are children of world-shell */
+body:has(.home-main) .world-shell.ui-hidden .world-instructions,
+body:has(.home-main) .world-shell.ui-hidden .world-set-controls {
+  opacity: 0;
+  pointer-events: none;
+  transition: none;
+}
+
+/* Fade in smoothly in the last moment */
+body:has(.home-main) .world-shell.ui-ready .world-instructions,
+body:has(.home-main) .world-shell.ui-ready .world-set-controls {
+  opacity: 1;
+  pointer-events: auto;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
 
 @media (max-width: 1023px) {
 .world-shell.reference-showcase {
@@ -5650,57 +5905,65 @@ opacity: 0.88;
 }
 
 .reference-world-card.kind-mini {
-box-shadow:
-0 24px 70px rgb(0 0 0 / 64%),
-0 0 28px color-mix(in srgb, var(--world-card-accent, var(--accent)) 20%, transparent),
-inset 0 1px 0 rgb(255 255 255 / 8%);
+  contain: strict !important;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 45%) !important;
+}
+
+.reference-world-card.kind-mini::before,
+.reference-world-card.kind-mini::after {
+  display: none !important;
+  content: none !important;
 }
 
 .reference-world-card.kind-hero {
-gap: 10px;
-box-shadow:
-0 42px 126px rgb(0 0 0 / 80%),
-0 0 92px color-mix(in srgb, var(--world-card-accent, var(--accent)) 26%, transparent),
-inset 0 1px 0 rgb(255 255 255 / 10%),
-inset 0 -42px 62px rgb(0 0 0 / 16%);
+  gap: 10px;
+  box-shadow:
+    0 34px 96px rgb(0 0 0 / 75%),
+    inset 0 1px 0 rgb(255 255 255 / 10%),
+    inset 0 -42px 62px rgb(0 0 0 / 16%);
 }
 
 .reference-world-card .world-product-media {
-position: relative;
-z-index: 1;
-align-self: stretch;
-background:
-radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 18%, transparent), transparent 47%),
-radial-gradient(circle at 50% 56%, rgb(255 255 255 / 6%), transparent 56%);
+  position: relative;
+  z-index: 1;
+  align-self: stretch;
+  background:
+    radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 18%, transparent), transparent 47%),
+    radial-gradient(circle at 50% 56%, rgb(255 255 255 / 6%), transparent 56%);
 }
 
 .reference-world-card .world-product-media::after {
-content: "";
-position: absolute;
-left: 16%;
-right: 16%;
-bottom: 10%;
-height: 10%;
-border-radius: 999px;
-background: rgb(0 0 0 / 34%);
-filter: blur(10px);
-transform: translateY(50%);
+  content: "";
+  position: absolute;
+  left: 16%;
+  right: 16%;
+  bottom: 10%;
+  height: 10%;
+  border-radius: 999px;
+  background: radial-gradient(ellipse at center, rgb(0 0 0 / 42%) 0%, transparent 72%);
+  transform: translateY(50%);
+  pointer-events: none;
 }
 
+.reference-world-card.kind-mini .world-product-media {
+  background: transparent !important;
+  background-image: none !important;
+}
+
+.reference-world-card.kind-mini .world-product-media::before,
 .reference-world-card.kind-mini .world-product-media::after {
-left: 28%;
-right: 28%;
-bottom: 21%;
-height: 8%;
-opacity: 0.5;
+  left: 28%;
+  right: 28%;
+  bottom: 21%;
+  height: 8%;
+  opacity: 0.5;
+  display: none !important;
+  content: none !important;
 }
 
 .reference-world-card .product-art {
   z-index: 1;
   transform: translateY(2px) scale(var(--world-card-art-scale, 1));
-  filter:
-    drop-shadow(0 24px 28px rgb(0 0 0 / 58%))
-    drop-shadow(0 0 24px color-mix(in srgb, var(--world-card-accent, var(--accent)) 32%, transparent));
 }
 
 .product-art-full,
@@ -5721,24 +5984,28 @@ opacity: 0.5;
 }
 
 .compact-art-svg {
-  width: 95%;
-  height: 95%;
-  max-width: 95%;
-  max-height: 95%;
+  width: 78%;
+  height: 78%;
+  max-width: 78%;
+  max-height: 78%;
   display: block;
   overflow: visible;
-  filter: drop-shadow(0 0 12px color-mix(in srgb, var(--art-accent, var(--accent)) 75%, transparent));
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  shape-rendering: geometricPrecision;
+  pointer-events: none;
 }
 
 .reference-world-card.kind-mini .product-art {
   width: 96%;
   height: 96%;
+  width: 100%;
+  height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  filter:
-    drop-shadow(0 4px 8px rgb(0 0 0 / 30%))
-    drop-shadow(0 0 12px color-mix(in srgb, var(--world-card-accent, var(--accent)) 40%, transparent));
+  transform: translateZ(0);
+  backface-visibility: hidden;
 }
 
 .reference-world-card .world-card-copy {
@@ -5801,17 +6068,17 @@ cursor: grabbing;
 }
 
 .world-shell.reference-showcase .world-stage {
-transform:
-translate(
-var(--world-parallax-x, 0px),
-calc(var(--world-stage-offset-y, -4px) + var(--world-parallax-y, 0px))
-)
-perspective(1400px)
-rotateX(var(--world-rotate-x, 0deg))
-rotateY(var(--world-rotate-y, 0deg))
-scale(var(--world-stage-scale, 1));
-transform-style: preserve-3d;
-transition: transform 180ms ease-out;
+  transform:
+    translate(
+      var(--world-parallax-x, 0px),
+      calc(var(--world-stage-offset-y, -4px) + var(--world-parallax-y, 0px))
+    )
+    perspective(1400px)
+    rotateX(var(--world-rotate-x, 0deg))
+    rotateY(var(--world-rotate-y, 0deg))
+    scale(var(--world-stage-scale, 1));
+  transform-style: preserve-3d;
+  transition: transform 180ms ease-out;
 }
 
 .world-shell.reference-showcase.is-dragging .world-stage {
@@ -5822,19 +6089,18 @@ transition-duration: 40ms;
   border: none !important;
   outline: none !important;
   border-radius: 0;
+  backface-visibility: hidden;
+  will-change: transform, opacity;
   background:
     radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 18%, transparent), transparent 47%),
-    linear-gradient(150deg, rgb(20 25 35 / 75%), rgb(9 13 20 / 88%));
-  backdrop-filter: blur(20px);
+    linear-gradient(150deg, rgb(20 25 35 / 96%), rgb(9 13 20 / 99%));
   transform:
-    translate(-50%, -50%)
-    translateZ(var(--world-card-depth, 0px))
+    translate3d(-50%, -50%, var(--world-card-depth, 0px))
     rotate(var(--world-card-rotation, 0deg))
     scale(var(--world-card-scale, 1));
   box-shadow:
-    rgba(17, 17, 26, 0.1) 0px 4px 16px,
-    rgba(17, 17, 26, 0.05) 0px 8px 24px,
-    0 20px 50px rgb(0 0 0 / 55%);
+    0 16px 40px rgb(0 0 0 / 55%),
+    inset 0 1px 0 rgb(255 255 255 / 8%);
 }
 
 .world-shell.reference-showcase .reference-world-card.kind-hero {
@@ -5843,10 +6109,9 @@ transition-duration: 40ms;
   border-radius: 0;
   background:
     radial-gradient(circle at 50% 36%, color-mix(in srgb, var(--world-card-accent, #3385ff) 20%, transparent), transparent 45%),
-    linear-gradient(150deg, rgb(24 31 43 / 82%), rgb(8 14 23 / 92%));
+    linear-gradient(150deg, rgb(24 31 43 / 96%), rgb(8 14 23 / 99%));
   box-shadow:
-    0 38px 96px rgb(0 0 0 / 70%),
-    0 0 72px rgb(51 133 255 / 28%),
+    0 34px 96px rgb(0 0 0 / 75%),
     inset 0 1px 0 rgb(255 255 255 / 10%),
     inset 0 -46px 78px rgb(0 0 0 / 18%);
 }
@@ -5855,9 +6120,22 @@ transition-duration: 40ms;
   border: none !important;
   outline: none !important;
   border-radius: 0;
+  contain: layout paint style;
+  box-shadow:
+    0 4px 14px rgb(0 0 0 / 45%),
+    inset 0 1px 0 rgb(255 255 255 / 8%);
   background:
     radial-gradient(circle at 50% 47%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 28%, transparent), transparent 52%),
-    linear-gradient(145deg, rgb(20 25 35 / 72%), rgb(8 12 18 / 86%));
+    linear-gradient(145deg, rgb(20 25 35 / 96%), rgb(8 12 18 / 99%));
+  contain: strict !important;
+  box-shadow: 0 4px 12px rgb(0 0 0 / 45%) !important;
+  background: linear-gradient(145deg, rgb(20 25 35 / 96%), rgb(8 12 18 / 99%)) !important;
+}
+
+.world-shell.reference-showcase .reference-world-card.kind-mini::before,
+.world-shell.reference-showcase .reference-world-card.kind-mini::after {
+  display: none !important;
+  content: none !important;
 }
 
 .world-shell.reference-showcase .reference-world-card .world-card-title {
@@ -5884,21 +6162,17 @@ transition-duration: 40ms;
   outline: none !important;
   border-color: transparent !important;
   transform:
-    translate(-50%, calc(-50% - 10px))
-    translateZ(var(--world-card-hover-depth, 90px))
+    translate3d(-50%, calc(-50% - 10px), var(--world-card-hover-depth, 90px))
     rotate(var(--world-card-rotation, 0deg))
     scale(var(--world-card-hover-scale, 1.28)) !important;
-  box-shadow:
-    rgba(17, 17, 26, 0.22) 0px 24px 60px,
-    0 44px 130px rgb(0 0 0 / 80%),
-    0 0 88px color-mix(in srgb, var(--world-card-accent, var(--accent)) 45%, transparent),
-    inset 0 1px 0 rgb(255 255 255 / 14%);
 }
 
 .world-shell.reference-showcase .world-instructions {
-right: max(var(--page-x), 34px);
-color: rgb(247 241 232 / 68%);
-text-shadow: 0 2px 18px rgb(0 0 0 / 70%);
+  right: max(var(--page-x), 28px);
+  color: rgb(247 241 232 / 60%);
+  font-size: 9.5px;
+  letter-spacing: 0.04em;
+  text-shadow: 0 2px 18px rgb(0 0 0 / 70%);
 }
 
 [data-theme="light"] .world-shell.reference-showcase {
@@ -5961,12 +6235,19 @@ text-shadow: 0 2px 18px rgb(0 0 0 / 70%);
   border: none !important;
   outline: none !important;
   border-radius: 0;
+  contain: strict !important;
   background: #ffffff !important;
   background-image: none !important;
   box-shadow:
     0 2px 6px rgba(0, 0, 0, 0.03),
     0 8px 20px -4px rgba(15, 23, 42, 0.08),
-    0 0 0 1px rgba(0, 0, 0, 0.04);
+    0 0 0 1px rgba(0, 0, 0, 0.04) !important;
+}
+
+[data-theme="light"] .world-shell.reference-showcase .reference-world-card.kind-mini::before,
+[data-theme="light"] .world-shell.reference-showcase .reference-world-card.kind-mini::after {
+  display: none !important;
+  content: none !important;
 }
 
 [data-theme="light"] .world-shell.reference-showcase .reference-world-card.dimmed {
@@ -6009,12 +6290,17 @@ text-shadow: 0 2px 18px rgb(0 0 0 / 70%);
 [data-theme="light"] .site-header {
   background: rgba(255, 255, 255, 0.92);
   backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
   border-bottom: 1px solid rgba(0, 0, 0, 0.04);
 }
 
 [data-theme="light"] body:has(.home-main) .site-header {
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.95), rgba(255, 255, 255, 0.6) 54%, transparent);
-  border-bottom: none;
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
 }
 
 [data-theme="light"] body:has(.home-main) .wordmark,

@@ -46,6 +46,7 @@ export function ProductCard({ product, compact = false, selected = false, onClic
     <Link
       href={`/products/${product.slug}`}
       className={className}
+      data-flip-id={product.id}
       onClick={onClick}
       aria-label={`View details for ${product.title}, ${product.category}, ${product.stock}`}
     >

@@ -69,80 +69,80 @@ const dragThreshold = 7;
 
 const desktopReferenceSlots: ReferenceShowcaseSlot[] = [
   // Center Column (Hero, Top, Bottom)
-  slot(0, 0, 200, 235, 100, "hero", { floatY: -8, delay: -0.7 }),
-  slot(0, -250, 156, 165, 62, "feature", { floatY: -7, delay: -2.8 }),
-  slot(0, 250, 156, 165, 54, "feature", { floatY: -7, delay: -4.1 }),
+  slot(0, 0, 224, 264, 100, "hero", { floatY: -8 }),
+  slot(0, -270, 172, 186, 62, "feature", { floatY: -7 }),
+  slot(0, 270, 172, 186, 54, "feature", { floatY: -7 }),
 
-  // Left Side (Tier 1, Tier 2, Tier 3 - Matching Original Placement)
-  slot(-225, -170, 156, 165, 58, "feature", { floatY: -7, delay: -1.9 }),
-  slot(-225, 80, 156, 165, 59, "feature", { floatY: -7, delay: -3.0 }),
-  slot(-225, 295, 146, 155, 35, "medium", { opacity: 0.94, floatY: -5, delay: -1.6 }),
-  slot(-440, -160, 146, 155, 35, "medium", { opacity: 0.94, floatY: -5, delay: -2.3 }),
-  slot(-440, 60, 156, 165, 50, "feature", { floatX: -3, floatY: -6, delay: -3.3 }),
-  slot(-440, 275, 146, 155, 33, "medium", { opacity: 0.94, floatY: -5, delay: -2.7 }),
-  slot(-630, -25, 142, 150, 34, "medium", { opacity: 0.94, floatY: -1.5 }),
+  // Left Side (Tier 1, Tier 2, Tier 3 - Matching Placement)
+  slot(-245, -185, 172, 186, 58, "feature", { floatY: -7 }),
+  slot(-245, 90, 172, 186, 59, "feature", { floatY: -7 }),
+  slot(-245, 320, 160, 174, 35, "medium", { opacity: 0.94, floatY: -5 }),
+  slot(-475, -175, 160, 174, 35, "medium", { opacity: 0.94, floatY: -5 }),
+  slot(-475, 68, 172, 186, 50, "feature", { floatY: -6 }),
+  slot(-475, 300, 160, 174, 33, "medium", { opacity: 0.94, floatY: -5 }),
+  slot(-685, -28, 154, 168, 34, "medium", { opacity: 0.94, floatY: -5 }),
 
-  // Right Side (Tier 1, Tier 2, Tier 3 - Matching Original Placement)
-  slot(225, -170, 156, 165, 58, "feature", { floatY: -7, delay: -1.7 }),
-  slot(225, 80, 156, 165, 59, "feature", { floatY: -7, delay: -3.2 }),
-  slot(225, 295, 146, 155, 35, "medium", { opacity: 0.94, floatY: -1.4 }),
-  slot(440, -160, 146, 155, 35, "medium", { opacity: 0.94, floatY: -2.4 }),
-  slot(440, 60, 156, 165, 50, "feature", { floatX: 3, floatY: -6, delay: -3.4 }),
-  slot(440, 275, 146, 155, 33, "medium", { opacity: 0.94, floatY: -2.9 }),
-  slot(630, -25, 142, 150, 34, "medium", { opacity: 0.94, floatY: -1.8 }),
+  // Right Side (Tier 1, Tier 2, Tier 3 - Matching Placement)
+  slot(245, -185, 172, 186, 58, "feature", { floatY: -7 }),
+  slot(245, 90, 172, 186, 59, "feature", { floatY: -7 }),
+  slot(245, 320, 160, 174, 35, "medium", { opacity: 0.94, floatY: -5 }),
+  slot(475, -175, 160, 174, 35, "medium", { opacity: 0.94, floatY: -5 }),
+  slot(475, 68, 172, 186, 50, "feature", { floatY: -6 }),
+  slot(475, 300, 160, 174, 33, "medium", { opacity: 0.94, floatY: -5 }),
+  slot(685, -28, 154, 168, 34, "medium", { opacity: 0.94, floatY: -5 }),
 
-  // Surrounding Mini Floating Badges (56x56) in clear interstitial channels
-  slot(-116, -155, 56, 56, 28, "mini", { opacity: 0.94, delay: -2 }),
-  slot(116, -155, 56, 56, 28, "mini", { opacity: 0.94, delay: -2.4 }),
-  slot(-116, 155, 56, 56, 28, "mini", { opacity: 0.94, delay: -1.9 }),
-  slot(116, 155, 56, 56, 28, "mini", { opacity: 0.94, delay: -3.5 }),
-  slot(-225, -45, 56, 56, 26, "mini", { opacity: 0.92, delay: -2.3 }),
-  slot(225, -45, 56, 56, 26, "mini", { opacity: 0.92, delay: -3.1 }),
-  slot(-335, -60, 56, 56, 26, "mini", { opacity: 0.92, delay: -1.3 }),
-  slot(335, -60, 56, 56, 26, "mini", { opacity: 0.92, delay: -2.8 }),
-  slot(-335, 195, 56, 56, 24, "mini", { opacity: 0.9, delay: -4 }),
-  slot(335, 195, 56, 56, 24, "mini", { opacity: 0.9, delay: -2.2 }),
-  slot(-335, -295, 56, 56, 24, "mini", { opacity: 0.9, delay: -3.2 }),
-  slot(335, -295, 56, 56, 24, "mini", { opacity: 0.9, delay: -1.7 }),
-  slot(-545, -165, 56, 56, 22, "mini", { opacity: 0.88, delay: -2.7 }),
-  slot(545, -165, 56, 56, 22, "mini", { opacity: 0.88, delay: -3.4 }),
-  slot(-545, 185, 56, 56, 22, "mini", { opacity: 0.88, delay: -1.5 }),
-  slot(545, 185, 56, 56, 22, "mini", { opacity: 0.88, delay: -2.9 }),
-  slot(-630, -145, 56, 56, 20, "mini", { opacity: 0.86, delay: -3.2 }),
-  slot(630, -145, 56, 56, 20, "mini", { opacity: 0.86, delay: -2.7 }),
-  slot(-630, 95, 56, 56, 20, "mini", { opacity: 0.86, delay: -2.1 }),
-  slot(630, 95, 56, 56, 20, "mini", { opacity: 0.86, delay: -3.6 }),
-  slot(-735, -25, 56, 56, 18, "mini", { opacity: 0.84, delay: -1.5 }),
-  slot(735, -25, 56, 56, 18, "mini", { opacity: 0.84, delay: -2.5 })
+  // Surrounding Mini Floating Badges (62x62) in clear interstitial channels
+  slot(-125, -165, 62, 62, 28, "mini", { opacity: 0.94 }),
+  slot(125, -165, 62, 62, 28, "mini", { opacity: 0.94 }),
+  slot(-125, 165, 62, 62, 28, "mini", { opacity: 0.94 }),
+  slot(125, 165, 62, 62, 28, "mini", { opacity: 0.94 }),
+  slot(-245, -48, 62, 62, 26, "mini", { opacity: 0.92 }),
+  slot(245, -48, 62, 62, 26, "mini", { opacity: 0.92 }),
+  slot(-360, -65, 62, 62, 26, "mini", { opacity: 0.92 }),
+  slot(360, -65, 62, 62, 26, "mini", { opacity: 0.92 }),
+  slot(-360, 210, 62, 62, 24, "mini", { opacity: 0.9 }),
+  slot(360, 210, 62, 62, 24, "mini", { opacity: 0.9 }),
+  slot(-360, -315, 62, 62, 24, "mini", { opacity: 0.9 }),
+  slot(360, -315, 62, 62, 24, "mini", { opacity: 0.9 }),
+  slot(-585, -180, 62, 62, 22, "mini", { opacity: 0.88 }),
+  slot(585, -180, 62, 62, 22, "mini", { opacity: 0.88 }),
+  slot(-585, 200, 62, 62, 22, "mini", { opacity: 0.88 }),
+  slot(585, 200, 62, 62, 22, "mini", { opacity: 0.88 }),
+  slot(-685, -155, 62, 62, 20, "mini", { opacity: 0.86 }),
+  slot(685, -155, 62, 62, 20, "mini", { opacity: 0.86 }),
+  slot(-685, 105, 62, 62, 20, "mini", { opacity: 0.86 }),
+  slot(685, 105, 62, 62, 20, "mini", { opacity: 0.86 }),
+  slot(-795, -28, 62, 62, 18, "mini", { opacity: 0.84 }),
+  slot(795, -28, 62, 62, 18, "mini", { opacity: 0.84 })
 ];
 
 const mobileReferenceSlots: ReferenceShowcaseSlot[] = [
   // Center Column (3 cards)
-  slot(0, 0, 175, 215, 80, "hero", { floatY: -7, delay: -0.7 }),
-  slot(0, -255, 146, 155, 52, "feature", { floatY: -6, delay: -2.8 }),
-  slot(0, 255, 146, 155, 48, "feature", { floatY: -6, delay: -4.1 }),
+  slot(0, 0, 192, 236, 80, "hero", { floatY: -7 }),
+  slot(0, -280, 158, 172, 52, "feature", { floatY: -6 }),
+  slot(0, 280, 158, 172, 48, "feature", { floatY: -6 }),
 
-  // Left Column (X = -180, 3 cards)
-  slot(-180, -180, 136, 145, 46, "medium", { floatY: -5, delay: -2.0 }),
-  slot(-180, 80, 136, 145, 47, "medium", { floatY: -6, delay: -3.0 }),
-  slot(-180, 295, 130, 140, 38, "medium", { opacity: 0.94, floatY: -5, delay: -1.6 }),
+  // Left Column (X = -195, 3 cards)
+  slot(-195, -195, 148, 160, 46, "medium", { floatY: -5 }),
+  slot(-195, 90, 148, 160, 47, "medium", { floatY: -6 }),
+  slot(-195, 320, 142, 154, 38, "medium", { opacity: 0.94, floatY: -5 }),
 
-  // Right Column (X = 180, 3 cards)
-  slot(180, -180, 136, 145, 46, "medium", { floatY: -5, delay: -1.7 }),
-  slot(180, 80, 136, 145, 47, "medium", { floatY: -6, delay: -3.2 }),
-  slot(180, 295, 130, 140, 38, "medium", { opacity: 0.94, floatY: -5, delay: -1.4 }),
+  // Right Column (X = 195, 3 cards)
+  slot(195, -195, 148, 160, 46, "medium", { floatY: -5 }),
+  slot(195, 90, 148, 160, 47, "medium", { floatY: -6 }),
+  slot(195, 320, 142, 154, 38, "medium", { opacity: 0.94, floatY: -5 }),
 
-  // Mini Badges (52x52)
-  slot(-180, -50, 52, 52, 22, "mini", { opacity: 0.92, delay: -2.2 }),
-  slot(180, -50, 52, 52, 22, "mini", { opacity: 0.92, delay: -1.8 }),
-  slot(-180, 190, 52, 52, 20, "mini", { opacity: 0.9, delay: -2.5 }),
-  slot(180, 190, 52, 52, 20, "mini", { opacity: 0.9, delay: -3.1 }),
-  slot(-280, -180, 52, 52, 18, "mini", { opacity: 0.88, delay: -2.6 }),
-  slot(280, -180, 52, 52, 18, "mini", { opacity: 0.88, delay: -1.7 }),
-  slot(-280, 80, 52, 52, 18, "mini", { opacity: 0.88, delay: -3.4 }),
-  slot(280, 80, 52, 52, 18, "mini", { opacity: 0.88, delay: -2.7 }),
-  slot(0, -370, 52, 52, 16, "mini", { opacity: 0.86, delay: -1.5 }),
-  slot(0, 370, 52, 52, 16, "mini", { opacity: 0.86, delay: -1.5 })
+  // Mini Badges (56x56)
+  slot(-195, -55, 56, 56, 22, "mini", { opacity: 0.92 }),
+  slot(195, -55, 56, 56, 22, "mini", { opacity: 0.92 }),
+  slot(-195, 205, 56, 56, 20, "mini", { opacity: 0.9 }),
+  slot(195, 205, 56, 56, 20, "mini", { opacity: 0.9 }),
+  slot(-300, -195, 56, 56, 18, "mini", { opacity: 0.88 }),
+  slot(300, -195, 56, 56, 18, "mini", { opacity: 0.88 }),
+  slot(-300, 90, 56, 56, 18, "mini", { opacity: 0.88 }),
+  slot(300, 90, 56, 56, 18, "mini", { opacity: 0.88 }),
+  slot(0, -400, 56, 56, 16, "mini", { opacity: 0.86 }),
+  slot(0, 400, 56, 56, 16, "mini", { opacity: 0.86 })
 ];
 
 export function ProductWorld({ products }: ProductWorldProps) {
@@ -150,8 +150,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const { t, formatNumber, tCategory } = useLanguage();
   const prioritizedProducts = useMemo(() => prioritizeWorldProducts(products), [products]);
   const [mounted, setMounted] = useState(false);
-  const [worldReady, setWorldReady] = useState(false);
-  const [loadingProgress, setLoadingProgress] = useState(18);
+  const [showUI, setShowUI] = useState(false);
   const [viewportSize, setViewportSize] = useState<ViewportSize>({ width: 1440, height: 1120 });
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
 const [worldPaused, setWorldPaused] = useState(false);
@@ -285,18 +284,8 @@ useEffect(() => {
   updateViewport();
   window.addEventListener("resize", updateViewport);
 
-  const progressTimer = window.setInterval(() => {
-    setLoadingProgress((progress) => Math.min(96, progress + 13));
-  }, 90);
-  const readyTimer = window.setTimeout(() => {
-    setLoadingProgress(100);
-    setWorldReady(true);
-  }, 680);
-
   return () => {
     window.removeEventListener("resize", updateViewport);
-    window.clearInterval(progressTimer);
-    window.clearTimeout(readyTimer);
     cancelHoverEnter();
     cancelHoverHide();
   };
@@ -380,10 +369,15 @@ event.currentTarget.setPointerCapture(event.pointerId);
       setHoveredSlug(null);
     }
 
+    // 180-degree total horizontal sweep: [-65deg, +65deg] with smooth luxury resistance
+    // Vertical tilt: [-35deg, +35deg]
+    const nextRotateY = clamp(pointer.startRotateY + dragX * 0.32, -65, 65);
+    const nextRotateX = clamp(pointer.startRotateX - dragY * 0.24, -35, 35);
+
     setWorldView((current) => ({
       ...current,
-      rotateX: clamp(pointer.startRotateX - dragY * 0.035, -8, 8),
-      rotateY: clamp(pointer.startRotateY + dragX * 0.04, -14, 14),
+      rotateX: nextRotateX,
+      rotateY: nextRotateY,
       dragging: isDragging
     }));
   }, [cancelHoverHide]);
@@ -409,35 +403,48 @@ event.currentTarget.setPointerCapture(event.pointerId);
       return;
     }
 
-    setWorldView((current) => ({ ...current, parallaxX: 0, parallaxY: 0, rotateX: 0, rotateY: 0 }));
+    setWorldView((current) => ({ ...current, parallaxX: 0, parallaxY: 0 }));
   }, []);
 
-const beginWorldPointer = useCallback(
-(event: ReactPointerEvent<HTMLElement>) => {
-if (event.target !== event.currentTarget) {
-return;
-}
+  const beginWorldPointer = useCallback(
+    (event: ReactPointerEvent<HTMLElement>) => {
+      beginPointer(event);
+    },
+    [beginPointer]
+  );
 
-beginPointer(event);
-},
-[beginPointer]
-);
-
-const openProduct = useCallback(
-  (product: Product) => {
-    if (pointerRef.current.distance > dragThreshold) {
-      return;
-    }
-
-    router.push(`/products/${product.slug}`);
-  },
-  [router]
-);
+  const openProduct = useCallback(
+    (product: Product) => {
+      if (pointerRef.current.distance > dragThreshold) {
+        return;
+      }
+      router.push(`/products/${product.slug}`);
+    },
+    [router]
+  );
 
   const reloadNextProductSet = useCallback(() => {
     cancelHoverHide();
     setHoveredSlug(null);
     setProductSetIndex((index) => (index + 1) % productSetCount);
+    setWorldView({
+      rotateX: 0,
+      rotateY: 0,
+      zoom: 1,
+      parallaxX: 0,
+      parallaxY: 0,
+      dragging: false
+    });
+    pointerRef.current = {
+      active: false,
+      x: 0,
+      y: 0,
+      startX: 0,
+      startY: 0,
+      distance: 0,
+      startRotateX: 0,
+      startRotateY: 0
+    };
   }, [cancelHoverHide, productSetCount]);
 
   useEffect(() => {
@@ -448,8 +455,27 @@ const openProduct = useCallback(
     return () => window.removeEventListener("xtream-utd:world-reload", handleRemoteReload);
   }, [reloadNextProductSet]);
 
-if (!mounted || !worldReady) {
-return <ProductWorldLoading progress={loadingProgress} products={prioritizedProducts.slice(0, 4)} />;
+  // After mount, trigger UI chrome fade-in smoothly in the last moment of the fly-in
+  useEffect(() => {
+    if (!mounted) {
+      return;
+    }
+
+    // Core hero and feature cards land between 1200ms and 1580ms.
+    // Floating mini badges cruise in through 2100ms.
+    // Reveal UI chrome at 1500ms with a 600ms smooth fade so everything completes together seamlessly.
+    const uiRevealTimeMs = 1500;
+
+    const timer = window.setTimeout(() => {
+      setShowUI(true);
+      window.dispatchEvent(new CustomEvent("xtream-utd:world-ui-ready"));
+    }, uiRevealTimeMs);
+
+    return () => window.clearTimeout(timer);
+  }, [mounted]);
+
+if (!mounted) {
+return <section className="world-shell reference-showcase" aria-label="Loading product showcase" />;
 }
 
 const hoveredProduct = hoveredSlug ? worldProducts.find((product) => product.slug === hoveredSlug) ?? null : null;
@@ -461,7 +487,8 @@ className={[
 "reference-showcase",
 hoveredSlug ? "is-hovering" : "",
 worldPaused ? "is-paused" : "",
-worldView.dragging ? "is-dragging" : ""
+worldView.dragging ? "is-dragging" : "",
+showUI ? "ui-ready" : "ui-hidden"
 ]
 .filter(Boolean)
 .join(" ")}
@@ -479,18 +506,21 @@ onWheel={handleWorldWheel}
 const slotForProduct = activeSlots[index] ?? activeSlots[activeSlots.length - 1] ?? desktopReferenceSlots[0];
 
 return (
-<ReferenceWorldProduct
-key={product.id}
-product={product}
-slot={slotForProduct}
-isDimmed={Boolean(hoveredSlug && hoveredSlug !== product.slug)}
-isHovered={hoveredSlug === product.slug}
-onPreviewEnter={handleCardPreviewEnter}
-onPreviewLeave={handleCardPreviewLeave}
-onPointerDown={beginPointer}
-onPointerEnd={endPointer}
-onOpen={openProduct}
-/>
+  <ReferenceWorldProduct
+    key={product.id}
+    product={product}
+    slot={slotForProduct}
+    flyInIndex={index}
+    isFlyingIn={!showUI}
+    isDimmed={Boolean(hoveredSlug && hoveredSlug !== product.slug)}
+    isHovered={hoveredSlug === product.slug}
+    onPreviewEnter={handleCardPreviewEnter}
+    onPreviewLeave={handleCardPreviewLeave}
+    onPointerDown={beginPointer}
+    onPointerMove={movePointer}
+    onPointerEnd={endPointer}
+    onOpen={openProduct}
+  />
 );
 })}
 </div>
@@ -558,11 +588,14 @@ onOpen={openProduct}
 type ReferenceWorldProductProps = {
   product: Product;
   slot: ReferenceShowcaseSlot;
+  flyInIndex: number;
+  isFlyingIn: boolean;
   isDimmed: boolean;
   isHovered: boolean;
   onPreviewEnter: (slug: string) => void;
   onPreviewLeave: () => void;
   onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
+  onPointerMove: (event: ReactPointerEvent<HTMLElement>) => void;
   onPointerEnd: (event: ReactPointerEvent<HTMLElement>) => void;
   onOpen: (product: Product) => void;
 };
@@ -570,15 +603,23 @@ type ReferenceWorldProductProps = {
 function ReferenceWorldProduct({
   product,
   slot: cardSlot,
+  flyInIndex,
+  isFlyingIn,
   isDimmed,
   isHovered,
   onPreviewEnter,
   onPreviewLeave,
   onPointerDown,
+  onPointerMove,
   onPointerEnd,
   onOpen
 }: ReferenceWorldProductProps) {
   const { tCategory } = useLanguage();
+  const flyOrigin = getFlyInOrigin(cardSlot, flyInIndex);
+  const flyStyle = {
+    ...getReferenceCardStyle(cardSlot, product.accent, flyInIndex),
+    "--fly-in-delay": `${flyInIndex * 24}ms`
+  } as React.CSSProperties & Record<`--${string}`, string>;
 
   return (
     <button
@@ -587,18 +628,21 @@ function ReferenceWorldProduct({
         "reference-world-card",
         `kind-${cardSlot.kind}`,
         getLegacySizeClass(cardSlot.kind),
+        isFlyingIn ? "is-flying-in" : "",
         isDimmed ? "dimmed" : "",
         isHovered ? "hovered" : ""
       ]
         .filter(Boolean)
         .join(" ")}
-      style={getReferenceCardStyle(cardSlot, product.accent)}
+      data-fly-in-origin={flyOrigin}
+      style={flyStyle}
       type="button"
       onPointerEnter={() => onPreviewEnter(product.slug)}
       onPointerLeave={onPreviewLeave}
       onFocus={() => onPreviewEnter(product.slug)}
       onBlur={onPreviewLeave}
       onPointerDown={onPointerDown}
+      onPointerMove={onPointerMove}
       onPointerUp={onPointerEnd}
       onPointerCancel={onPointerEnd}
       onClick={() => onOpen(product)}
@@ -620,27 +664,8 @@ function ReferenceWorldProduct({
   );
 }
 
-function ProductWorldLoading({ progress, products }: { progress: number; products: Product[] }) {
-return (
-<section className="world-loading" aria-label="Preparing product showcase">
-<div className="world-loading-panel">
-<p className="section-kicker">Preparing product showcase</p>
-<h1 className="page-title">{progress}%</h1>
-<div className="loading-product-strip" aria-hidden="true">
-{products.map((product, index) => (
-<div className={`loading-product-card ${index < Math.ceil(progress / 25) ? "is-loaded" : ""}`} key={product.id}>
-<ProductArtwork product={product} compact />
-</div>
-))}
-</div>
-<div className="loading-bar" aria-hidden="true">
-<span style={{ width: `${progress}%` }} />
-</div>
-<p className="page-lede">Loading product previews and interactions</p>
-</div>
-</section>
-);
-}
+
+
 
 const canonicalHomeSlugs = [
   // Center Column:
@@ -803,14 +828,15 @@ maxY: Math.max(bounds.maxY, currentSlot.y + halfHeight)
 
 function getReferenceCardStyle(
   cardSlot: ReferenceShowcaseSlot,
-  accent: string
+  accent: string,
+  index = 0
 ): CSSProperties & Record<`--${string}`, string> {
   const slotScale = cardSlot.scale ?? 1;
   const hoverScale = slotScale + (cardSlot.kind === "hero" ? 0.22 : cardSlot.kind === "mini" ? 0.35 : 0.28);
-  const duration = cardSlot.duration ?? 7.5 + Math.abs(cardSlot.x % 5) * 0.35;
-  const floatX = cardSlot.floatX ?? (cardSlot.kind === "mini" ? 3 : 5);
-  const floatY = cardSlot.floatY ?? (cardSlot.kind === "mini" ? -5 : -8);
-  const floatRotate = cardSlot.floatRotate ?? (cardSlot.kind === "mini" ? 0.45 : 0.28);
+  const duration = cardSlot.duration ?? Number((6.8 + ((Math.abs(cardSlot.x * 3 + cardSlot.y * 7) + index * 11) % 35) * 0.08).toFixed(2));
+  const floatX = cardSlot.floatX ?? 0;
+  const floatY = cardSlot.floatY ?? (cardSlot.kind === "mini" ? -5 : -7);
+  const floatRotate = cardSlot.floatRotate ?? (cardSlot.kind === "mini" ? 0.35 : 0.22);
   const cardDepth = cardSlot.kind === "hero" ? 72 : cardSlot.kind === "feature" ? 32 : cardSlot.kind === "medium" ? 10 : -26;
 
   return {
@@ -834,7 +860,7 @@ function getReferenceCardStyle(
     "--world-card-float-y": `${floatY}px`,
     "--world-card-float-rotate": `${floatRotate}deg`,
     "--world-card-float-duration": `${duration}s`,
-    "--world-card-float-delay": `${cardSlot.delay ?? 0}s`
+    "--world-card-float-delay": "0s"
   };
 }
 
@@ -864,4 +890,35 @@ return { x, y, width, height, zIndex, kind, ...options };
 
 function clamp(value: number, min: number, max: number): number {
 return Math.min(max, Math.max(min, value));
+}
+
+function getFlyInOrigin(slot: ReferenceShowcaseSlot, index: number): "top" | "bottom" | "left" | "right" {
+  // Center column cards: alternate top and bottom
+  if (Math.abs(slot.x) < 50) {
+    if (slot.y < -50) return "top";
+    if (slot.y > 50) return "bottom";
+    return index % 2 === 0 ? "top" : "bottom";
+  }
+
+  // Strong top or bottom cards
+  if (Math.abs(slot.y) >= 220 && Math.abs(slot.x) <= 350) {
+    return slot.y < 0 ? "top" : "bottom";
+  }
+
+  // Balanced 4-directional quadrant distribution
+  const isHoriz = (Math.abs(slot.x) + index * 3) % 2 === 0;
+
+  if (slot.x >= 0) {
+    if (slot.y <= 0) {
+      return isHoriz ? "right" : "top";
+    } else {
+      return isHoriz ? "right" : "bottom";
+    }
+  } else {
+    if (slot.y <= 0) {
+      return isHoriz ? "left" : "top";
+    } else {
+      return isHoriz ? "left" : "bottom";
+    }
+  }
 }
