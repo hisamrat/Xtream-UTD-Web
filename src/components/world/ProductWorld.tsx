@@ -282,7 +282,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
   const handleCardPreviewEnter = useCallback(
     (slug: string) => {
-      if (worldView.dragging || cameraSlotTargetRef.current > 0.05) {
+      if (worldView.dragging || Math.abs(cameraSlotTargetRef.current) > 0.05) {
         return;
       }
       showProductPreviewWithDelay(slug, 140);
@@ -298,12 +298,12 @@ export function ProductWorld({ products }: ProductWorldProps) {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closePreview();
-      } else if (event.key === "ArrowDown" || event.key === "PageDown") {
+      } else if (event.key === "ArrowDown" || event.key === "PageDown" || event.key === "ArrowRight") {
         event.preventDefault();
         cameraSlotTargetRef.current += 1.0;
-      } else if (event.key === "ArrowUp" || event.key === "PageUp") {
+      } else if (event.key === "ArrowUp" || event.key === "PageUp" || event.key === "ArrowLeft") {
         event.preventDefault();
-        cameraSlotTargetRef.current = Math.max(0, cameraSlotTargetRef.current - 1.0);
+        cameraSlotTargetRef.current -= 1.0;
       } else if (event.key === "Home") {
         event.preventDefault();
         cameraSlotTargetRef.current = 0;
@@ -415,9 +415,11 @@ export function ProductWorld({ products }: ProductWorldProps) {
         setHoveredSlug(null);
       }
 
-      // If user is already in corridor mode or performs a strong vertical drag, drive cameraSlot
-      if (cameraSlotTargetRef.current > 0.05) {
-        cameraSlotTargetRef.current = Math.max(0, cameraSlotTargetRef.current + deltaY * 0.0035);
+      // If user is already in corridor mode or performs a strong drag, drive cameraSlot
+      if (Math.abs(cameraSlotTargetRef.current) > 0.03 || Math.abs(cameraSlot) > 0.03) {
+        const deltaX = pointer.x - event.clientX;
+        const scrollDelta = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY;
+        cameraSlotTargetRef.current += scrollDelta * 0.0035;
         return;
       }
 
@@ -433,7 +435,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
         dragging: isDragging
       }));
     },
-    [cancelHoverHide]
+    [cancelHoverHide, cameraSlot]
   );
 
   const endPointer = useCallback((event: ReactPointerEvent<HTMLElement>) => {
@@ -452,7 +454,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
       setHoveredSlug(null);
 
       const delta = event.deltaY * 0.0022;
-      cameraSlotTargetRef.current = Math.max(0, cameraSlotTargetRef.current + delta);
+      cameraSlotTargetRef.current += delta;
     },
     [cancelHoverEnter, cancelHoverHide]
   );
@@ -474,7 +476,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
   const openProduct = useCallback(
     (product: Product) => {
-      if (cameraSlotTargetRef.current < 0.05 && pointerRef.current.distance > dragThreshold) {
+      if (Math.abs(cameraSlotTargetRef.current) < 0.05 && pointerRef.current.distance > dragThreshold) {
         return;
       }
       router.push(`/products/${product.slug}`);
@@ -485,9 +487,6 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const reloadNextProductSet = useCallback(() => {
     cancelHoverHide();
     setHoveredSlug(null);
-    cameraSlotTargetRef.current = 0;
-    setCameraSlot(0);
-    setProductSetIndex((index) => (index + 1) % productSetCount);
     setWorldView({
       rotateX: 0,
       rotateY: 0,
@@ -506,7 +505,18 @@ export function ProductWorld({ products }: ProductWorldProps) {
       startRotateX: 0,
       startRotateY: 0
     };
-  }, [cancelHoverHide, productSetCount]);
+
+    if (Math.abs(cameraSlotTargetRef.current) > 0.03 || Math.abs(cameraSlot) > 0.03) {
+      // Return to showcase view for the current page set
+      cameraSlotTargetRef.current = 0;
+      setCameraSlot(0);
+    } else {
+      // In home showcase mode: cycle to next page set
+      setProductSetIndex((prev) => (prev + 1) % productSetCount);
+      cameraSlotTargetRef.current = 0;
+      setCameraSlot(0);
+    }
+  }, [cancelHoverHide, cameraSlot, productSetCount]);
 
   useEffect(() => {
     const handleRemoteReload = () => {
@@ -539,36 +549,61 @@ export function ProductWorld({ products }: ProductWorldProps) {
   // -------------------------------------------------------------
   // Transition Blending between 3D Showcase World and Depth Corridor
   // -------------------------------------------------------------
-  const isInShowcase = cameraSlot < 0.03 && cameraSlotTargetRef.current < 0.03;
-  const showcaseOpacity = Math.max(0, 1 - cameraSlot / 0.45);
-  const corridorOpacity = Math.min(1, Math.max(0, (cameraSlot - 0.03) / 0.35));
+  const absCameraSlot = Math.abs(cameraSlot);
+  const absTargetSlot = Math.abs(cameraSlotTargetRef.current);
+  const isInShowcase = absCameraSlot < 0.02 && absTargetSlot < 0.02;
+  const showcaseOpacity = isInShowcase ? 1 : Math.max(0, 1 - absCameraSlot / 0.08);
+  const corridorOpacity = isInShowcase ? 0 : Math.min(1, absCameraSlot / 0.06);
 
   // -------------------------------------------------------------
-  // Strict 2-Plate Active Render Window for Depth Corridor
+  // Visible Render Window for Multi-Plate Depth Corridor
+  // Scoped strictly to current active page set products
   // -------------------------------------------------------------
-  const total = orderedProducts.length;
+  const corridorProducts = worldProducts.length > 0 ? worldProducts : orderedProducts;
+  const total = corridorProducts.length;
   const baseIndex = Math.floor(cameraSlot);
   const fraction = cameraSlot - baseIndex;
-  const focalIndex = ((baseIndex % total) + total) % total;
-  const approachingIndex = (((baseIndex + 1) % total) + total) % total;
 
-  const focalProduct = orderedProducts[focalIndex];
-  const approachingProduct = orderedProducts[approachingIndex];
+  // Window of 5 relative slots [-2, -1, 0, 1, 2] around the active position
+  const corridorSlots = [-2, -1, 0, 1, 2].map((k) => {
+    const itemIndex = (((baseIndex + k) % total) + total) % total;
+    const product = corridorProducts[itemIndex];
+    const pos = k - fraction; // Continuous position relative to center (pos = 0 is exact center)
+    const absPos = Math.abs(pos);
 
-  // Staggered dual-plate layout calculations
-  const focalStyle: CSSProperties = {
-    transform: `translate3d(${-fraction * 34}%, 0, ${-fraction * 180}px) scale(${1 - fraction * 0.16})`,
-    opacity: 1 - fraction * 0.85,
-    zIndex: 10,
-    pointerEvents: fraction < 0.5 ? "auto" : "none"
-  };
+    // Dynamic overlapping transform & depth calculations
+    // Center card overlaps left & right cards (shifted ~65% so ~35% overlaps underneath center)
+    const xPercent = pos * 65;
+    const zOffsetPx = -absPos * 30;
+    const scale = Math.max(0.78, 1 - absPos * 0.08);
 
-  const approachingStyle: CSSProperties = {
-    transform: `translate3d(${(1 - fraction) * 34}%, 0, ${(fraction - 1) * 220}px) scale(${0.82 + fraction * 0.18})`,
-    opacity: 0.25 + fraction * 0.75,
-    zIndex: 20,
-    pointerEvents: fraction >= 0.5 ? "auto" : "none"
-  };
+    let opacity = 0;
+    if (absPos <= 1) {
+      opacity = 1 - absPos * 0.25; // pos 0 -> 1.0, pos ±1 -> 0.75
+    } else if (absPos <= 2) {
+      opacity = Math.max(0, 0.75 * (2 - absPos)); // pos ±1 -> 0.75, pos ±2 -> 0.0
+    }
+
+    // Highest z-index is always at center (pos = 0 has z-index 50, pos = ±1 has z-index 25)
+    // This ensures the center card is always in front and overlaps left & right cards
+    const zIndex = Math.round(50 - absPos * 25);
+    const pointerEvents = absPos < 1.2 ? "auto" : "none";
+
+    const style: CSSProperties = {
+      transform: `translate3d(${xPercent}%, 0, ${zOffsetPx}px) scale(${scale})`,
+      opacity,
+      zIndex,
+      pointerEvents: pointerEvents as CSSProperties["pointerEvents"]
+    };
+
+    return {
+      product,
+      k,
+      pos,
+      style,
+      slotKind: (k === 0 ? "focal" : "approaching") as "focal" | "approaching"
+    };
+  });
 
   const hoveredProduct = hoveredSlug ? worldProducts.find((product) => product.slug === hoveredSlug) ?? null : null;
 
@@ -597,7 +632,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
       {/* ------------------------------------------------------------- */}
       {/* Layer 1: Resting 3D Showcase World (from 18edb0a)            */}
       {/* ------------------------------------------------------------- */}
-      {showcaseOpacity > 0 ? (
+      {showcaseOpacity > 0 && isInShowcase ? (
         <div
           className="world-stage"
           style={{
@@ -632,7 +667,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
       ) : null}
 
       {/* ------------------------------------------------------------- */}
-      {/* Layer 2: On-Scroll Staggered Dual-Plate Depth Corridor        */}
+      {/* Layer 2: On-Scroll Multi-Plate Depth Corridor (Center + Left + Right) */}
       {/* ------------------------------------------------------------- */}
       {corridorOpacity > 0 && (
         <div
@@ -648,28 +683,22 @@ export function ProductWorld({ products }: ProductWorldProps) {
           </div>
 
           <div className="depth-gallery-plates-container">
-            {focalProduct && (
+            {corridorSlots.map(({ product, k, style, pos, slotKind }) => (
               <DepthPlate
-                product={focalProduct}
-                slotKind="focal"
-                style={focalStyle}
-                language={language}
+                key={`${product.id}-${k}`}
+                product={product}
+                slotKind={slotKind}
+                style={style}
                 t={t}
-                tCategory={tCategory}
-                onSelect={openProduct}
+                onSelect={(prod) => {
+                  if (Math.abs(pos) < 0.45) {
+                    openProduct(prod);
+                  } else {
+                    cameraSlotTargetRef.current = Math.round(cameraSlotTargetRef.current + pos);
+                  }
+                }}
               />
-            )}
-            {approachingProduct && (
-              <DepthPlate
-                product={approachingProduct}
-                slotKind="approaching"
-                style={approachingStyle}
-                language={language}
-                t={t}
-                tCategory={tCategory}
-                onSelect={openProduct}
-              />
-            )}
+            ))}
           </div>
         </div>
       )}
@@ -734,28 +763,17 @@ export function ProductWorld({ products }: ProductWorldProps) {
       ) : null}
 
       {/* ------------------------------------------------------------- */}
-      {/* Product Sets / Corridor Progress Counter                     */}
+      {/* Product Sets Counter (Hidden in Depth Corridor)               */}
       {/* ------------------------------------------------------------- */}
-      <div className="world-set-controls" aria-label="Home page product sets">
-        <span className="world-set-count">
-          {isInShowcase ? (
-            productSetCount > 1 ? (
-              <>
-                {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} /{" "}
-                {formatNumber(String(productSetCount).padStart(2, "0"))} {t("pages")} •{" "}
-                {formatNumber(products.length)} {t("products")}
-              </>
-            ) : (
-              <>{formatNumber(products.length)} {t("products")}</>
-            )
-          ) : (
-            <>
-              {formatNumber(String(focalIndex + 1).padStart(2, "0"))} /{" "}
-              {formatNumber(String(total).padStart(2, "0"))} {t("products")}
-            </>
-          )}
-        </span>
-      </div>
+      {isInShowcase && productSetCount > 1 ? (
+        <div className="world-set-controls" aria-label="Home page product sets">
+          <span className="world-set-count">
+            {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} /{" "}
+            {formatNumber(String(productSetCount).padStart(2, "0"))} {t("pages")} •{" "}
+            {formatNumber(products.length)} {t("products")}
+          </span>
+        </div>
+      ) : null}
 
       <div className="sr-only">
         {worldProducts.map((product) => (
@@ -857,9 +875,7 @@ type DepthPlateProps = {
   product: Product;
   slotKind: "focal" | "approaching";
   style: CSSProperties;
-  language: "en" | "bn";
   t: (key: TranslationKey) => string;
-  tCategory: (cat: string) => string;
   onSelect: (product: Product) => void;
 };
 
@@ -867,34 +883,12 @@ function DepthPlate({
   product,
   slotKind,
   style,
-  language,
   t,
-  tCategory,
   onSelect
 }: DepthPlateProps) {
   const formattedPrice = formatPrice(product.price);
   const formattedOldPrice = product.old_price ? formatPrice(product.old_price) : null;
   const hasDiscount = Boolean(product.old_price && product.old_price > product.price);
-
-  const stockLabel =
-    product.stock === "In stock"
-      ? language === "bn"
-        ? "স্টকে আছে"
-        : "In stock"
-      : product.stock === "Low stock"
-      ? language === "bn"
-        ? "সীমিত স্টক"
-        : "Low stock"
-      : language === "bn"
-      ? "স্টক শেষ"
-      : "Out of stock";
-
-  const stockDotClass =
-    product.stock === "In stock"
-      ? ""
-      : product.stock === "Low stock"
-      ? "stock-low"
-      : "stock-out";
 
   const plateStyle: CSSProperties = {
     ...style,
@@ -921,38 +915,28 @@ function DepthPlate({
         onSelect(product);
       }}
     >
-      {/* Top Bar: Category Badge & Stock Indicator */}
-      <div className="depth-plate-top">
-        <span className="depth-plate-badge">{tCategory(product.category)}</span>
-        <div className="depth-plate-stock">
-          <span className={`depth-plate-stock-dot ${stockDotClass}`} />
-          <span>{stockLabel}</span>
-        </div>
-      </div>
-
-      {/* Media Artwork */}
+      {/* Media Artwork - Fits fully in card body */}
       <div className="depth-plate-media">
         <div className="depth-plate-art-wrap">
           <ProductArtwork product={product} compact={false} />
         </div>
       </div>
 
-      {/* Bottom Info Bar */}
+      {/* Transparent Overlay Bottom Bar: Title & Price on Left, View Details on Right */}
       <div className="depth-plate-bottom">
-        <h2 className="depth-plate-title">{product.title}</h2>
-
-        <div className="depth-plate-footer">
+        <div className="depth-plate-info">
+          <h2 className="depth-plate-title">{product.title}</h2>
           <div className="depth-plate-price-box">
             <span className="depth-plate-price">{formattedPrice}</span>
             {hasDiscount && formattedOldPrice ? (
               <span className="depth-plate-old-price">{formattedOldPrice}</span>
             ) : null}
           </div>
+        </div>
 
-          <div className="depth-plate-cta" aria-hidden="true">
-            <span>{t("view_details")}</span>
-            <ArrowUpRight size={13} />
-          </div>
+        <div className="depth-plate-cta" aria-hidden="true">
+          <ArrowUpRight size={15} className="depth-cta-arrow" />
+          <span>{t("view_details")}</span>
         </div>
       </div>
     </button>
