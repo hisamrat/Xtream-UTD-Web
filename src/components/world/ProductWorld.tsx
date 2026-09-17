@@ -200,23 +200,18 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
   const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView, cameraSlot);
 
-  // RAF loop for smooth cameraSlot interpolation with inertia damping
+  // Smooth inertia loop with requestAnimationFrame
   useEffect(() => {
     let animationFrameId: number;
-    let lastTime = performance.now();
 
-    const loop = (time: number) => {
-      const dt = Math.min((time - lastTime) / 1000, 0.1);
-      lastTime = time;
-
+    const loop = () => {
       const target = cameraSlotTargetRef.current;
       setCameraSlot((current) => {
         const diff = target - current;
-        if (Math.abs(diff) < 0.0005) {
+        if (Math.abs(diff) < 0.0001) {
           return target;
         }
-        const factor = 1 - Math.pow(0.001, dt);
-        return current + diff * factor;
+        return current + diff * 0.08;
       });
 
       animationFrameId = requestAnimationFrame(loop);
@@ -378,6 +373,9 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
   const beginPointer = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
+      if (!showUI) {
+        return;
+      }
       pointerRef.current = {
         active: true,
         x: event.clientX,
@@ -391,11 +389,14 @@ export function ProductWorld({ products }: ProductWorldProps) {
       touchStartYRef.current = event.clientY;
       event.currentTarget.setPointerCapture(event.pointerId);
     },
-    [worldView.rotateX, worldView.rotateY]
+    [showUI, worldView.rotateX, worldView.rotateY]
   );
 
   const movePointer = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
+      if (!showUI) {
+        return;
+      }
       const pointer = pointerRef.current;
 
       if (!pointer.active) {
@@ -415,11 +416,9 @@ export function ProductWorld({ products }: ProductWorldProps) {
         setHoveredSlug(null);
       }
 
-      // If user is already in corridor mode or performs a strong drag, drive cameraSlot
+      // Vertical touch swipe handling on mobile with the same delta conversion
       if (Math.abs(cameraSlotTargetRef.current) > 0.03 || Math.abs(cameraSlot) > 0.03) {
-        const deltaX = pointer.x - event.clientX;
-        const scrollDelta = Math.abs(deltaX) > Math.abs(deltaY) ? deltaX : deltaY;
-        cameraSlotTargetRef.current += scrollDelta * 0.0035;
+        cameraSlotTargetRef.current += deltaY * 0.0012;
         return;
       }
 
@@ -435,7 +434,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
         dragging: isDragging
       }));
     },
-    [cancelHoverHide, cameraSlot]
+    [showUI, cancelHoverHide, cameraSlot]
   );
 
   const endPointer = useCallback((event: ReactPointerEvent<HTMLElement>) => {
@@ -449,14 +448,16 @@ export function ProductWorld({ products }: ProductWorldProps) {
   // Wheel scroll drives On-Scroll Depth Gallery Corridor
   const handleWorldWheel = useCallback(
     (event: ReactWheelEvent<HTMLElement>) => {
+      if (!showUI) {
+        return;
+      }
       cancelHoverEnter();
       cancelHoverHide();
       setHoveredSlug(null);
 
-      const delta = event.deltaY * 0.0022;
-      cameraSlotTargetRef.current += delta;
+      cameraSlotTargetRef.current += event.deltaY * 0.0012;
     },
-    [cancelHoverEnter, cancelHoverHide]
+    [showUI, cancelHoverEnter, cancelHoverHide]
   );
 
   const leaveWorld = useCallback(() => {
@@ -556,54 +557,33 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const corridorOpacity = isInShowcase ? 0 : Math.min(1, absCameraSlot / 0.06);
 
   // -------------------------------------------------------------
-  // Visible Render Window for Multi-Plate Depth Corridor
-  // Scoped strictly to current active page set products
+  // Staggered 2-Card Render Window Across Products
   // -------------------------------------------------------------
   const corridorProducts = worldProducts.length > 0 ? worldProducts : orderedProducts;
   const total = corridorProducts.length;
   const baseIndex = Math.floor(cameraSlot);
-  const fraction = cameraSlot - baseIndex;
+  const f = cameraSlot - baseIndex;
+  const cardAIndex = ((baseIndex % total) + total) % total;
+  const cardBIndex = (((baseIndex + 1) % total) + total) % total;
 
-  // Window of 5 relative slots [-2, -1, 0, 1, 2] around the active position
-  const corridorSlots = [-2, -1, 0, 1, 2].map((k) => {
-    const itemIndex = (((baseIndex + k) % total) + total) % total;
-    const product = corridorProducts[itemIndex];
-    const pos = k - fraction; // Continuous position relative to center (pos = 0 is exact center)
-    const absPos = Math.abs(pos);
+  const cardA = corridorProducts[cardAIndex];
+  const cardB = corridorProducts[cardBIndex];
 
-    // Dynamic overlapping transform & depth calculations
-    // Center card overlaps left & right cards (shifted ~65% so ~35% overlaps underneath center)
-    const xPercent = pos * 65;
-    const zOffsetPx = -absPos * 30;
-    const scale = Math.max(0.78, 1 - absPos * 0.08);
+  // Card A (Current / Receding, z-index: 1)
+  const cardAStyle: CSSProperties = {
+    transform: `translateX(-50%) translateX(-${f * 20}vw) scale(${1.0 - f * 0.3})`,
+    opacity: Math.max(0.15, 1.0 - f * 0.85),
+    zIndex: 1,
+    pointerEvents: f < 0.3 ? "auto" : "none"
+  };
 
-    let opacity = 0;
-    if (absPos <= 1) {
-      opacity = 1 - absPos * 0.25; // pos 0 -> 1.0, pos ±1 -> 0.75
-    } else if (absPos <= 2) {
-      opacity = Math.max(0, 0.75 * (2 - absPos)); // pos ±1 -> 0.75, pos ±2 -> 0.0
-    }
-
-    // Highest z-index is always at center (pos = 0 has z-index 50, pos = ±1 has z-index 25)
-    // This ensures the center card is always in front and overlaps left & right cards
-    const zIndex = Math.round(50 - absPos * 25);
-    const pointerEvents = absPos < 1.2 ? "auto" : "none";
-
-    const style: CSSProperties = {
-      transform: `translate3d(${xPercent}%, 0, ${zOffsetPx}px) scale(${scale})`,
-      opacity,
-      zIndex,
-      pointerEvents: pointerEvents as CSSProperties["pointerEvents"]
-    };
-
-    return {
-      product,
-      k,
-      pos,
-      style,
-      slotKind: (k === 0 ? "focal" : "approaching") as "focal" | "approaching"
-    };
-  });
+  // Card B (Incoming / Foreground, z-index: 2)
+  const cardBStyle: CSSProperties = {
+    transform: `translateX(-50%) translateX(${(1 - f) * 20}vw) scale(${0.7 + f * 0.3})`,
+    opacity: Math.min(1.0, 0.2 + f * 0.8),
+    zIndex: 2,
+    pointerEvents: f >= 0.7 ? "auto" : "none"
+  };
 
   const hoveredProduct = hoveredSlug ? worldProducts.find((product) => product.slug === hoveredSlug) ?? null : null;
 
@@ -667,7 +647,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
       ) : null}
 
       {/* ------------------------------------------------------------- */}
-      {/* Layer 2: On-Scroll Multi-Plate Depth Corridor (Center + Left + Right) */}
+      {/* Layer 2: On-Scroll Staggered 2-Card Depth Corridor            */}
       {/* ------------------------------------------------------------- */}
       {corridorOpacity > 0 && (
         <div
@@ -683,22 +663,26 @@ export function ProductWorld({ products }: ProductWorldProps) {
           </div>
 
           <div className="depth-gallery-plates-container">
-            {corridorSlots.map(({ product, k, style, pos, slotKind }) => (
+            {cardA && (
               <DepthPlate
-                key={`${product.id}-${k}`}
-                product={product}
-                slotKind={slotKind}
-                style={style}
+                key={`card-a-${cardA.id}-${cardAIndex}`}
+                product={cardA}
+                slotKind="focal"
+                style={cardAStyle}
                 t={t}
-                onSelect={(prod) => {
-                  if (Math.abs(pos) < 0.45) {
-                    openProduct(prod);
-                  } else {
-                    cameraSlotTargetRef.current = Math.round(cameraSlotTargetRef.current + pos);
-                  }
-                }}
+                onSelect={openProduct}
               />
-            ))}
+            )}
+            {cardB && (
+              <DepthPlate
+                key={`card-b-${cardB.id}-${cardBIndex}`}
+                product={cardB}
+                slotKind="approaching"
+                style={cardBStyle}
+                t={t}
+                onSelect={openProduct}
+              />
+            )}
           </div>
         </div>
       )}
@@ -717,7 +701,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
           </>
         ) : (
           <>
-            {language === "bn" ? "স্ক্রোল করে নেভিগেট করুন" : "SCROLL TO NAVIGATE"}
+            {language === "bn" ? "স্ক্রোল করে দেখুন" : "SCROLL TO EXPLORE"}
             <br />
             {language === "bn" ? "বিস্তারিত দেখতে ক্লিক করুন" : "CLICK TO VIEW DETAILS"}
             <br />
@@ -898,7 +882,7 @@ function DepthPlate({
   return (
     <button
       type="button"
-      className={`depth-plate depth-plate-${slotKind}`}
+      className={`depth-plate depth-plate-${slotKind} rounded-none`}
       data-plate-slot={slotKind}
       style={plateStyle}
       aria-label={`${product.title} - ${formattedPrice}`}
@@ -915,14 +899,14 @@ function DepthPlate({
         onSelect(product);
       }}
     >
-      {/* Media Artwork - Fits fully in card body */}
+      {/* Background / Full-Bleed Media Artwork */}
       <div className="depth-plate-media">
         <div className="depth-plate-art-wrap">
           <ProductArtwork product={product} compact={false} />
         </div>
       </div>
 
-      {/* Transparent Overlay Bottom Bar: Title & Price on Left, View Details on Right */}
+      {/* Bottom Bar: Title & Price on Left, View Details Text Link on Right */}
       <div className="depth-plate-bottom">
         <div className="depth-plate-info">
           <h2 className="depth-plate-title">{product.title}</h2>
