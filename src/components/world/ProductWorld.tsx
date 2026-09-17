@@ -236,27 +236,38 @@ export function ProductWorld({ products }: ProductWorldProps) {
     [worldProducts, products]
   );
 
-  // Dynamic professional wide card dimensions based on viewport
-  const cardWidth = useMemo(() => {
+  // Fully responsive dynamic dimensions based on viewport width and height
+  const cardHeight = useMemo(() => {
+    // Reserve vertical space for top header (70px) and bottom floating dock (90px) + safety padding
+    const maxAvailableH = Math.max(200, viewportSize.height - 190);
+
     if (viewportSize.width < 700) {
-      return Math.min(340, Math.max(280, viewportSize.width * 0.84));
+      return Math.min(maxAvailableH, Math.min(320, Math.max(220, Math.round(viewportSize.height * 0.40))));
     }
     if (viewportSize.width < 1024) {
-      return Math.min(460, Math.max(360, viewportSize.width * 0.44));
+      return Math.min(maxAvailableH, Math.min(370, Math.max(260, Math.round(viewportSize.height * 0.45))));
     }
     if (viewportSize.width < 1440) {
-      return Math.min(540, Math.max(440, viewportSize.width * 0.38));
+      return Math.min(maxAvailableH, Math.min(410, Math.max(300, Math.round(viewportSize.height * 0.48))));
     }
-    return Math.min(600, Math.max(480, viewportSize.width * 0.36));
-  }, [viewportSize.width]);
+    return Math.min(maxAvailableH, Math.min(450, Math.max(320, Math.round(viewportSize.height * 0.50))));
+  }, [viewportSize.width, viewportSize.height]);
 
-  const cardHeight = useMemo(() => {
+  const cardWidth = useMemo(() => {
+    // 1.25 : 1 width-to-height ratio with responsive width limits
+    const targetW = Math.round(cardHeight * 1.25);
+
     if (viewportSize.width < 700) {
-      return Math.min(300, Math.max(240, Math.round(cardWidth * 0.84)));
+      return Math.min(280, Math.max(230, Math.round(viewportSize.width * 0.70)));
     }
-    // Professional 1.25 : 1 width to height aspect ratio on desktop (e.g. 540px wide -> 420px tall)
-    return Math.min(460, Math.max(340, Math.round(cardWidth * 0.78)));
-  }, [cardWidth, viewportSize.width]);
+    if (viewportSize.width < 1024) {
+      return Math.min(targetW, Math.max(320, Math.round(viewportSize.width * 0.48)));
+    }
+    if (viewportSize.width < 1440) {
+      return Math.min(targetW, Math.max(400, Math.round(viewportSize.width * 0.38)));
+    }
+    return Math.min(560, Math.max(440, targetW));
+  }, [cardHeight, viewportSize.width]);
 
   const perspective = useMemo(() => Math.max(cardWidth, 120) * PERSPECTIVE_RATIO, [cardWidth]);
   const gap = useMemo(() => perspective * (GAP_MIN + (5 / 10) * GAP_RANGE), [perspective]);
@@ -266,9 +277,12 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
   const spreadPx = useMemo(() => {
     if (viewportSize.width < 700) {
-      return cardWidth * 0.12;
+      return cardWidth * 0.035; // ~10px subtle alternating offset on mobile for clean framing
     }
-    // ~32% of card width creates optimal lateral offset and overlap in 3D corridor
+    if (viewportSize.width < 1024) {
+      return cardWidth * 0.18; // Balanced lateral corridor spread for tablet
+    }
+    // ~32% of card width creates optimal lateral offset and overlap in 3D corridor on desktop/laptop
     return (5 / 10) * SPREAD_RANGE * cardWidth * 1.05;
   }, [cardWidth, viewportSize.width]);
   const wheelToSlot = useMemo(
@@ -294,10 +308,10 @@ export function ProductWorld({ products }: ProductWorldProps) {
     ) => {
       if (!node) return;
       const distance = ahead + VIEW_LEAD;
-      const z = ahead <= 0 ? -distance * gap * 0.35 : -distance * gap;
+      const z = distance < 0 ? -Math.atan(distance * 1.0) * gap * 0.35 : -distance * gap;
       const influence = opacity * (1 + Math.max(0, distance) * DEPTH_INFLUENCE);
       const side = (((slot % 2) + 2) % 2) === 0 ? -1 : 1;
-      const xSpread = side * spreadPx * (ahead <= 0 ? 1 + Math.abs(ahead) * 0.5 : scaleK);
+      const xSpread = side * spreadPx * (1 + distance * (scaleK - 1));
       const x = xSpread + pointerCurrentRef.current.x * (0.08 * cardWidth) * influence;
       const y = pointerCurrentRef.current.y * (0.08 * cardWidth) * 0.5 * influence + driftRef.current * (0.025 * cardHeight);
       const lean = breathRef.current * opacity;
@@ -321,11 +335,15 @@ export function ProductWorld({ products }: ProductWorldProps) {
       cameraSlotCurrentRef.current += (cameraSlotTargetRef.current - cameraSlotCurrentRef.current) * ease;
 
       const span = count % 2 === 0 ? count : count * 2;
-      if (cameraSlotCurrentRef.current < -span || cameraSlotCurrentRef.current > span) {
-        const laps = Math.floor(cameraSlotCurrentRef.current / span) * span;
-        cameraSlotCurrentRef.current -= laps;
-        cameraSlotTargetRef.current -= laps;
-        previousPositionRef.current -= laps;
+      while (cameraSlotCurrentRef.current < 0) {
+        cameraSlotCurrentRef.current += span;
+        cameraSlotTargetRef.current += span;
+        previousPositionRef.current += span;
+      }
+      while (cameraSlotCurrentRef.current >= span) {
+        cameraSlotCurrentRef.current -= span;
+        cameraSlotTargetRef.current -= span;
+        previousPositionRef.current -= span;
       }
       const position = cameraSlotCurrentRef.current;
 
@@ -824,7 +842,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
                   width: plateWidth,
                   height: plateHeight,
                   marginLeft: -plateWidth / 2,
-                  marginTop: -plateHeight / 2,
+                  marginTop: -plateHeight / 2 - 14,
                   borderRadius: 0,
                   overflow: "hidden",
                   backfaceVisibility: "hidden",
