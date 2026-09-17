@@ -145,6 +145,28 @@ const mobileReferenceSlots: ReferenceShowcaseSlot[] = [
   slot(0, 400, 56, 56, 16, "mini", { opacity: 0.86 })
 ];
 
+// -------------------------------------------------------------
+// Originkit Depth Gallery Corridor Mathematical Model & Physics Constants
+// -------------------------------------------------------------
+const PERSPECTIVE_RATIO = 3.2;
+const GAP_MIN = 0.26;
+const GAP_RANGE = 0.9;
+const SPREAD_RANGE = 0.6;
+const WHEEL_SPAN = 650;
+const WHEEL_MIN = 0.4;
+const WHEEL_RANGE = 1.6;
+const DRAG_GAIN = 1.8;
+const VELOCITY_MAX = 0.03;
+const VELOCITY_DAMPING = 0.12;
+const POINTER_SMOOTHING = 0.08;
+const BREATH_SMOOTHING = 0.14;
+const DRIFT_SMOOTHING = 0.05;
+const BREATH_GAIN = 1.1;
+const BREATH_TILT_DEG = 2.6;
+const BREATH_SCALE = 0.03;
+const DEPTH_INFLUENCE = 0.05;
+const VIEW_LEAD = 0.0;
+
 export function ProductWorld({ products }: ProductWorldProps) {
   const router = useRouter();
   const { t, formatNumber, tCategory, language } = useLanguage();
@@ -165,11 +187,19 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const [productSetIndex, setProductSetIndex] = useState(0);
 
   // -------------------------------------------------------------
-  // On-Scroll Depth Gallery Corridor State & Lerp Engine
+  // On-Scroll Depth Gallery Corridor State & Physics Engine
   // -------------------------------------------------------------
   const [cameraSlot, setCameraSlot] = useState(0);
   const cameraSlotTargetRef = useRef(0);
-  const touchStartYRef = useRef(0);
+  const cameraSlotCurrentRef = useRef(0);
+  const previousPositionRef = useRef(0);
+  const velocityRef = useRef(0);
+  const breathRef = useRef(0);
+  const driftRef = useRef(0);
+  const pointerTargetRef = useRef({ x: 0, y: 0 });
+  const pointerCurrentRef = useRef({ x: 0, y: 0 });
+  const plateNodesRef = useRef<(HTMLDivElement | null)[]>([]);
+  const bgRef = useRef<HTMLDivElement | null>(null);
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const pointerRef = useRef<PointerState>({
@@ -200,26 +230,145 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
   const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView, cameraSlot);
 
-  // Smooth inertia loop with requestAnimationFrame
+  // Corridor products array (products from current active page set)
+  const corridorProducts = useMemo(
+    () => (worldProducts.length >= 2 ? worldProducts : products),
+    [worldProducts, products]
+  );
+
+  // Dynamic professional wide card dimensions based on viewport
+  const cardWidth = useMemo(() => {
+    if (viewportSize.width < 700) {
+      return Math.min(340, Math.max(280, viewportSize.width * 0.84));
+    }
+    if (viewportSize.width < 1024) {
+      return Math.min(460, Math.max(360, viewportSize.width * 0.44));
+    }
+    if (viewportSize.width < 1440) {
+      return Math.min(540, Math.max(440, viewportSize.width * 0.38));
+    }
+    return Math.min(600, Math.max(480, viewportSize.width * 0.36));
+  }, [viewportSize.width]);
+
+  const cardHeight = useMemo(() => {
+    if (viewportSize.width < 700) {
+      return Math.min(300, Math.max(240, Math.round(cardWidth * 0.84)));
+    }
+    // Professional 1.25 : 1 width to height aspect ratio on desktop (e.g. 540px wide -> 420px tall)
+    return Math.min(460, Math.max(340, Math.round(cardWidth * 0.78)));
+  }, [cardWidth, viewportSize.width]);
+
+  const perspective = useMemo(() => Math.max(cardWidth, 120) * PERSPECTIVE_RATIO, [cardWidth]);
+  const gap = useMemo(() => perspective * (GAP_MIN + (5 / 10) * GAP_RANGE), [perspective]);
+  const scaleK = useMemo(() => (perspective + gap) / perspective, [perspective, gap]);
+  const plateWidth = useMemo(() => cardWidth, [cardWidth]);
+  const plateHeight = useMemo(() => cardHeight, [cardHeight]);
+
+  const spreadPx = useMemo(() => {
+    if (viewportSize.width < 700) {
+      return cardWidth * 0.12;
+    }
+    // ~32% of card width creates optimal lateral offset and overlap in 3D corridor
+    return (5 / 10) * SPREAD_RANGE * cardWidth * 1.05;
+  }, [cardWidth, viewportSize.width]);
+  const wheelToSlot = useMemo(
+    () => (WHEEL_MIN + (5 / 10) * WHEEL_RANGE) / WHEEL_SPAN,
+    []
+  );
+  const dragToSlot = useMemo(
+    () => (cardHeight > 0 ? (1 / cardHeight) * DRAG_GAIN : 0.003),
+    [cardHeight]
+  );
+  const ease = useMemo(() => 0.16 - (6 / 10) * 0.135, []);
+
+  // Frame Loop (Originkit Depth Gallery rAF Engine)
   useEffect(() => {
-    let animationFrameId: number;
+    let rafId: number;
+    let started = 0;
 
-    const loop = () => {
-      const target = cameraSlotTargetRef.current;
-      setCameraSlot((current) => {
-        const diff = target - current;
-        if (Math.abs(diff) < 0.0001) {
-          return target;
-        }
-        return current + diff * 0.08;
-      });
+    const place = (
+      node: HTMLDivElement | null,
+      slot: number,
+      opacity: number,
+      ahead: number
+    ) => {
+      if (!node) return;
+      const distance = ahead + VIEW_LEAD;
+      const z = ahead <= 0 ? -distance * gap * 0.35 : -distance * gap;
+      const influence = opacity * (1 + Math.max(0, distance) * DEPTH_INFLUENCE);
+      const side = (((slot % 2) + 2) % 2) === 0 ? -1 : 1;
+      const xSpread = side * spreadPx * (ahead <= 0 ? 1 + Math.abs(ahead) * 0.5 : scaleK);
+      const x = xSpread + pointerCurrentRef.current.x * (0.08 * cardWidth) * influence;
+      const y = pointerCurrentRef.current.y * (0.08 * cardWidth) * 0.5 * influence + driftRef.current * (0.025 * cardHeight);
+      const lean = breathRef.current * opacity;
+      const tiltX = -pointerCurrentRef.current.y * BREATH_TILT_DEG * lean;
+      const tiltY = pointerCurrentRef.current.x * BREATH_TILT_DEG * lean;
+      const pulse = 1 + BREATH_SCALE * lean;
 
-      animationFrameId = requestAnimationFrame(loop);
+      node.style.visibility = "visible";
+      node.style.opacity = Math.max(0, Math.min(1, opacity)).toFixed(3);
+      node.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) rotateX(${tiltX.toFixed(3)}deg) rotateY(${tiltY.toFixed(3)}deg) scale(${pulse.toFixed(4)})`;
+      node.style.zIndex = ahead <= 0 ? "2" : "1";
+      node.style.pointerEvents = opacity > 0.65 ? "auto" : "none";
     };
 
-    animationFrameId = requestAnimationFrame(loop);
-    return () => cancelAnimationFrame(animationFrameId);
-  }, []);
+    const tick = (now: number) => {
+      rafId = requestAnimationFrame(tick);
+      const count = corridorProducts.length;
+      if (count < 2) return;
+      if (!started) started = now;
+
+      cameraSlotCurrentRef.current += (cameraSlotTargetRef.current - cameraSlotCurrentRef.current) * ease;
+
+      const span = count % 2 === 0 ? count : count * 2;
+      if (cameraSlotCurrentRef.current < -span || cameraSlotCurrentRef.current > span) {
+        const laps = Math.floor(cameraSlotCurrentRef.current / span) * span;
+        cameraSlotCurrentRef.current -= laps;
+        cameraSlotTargetRef.current -= laps;
+        previousPositionRef.current -= laps;
+      }
+      const position = cameraSlotCurrentRef.current;
+
+      const raw = position - previousPositionRef.current;
+      previousPositionRef.current = position;
+      velocityRef.current += (raw - velocityRef.current) * VELOCITY_DAMPING;
+      if (Math.abs(velocityRef.current) < 1e-6) velocityRef.current = 0;
+      const speed = Math.min(1, Math.abs(velocityRef.current) / VELOCITY_MAX);
+      const signed = Math.max(-1, Math.min(1, velocityRef.current / VELOCITY_MAX));
+
+      breathRef.current += (speed * BREATH_GAIN - breathRef.current) * BREATH_SMOOTHING;
+      driftRef.current += (signed - driftRef.current) * DRIFT_SMOOTHING;
+      pointerCurrentRef.current.x += (pointerTargetRef.current.x - pointerCurrentRef.current.x) * POINTER_SMOOTHING;
+      pointerCurrentRef.current.y += (pointerTargetRef.current.y - pointerCurrentRef.current.y) * POINTER_SMOOTHING;
+
+      setCameraSlot(position);
+
+      const slot = Math.floor(position);
+      const blend = position - slot;
+      const focus = ((slot % count) + count) % count;
+      const following = (((slot + 1) % count) + count) % count;
+
+      const activeProd = corridorProducts[focus];
+      if (activeProd && activeProd.accent && bgRef.current) {
+        bgRef.current.style.setProperty("--active-tint", activeProd.accent);
+      }
+
+      for (let i = 0; i < count; i += 1) {
+        if (i === focus || i === following) continue;
+        const node = plateNodesRef.current[i];
+        if (!node || node.style.visibility === "hidden") continue;
+        node.style.visibility = "hidden";
+        node.style.opacity = "0";
+        node.style.pointerEvents = "none";
+      }
+
+      place(plateNodesRef.current[focus], slot, 1 - blend, -blend);
+      place(plateNodesRef.current[following], slot + 1, blend, 1 - blend);
+    };
+
+    rafId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(rafId);
+  }, [corridorProducts, ease, gap, scaleK, spreadPx, cardWidth, cardHeight]);
 
   const cancelHoverEnter = useCallback(() => {
     if (hoverEnterTimerRef.current !== null) {
@@ -386,7 +535,6 @@ export function ProductWorld({ products }: ProductWorldProps) {
         startRotateX: worldView.rotateX,
         startRotateY: worldView.rotateY
       };
-      touchStartYRef.current = event.clientY;
       event.currentTarget.setPointerCapture(event.pointerId);
     },
     [showUI, worldView.rotateX, worldView.rotateY]
@@ -418,7 +566,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
       // Vertical touch swipe handling on mobile with the same delta conversion
       if (Math.abs(cameraSlotTargetRef.current) > 0.03 || Math.abs(cameraSlot) > 0.03) {
-        cameraSlotTargetRef.current += deltaY * 0.0012;
+        cameraSlotTargetRef.current += deltaY * dragToSlot;
         return;
       }
 
@@ -434,7 +582,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
         dragging: isDragging
       }));
     },
-    [showUI, cancelHoverHide, cameraSlot]
+    [showUI, cancelHoverHide, cameraSlot, dragToSlot]
   );
 
   const endPointer = useCallback((event: ReactPointerEvent<HTMLElement>) => {
@@ -455,9 +603,9 @@ export function ProductWorld({ products }: ProductWorldProps) {
       cancelHoverHide();
       setHoveredSlug(null);
 
-      cameraSlotTargetRef.current += event.deltaY * 0.0012;
+      cameraSlotTargetRef.current += event.deltaY * wheelToSlot;
     },
-    [showUI, cancelHoverEnter, cancelHoverHide]
+    [showUI, cancelHoverEnter, cancelHoverHide, wheelToSlot]
   );
 
   const leaveWorld = useCallback(() => {
@@ -467,6 +615,26 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
     setWorldView((current) => ({ ...current, parallaxX: 0, parallaxY: 0 }));
   }, []);
+
+  const handleSectionPointerMove = useCallback(
+    (event: ReactPointerEvent<HTMLElement>) => {
+      if (sectionRef.current) {
+        const rect = sectionRef.current.getBoundingClientRect();
+        if (rect.width && rect.height) {
+          pointerTargetRef.current.x = ((event.clientX - rect.left) / rect.width) * 2 - 1;
+          pointerTargetRef.current.y = -(((event.clientY - rect.top) / rect.height) * 2 - 1);
+        }
+      }
+      movePointer(event);
+    },
+    [movePointer]
+  );
+
+  const handleSectionPointerLeave = useCallback(() => {
+    pointerTargetRef.current.x = 0;
+    pointerTargetRef.current.y = 0;
+    leaveWorld();
+  }, [leaveWorld]);
 
   const beginWorldPointer = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
@@ -508,13 +676,19 @@ export function ProductWorld({ products }: ProductWorldProps) {
     };
 
     if (Math.abs(cameraSlotTargetRef.current) > 0.03 || Math.abs(cameraSlot) > 0.03) {
-      // Return to showcase view for the current page set
+      // Return to resting showcase view for the current page set where user started scrolling
       cameraSlotTargetRef.current = 0;
+      cameraSlotCurrentRef.current = 0;
+      previousPositionRef.current = 0;
+      velocityRef.current = 0;
       setCameraSlot(0);
     } else {
       // In home showcase mode: cycle to next page set
       setProductSetIndex((prev) => (prev + 1) % productSetCount);
       cameraSlotTargetRef.current = 0;
+      cameraSlotCurrentRef.current = 0;
+      previousPositionRef.current = 0;
+      velocityRef.current = 0;
       setCameraSlot(0);
     }
   }, [cancelHoverHide, cameraSlot, productSetCount]);
@@ -556,35 +730,6 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const showcaseOpacity = isInShowcase ? 1 : Math.max(0, 1 - absCameraSlot / 0.08);
   const corridorOpacity = isInShowcase ? 0 : Math.min(1, absCameraSlot / 0.06);
 
-  // -------------------------------------------------------------
-  // Staggered 2-Card Render Window Across Products
-  // -------------------------------------------------------------
-  const corridorProducts = worldProducts.length > 0 ? worldProducts : orderedProducts;
-  const total = corridorProducts.length;
-  const baseIndex = Math.floor(cameraSlot);
-  const f = cameraSlot - baseIndex;
-  const cardAIndex = ((baseIndex % total) + total) % total;
-  const cardBIndex = (((baseIndex + 1) % total) + total) % total;
-
-  const cardA = corridorProducts[cardAIndex];
-  const cardB = corridorProducts[cardBIndex];
-
-  // Card A (Current / Receding, z-index: 1)
-  const cardAStyle: CSSProperties = {
-    transform: `translateX(-50%) translateX(-${f * 20}vw) scale(${1.0 - f * 0.3})`,
-    opacity: Math.max(0.15, 1.0 - f * 0.85),
-    zIndex: 1,
-    pointerEvents: f < 0.3 ? "auto" : "none"
-  };
-
-  // Card B (Incoming / Foreground, z-index: 2)
-  const cardBStyle: CSSProperties = {
-    transform: `translateX(-50%) translateX(${(1 - f) * 20}vw) scale(${0.7 + f * 0.3})`,
-    opacity: Math.min(1.0, 0.2 + f * 0.8),
-    zIndex: 2,
-    pointerEvents: f >= 0.7 ? "auto" : "none"
-  };
-
   const hoveredProduct = hoveredSlug ? worldProducts.find((product) => product.slug === hoveredSlug) ?? null : null;
 
   return (
@@ -603,10 +748,10 @@ export function ProductWorld({ products }: ProductWorldProps) {
       ref={sectionRef}
       aria-label="Interactive product showcase"
       onPointerDown={beginWorldPointer}
-      onPointerMove={movePointer}
+      onPointerMove={handleSectionPointerMove}
       onPointerUp={endPointer}
       onPointerCancel={endPointer}
-      onPointerLeave={leaveWorld}
+      onPointerLeave={handleSectionPointerLeave}
       onWheel={handleWorldWheel}
     >
       {/* ------------------------------------------------------------- */}
@@ -647,42 +792,54 @@ export function ProductWorld({ products }: ProductWorldProps) {
       ) : null}
 
       {/* ------------------------------------------------------------- */}
-      {/* Layer 2: On-Scroll Staggered 2-Card Depth Corridor            */}
+      {/* Layer 2: Originkit Depth Gallery 3D Perspective Corridor      */}
       {/* ------------------------------------------------------------- */}
       {corridorOpacity > 0 && (
         <div
           className="depth-gallery-viewport"
           style={{
             opacity: corridorOpacity,
-            pointerEvents: corridorOpacity > 0.1 ? "auto" : "none"
+            pointerEvents: corridorOpacity > 0.1 ? "auto" : "none",
+            perspective: `${perspective}px`,
+            perspectiveOrigin: "50% 50%"
           }}
         >
-          <div className="depth-gallery-bg" aria-hidden="true">
+          <div className="depth-gallery-bg" ref={bgRef} aria-hidden="true">
             <div className="bg-blob-a" />
             <div className="bg-blob-b" />
           </div>
 
           <div className="depth-gallery-plates-container">
-            {cardA && (
-              <DepthPlate
-                key={`card-a-${cardA.id}-${cardAIndex}`}
-                product={cardA}
-                slotKind="focal"
-                style={cardAStyle}
-                t={t}
-                onSelect={openProduct}
-              />
-            )}
-            {cardB && (
-              <DepthPlate
-                key={`card-b-${cardB.id}-${cardBIndex}`}
-                product={cardB}
-                slotKind="approaching"
-                style={cardBStyle}
-                t={t}
-                onSelect={openProduct}
-              />
-            )}
+            {corridorProducts.map((product, i) => (
+              <div
+                key={`corridor-plate-${product.id}-${i}`}
+                ref={(el) => {
+                  plateNodesRef.current[i] = el;
+                }}
+                className="depth-gallery-plate-slot"
+                style={{
+                  position: "absolute",
+                  left: "50%",
+                  top: "50%",
+                  width: plateWidth,
+                  height: plateHeight,
+                  marginLeft: -plateWidth / 2,
+                  marginTop: -plateHeight / 2,
+                  borderRadius: 0,
+                  overflow: "hidden",
+                  backfaceVisibility: "hidden",
+                  visibility: "hidden",
+                  opacity: 0,
+                  willChange: "transform, opacity"
+                }}
+              >
+                <DepthPlate
+                  product={product}
+                  t={t}
+                  onSelect={openProduct}
+                />
+              </div>
+            ))}
           </div>
         </div>
       )}
@@ -853,20 +1010,16 @@ function ReferenceWorldProduct({
 }
 
 // -------------------------------------------------------------
-// Staggered Dual-Plate Depth Corridor Plate Component
+// Originkit Depth Gallery 3D Corridor Plate Component
 // -------------------------------------------------------------
 type DepthPlateProps = {
   product: Product;
-  slotKind: "focal" | "approaching";
-  style: CSSProperties;
   t: (key: TranslationKey) => string;
   onSelect: (product: Product) => void;
 };
 
 function DepthPlate({
   product,
-  slotKind,
-  style,
   t,
   onSelect
 }: DepthPlateProps) {
@@ -875,29 +1028,16 @@ function DepthPlate({
   const hasDiscount = Boolean(product.old_price && product.old_price > product.price);
 
   const plateStyle: CSSProperties = {
-    ...style,
     "--plate-accent": product.accent || "#3385ff"
   } as CSSProperties;
 
   return (
     <button
       type="button"
-      className={`depth-plate depth-plate-${slotKind} rounded-none`}
-      data-plate-slot={slotKind}
+      className="depth-plate rounded-none"
       style={plateStyle}
       aria-label={`${product.title} - ${formattedPrice}`}
-      onPointerDown={(e) => {
-        if (style.pointerEvents !== "none") {
-          e.stopPropagation();
-        }
-      }}
-      onClick={(e) => {
-        if (style.pointerEvents === "none") {
-          e.preventDefault();
-          return;
-        }
-        onSelect(product);
-      }}
+      onClick={() => onSelect(product)}
     >
       {/* Background / Full-Bleed Media Artwork */}
       <div className="depth-plate-media">
