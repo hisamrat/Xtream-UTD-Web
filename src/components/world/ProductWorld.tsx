@@ -6,63 +6,63 @@ import { ArrowUpRight } from "lucide-react";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, WheelEvent as ReactWheelEvent } from "react";
 import { ProductArtwork } from "@/components/products/ProductArtwork";
-import { useLanguage } from "@/components/site/LanguageProvider";
+import { useLanguage, type TranslationKey } from "@/components/site/LanguageProvider";
 import { formatPrice } from "@/lib/format";
 import type { Product } from "@/lib/product-schema";
 
 type ProductWorldProps = {
-products: Product[];
+  products: Product[];
 };
 
 type ViewportSize = {
-width: number;
-height: number;
+  width: number;
+  height: number;
 };
 
 type PointerState = {
-active: boolean;
-x: number;
-y: number;
-startX: number;
-startY: number;
-distance: number;
-startRotateX: number;
-startRotateY: number;
+  active: boolean;
+  x: number;
+  y: number;
+  startX: number;
+  startY: number;
+  distance: number;
+  startRotateX: number;
+  startRotateY: number;
 };
 
 type ShowcaseCardKind = "mini" | "medium" | "feature" | "hero";
 
 type WorldViewState = {
-rotateX: number;
-rotateY: number;
-zoom: number;
-parallaxX: number;
-parallaxY: number;
-dragging: boolean;
+  rotateX: number;
+  rotateY: number;
+  zoom: number;
+  parallaxX: number;
+  parallaxY: number;
+  dragging: boolean;
 };
 
 type ReferenceShowcaseSlot = {
-x: number;
-y: number;
-width: number;
-height: number;
-zIndex: number;
-kind: ShowcaseCardKind;
-opacity?: number;
-rotate?: number;
-scale?: number;
-floatX?: number;
-floatY?: number;
-floatRotate?: number;
-delay?: number;
-duration?: number;
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  zIndex: number;
+  kind: ShowcaseCardKind;
+  opacity?: number;
+  rotate?: number;
+  scale?: number;
+  floatX?: number;
+  floatY?: number;
+  floatRotate?: number;
+  delay?: number;
+  duration?: number;
 };
 
 type ShowcaseBounds = {
-minX: number;
-maxX: number;
-minY: number;
-maxY: number;
+  minX: number;
+  maxX: number;
+  minY: number;
+  maxY: number;
 };
 
 const dragThreshold = 7;
@@ -147,49 +147,84 @@ const mobileReferenceSlots: ReferenceShowcaseSlot[] = [
 
 export function ProductWorld({ products }: ProductWorldProps) {
   const router = useRouter();
-  const { t, formatNumber, tCategory } = useLanguage();
+  const { t, formatNumber, tCategory, language } = useLanguage();
   const prioritizedProducts = useMemo(() => prioritizeWorldProducts(products), [products]);
   const [mounted, setMounted] = useState(false);
   const [showUI, setShowUI] = useState(false);
   const [viewportSize, setViewportSize] = useState<ViewportSize>({ width: 1440, height: 1120 });
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
-const [worldPaused, setWorldPaused] = useState(false);
-const [worldView, setWorldView] = useState<WorldViewState>({
-rotateX: 0,
-rotateY: 0,
-zoom: 1,
-parallaxX: 0,
-parallaxY: 0,
-dragging: false
-});
-const [productSetIndex, setProductSetIndex] = useState(0);
-const sectionRef = useRef<HTMLElement | null>(null);
-const pointerRef = useRef<PointerState>({
-active: false,
-x: 0,
-y: 0,
-startX: 0,
-startY: 0,
-distance: 0,
-startRotateX: 0,
-startRotateY: 0
-});
-const hoverEnterTimerRef = useRef<number | null>(null);
-const hoverHideTimerRef = useRef<number | null>(null);
-const closeCooldownUntilRef = useRef<number>(0);
-const orderedProducts = prioritizedProducts;
-const showcaseSlots = useMemo(() => getShowcaseSlots(viewportSize), [viewportSize]);
-const productLimit = showcaseSlots.length;
-const productSetCount = Math.max(1, Math.ceil(orderedProducts.length / productLimit));
-const safeProductSetIndex = Math.min(productSetIndex, productSetCount - 1);
-const firstVisibleProductIndex = safeProductSetIndex * productLimit;
-const worldProducts = useMemo(
-  () => orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + productLimit),
-  [firstVisibleProductIndex, orderedProducts, productLimit]
-);
-const activeSlots = showcaseSlots.slice(0, worldProducts.length);
-const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
-const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView);
+  const [worldPaused, setWorldPaused] = useState(false);
+  const [worldView, setWorldView] = useState<WorldViewState>({
+    rotateX: 0,
+    rotateY: 0,
+    zoom: 1,
+    parallaxX: 0,
+    parallaxY: 0,
+    dragging: false
+  });
+  const [productSetIndex, setProductSetIndex] = useState(0);
+
+  // -------------------------------------------------------------
+  // On-Scroll Depth Gallery Corridor State & Lerp Engine
+  // -------------------------------------------------------------
+  const [cameraSlot, setCameraSlot] = useState(0);
+  const cameraSlotTargetRef = useRef(0);
+  const touchStartYRef = useRef(0);
+
+  const sectionRef = useRef<HTMLElement | null>(null);
+  const pointerRef = useRef<PointerState>({
+    active: false,
+    x: 0,
+    y: 0,
+    startX: 0,
+    startY: 0,
+    distance: 0,
+    startRotateX: 0,
+    startRotateY: 0
+  });
+
+  const hoverEnterTimerRef = useRef<number | null>(null);
+  const hoverHideTimerRef = useRef<number | null>(null);
+  const closeCooldownUntilRef = useRef<number>(0);
+  const orderedProducts = prioritizedProducts;
+  const showcaseSlots = useMemo(() => getShowcaseSlots(viewportSize), [viewportSize]);
+  const productLimit = showcaseSlots.length;
+  const productSetCount = Math.max(1, Math.ceil(orderedProducts.length / productLimit));
+  const safeProductSetIndex = Math.min(productSetIndex, productSetCount - 1);
+  const firstVisibleProductIndex = safeProductSetIndex * productLimit;
+  const worldProducts = useMemo(
+    () => orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + productLimit),
+    [firstVisibleProductIndex, orderedProducts, productLimit]
+  );
+  const activeSlots = showcaseSlots.slice(0, worldProducts.length);
+  const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
+  const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView, cameraSlot);
+
+  // RAF loop for smooth cameraSlot interpolation with inertia damping
+  useEffect(() => {
+    let animationFrameId: number;
+    let lastTime = performance.now();
+
+    const loop = (time: number) => {
+      const dt = Math.min((time - lastTime) / 1000, 0.1);
+      lastTime = time;
+
+      const target = cameraSlotTargetRef.current;
+      setCameraSlot((current) => {
+        const diff = target - current;
+        if (Math.abs(diff) < 0.0005) {
+          return target;
+        }
+        const factor = 1 - Math.pow(0.001, dt);
+        return current + diff * factor;
+      });
+
+      animationFrameId = requestAnimationFrame(loop);
+    };
+
+    animationFrameId = requestAnimationFrame(loop);
+    return () => cancelAnimationFrame(animationFrameId);
+  }, []);
 
   const cancelHoverEnter = useCallback(() => {
     if (hoverEnterTimerRef.current !== null) {
@@ -247,7 +282,7 @@ const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView);
 
   const handleCardPreviewEnter = useCallback(
     (slug: string) => {
-      if (worldView.dragging) {
+      if (worldView.dragging || cameraSlotTargetRef.current > 0.05) {
         return;
       }
       showProductPreviewWithDelay(slug, 140);
@@ -259,61 +294,66 @@ const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView);
     cancelHoverEnter();
   }, [cancelHoverEnter]);
 
-useEffect(() => {
-  if (!hoveredSlug) {
-    return;
-  }
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        closePreview();
+      } else if (event.key === "ArrowDown" || event.key === "PageDown") {
+        event.preventDefault();
+        cameraSlotTargetRef.current += 1.0;
+      } else if (event.key === "ArrowUp" || event.key === "PageUp") {
+        event.preventDefault();
+        cameraSlotTargetRef.current = Math.max(0, cameraSlotTargetRef.current - 1.0);
+      } else if (event.key === "Home") {
+        event.preventDefault();
+        cameraSlotTargetRef.current = 0;
+      }
+    };
 
-  const handleKeyDown = (event: KeyboardEvent) => {
-    if (event.key === "Escape") {
-      closePreview();
+    window.addEventListener("keydown", handleKeyDown);
+    return () => window.removeEventListener("keydown", handleKeyDown);
+  }, [closePreview]);
+
+  useEffect(() => {
+    setMounted(true);
+
+    const updateViewport = () => {
+      const nextViewport = { width: window.innerWidth, height: window.innerHeight };
+      setViewportSize(nextViewport);
+    };
+    updateViewport();
+    window.addEventListener("resize", updateViewport);
+
+    return () => {
+      window.removeEventListener("resize", updateViewport);
+      cancelHoverEnter();
+      cancelHoverHide();
+    };
+  }, [cancelHoverEnter, cancelHoverHide]);
+
+  useEffect(() => {
+    if (!mounted) {
+      return;
     }
-  };
 
-  window.addEventListener("keydown", handleKeyDown);
-  return () => window.removeEventListener("keydown", handleKeyDown);
-}, [closePreview, hoveredSlug]);
+    const updateWorldPaused = () => {
+      setWorldPaused(document.hidden || document.body.classList.contains("modal-open"));
+    };
+    const bodyObserver = new MutationObserver(updateWorldPaused);
 
-useEffect(() => {
-  setMounted(true);
+    updateWorldPaused();
+    bodyObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
+    document.addEventListener("visibilitychange", updateWorldPaused);
+    window.addEventListener("focus", updateWorldPaused);
+    window.addEventListener("blur", updateWorldPaused);
 
-  const updateViewport = () => {
-    const nextViewport = { width: window.innerWidth, height: window.innerHeight };
-    setViewportSize(nextViewport);
-  };
-  updateViewport();
-  window.addEventListener("resize", updateViewport);
-
-  return () => {
-    window.removeEventListener("resize", updateViewport);
-    cancelHoverEnter();
-    cancelHoverHide();
-  };
-}, [cancelHoverEnter, cancelHoverHide]);
-
-useEffect(() => {
-if (!mounted) {
-return;
-}
-
-const updateWorldPaused = () => {
-setWorldPaused(document.hidden || document.body.classList.contains("modal-open"));
-};
-const bodyObserver = new MutationObserver(updateWorldPaused);
-
-updateWorldPaused();
-bodyObserver.observe(document.body, { attributes: true, attributeFilter: ["class"] });
-document.addEventListener("visibilitychange", updateWorldPaused);
-window.addEventListener("focus", updateWorldPaused);
-window.addEventListener("blur", updateWorldPaused);
-
-return () => {
-bodyObserver.disconnect();
-document.removeEventListener("visibilitychange", updateWorldPaused);
-window.removeEventListener("focus", updateWorldPaused);
-window.removeEventListener("blur", updateWorldPaused);
-};
-}, [mounted]);
+    return () => {
+      bodyObserver.disconnect();
+      document.removeEventListener("visibilitychange", updateWorldPaused);
+      window.removeEventListener("focus", updateWorldPaused);
+      window.removeEventListener("blur", updateWorldPaused);
+    };
+  }, [mounted]);
 
   useEffect(() => {
     if (!mounted) {
@@ -322,65 +362,79 @@ window.removeEventListener("blur", updateWorldPaused);
     setProductSetIndex(0);
   }, [mounted]);
 
-useEffect(() => {
-setProductSetIndex((index) => Math.min(index, productSetCount - 1));
-}, [productSetCount]);
+  useEffect(() => {
+    setProductSetIndex((index) => Math.min(index, productSetCount - 1));
+  }, [productSetCount]);
 
-useEffect(() => {
-if (!hoveredSlug) {
-return;
-}
-
-if (!worldProducts.some((product) => product.slug === hoveredSlug)) {
-setHoveredSlug(null);
-}
-}, [hoveredSlug, worldProducts]);
-
-const beginPointer = useCallback((event: ReactPointerEvent<HTMLElement>) => {
-pointerRef.current = {
-active: true,
-x: event.clientX,
-y: event.clientY,
-startX: event.clientX,
-startY: event.clientY,
-distance: 0,
-startRotateX: worldView.rotateX,
-startRotateY: worldView.rotateY
-};
-event.currentTarget.setPointerCapture(event.pointerId);
-}, [worldView.rotateX, worldView.rotateY]);
-
-  const movePointer = useCallback((event: ReactPointerEvent<HTMLElement>) => {
-    const pointer = pointerRef.current;
-
-    if (!pointer.active) {
+  useEffect(() => {
+    if (!hoveredSlug) {
       return;
     }
 
-    pointer.distance += Math.abs(event.clientX - pointer.x) + Math.abs(event.clientY - pointer.y);
-    pointer.x = event.clientX;
-    pointer.y = event.clientY;
-    const dragX = event.clientX - pointer.startX;
-    const dragY = event.clientY - pointer.startY;
-    const isDragging = pointer.distance > dragThreshold;
-
-    if (isDragging) {
-      cancelHoverHide();
+    if (!worldProducts.some((product) => product.slug === hoveredSlug)) {
       setHoveredSlug(null);
     }
+  }, [hoveredSlug, worldProducts]);
 
-    // 180-degree total horizontal sweep: [-65deg, +65deg] with smooth luxury resistance
-    // Vertical tilt: [-35deg, +35deg]
-    const nextRotateY = clamp(pointer.startRotateY + dragX * 0.32, -65, 65);
-    const nextRotateX = clamp(pointer.startRotateX - dragY * 0.24, -35, 35);
+  const beginPointer = useCallback(
+    (event: ReactPointerEvent<HTMLElement>) => {
+      pointerRef.current = {
+        active: true,
+        x: event.clientX,
+        y: event.clientY,
+        startX: event.clientX,
+        startY: event.clientY,
+        distance: 0,
+        startRotateX: worldView.rotateX,
+        startRotateY: worldView.rotateY
+      };
+      touchStartYRef.current = event.clientY;
+      event.currentTarget.setPointerCapture(event.pointerId);
+    },
+    [worldView.rotateX, worldView.rotateY]
+  );
 
-    setWorldView((current) => ({
-      ...current,
-      rotateX: nextRotateX,
-      rotateY: nextRotateY,
-      dragging: isDragging
-    }));
-  }, [cancelHoverHide]);
+  const movePointer = useCallback(
+    (event: ReactPointerEvent<HTMLElement>) => {
+      const pointer = pointerRef.current;
+
+      if (!pointer.active) {
+        return;
+      }
+
+      const deltaY = pointer.y - event.clientY;
+      pointer.distance += Math.abs(event.clientX - pointer.x) + Math.abs(event.clientY - pointer.y);
+      pointer.x = event.clientX;
+      pointer.y = event.clientY;
+      const dragX = event.clientX - pointer.startX;
+      const dragY = event.clientY - pointer.startY;
+      const isDragging = pointer.distance > dragThreshold;
+
+      if (isDragging) {
+        cancelHoverHide();
+        setHoveredSlug(null);
+      }
+
+      // If user is already in corridor mode or performs a strong vertical drag, drive cameraSlot
+      if (cameraSlotTargetRef.current > 0.05) {
+        cameraSlotTargetRef.current = Math.max(0, cameraSlotTargetRef.current + deltaY * 0.0035);
+        return;
+      }
+
+      // 180-degree total horizontal sweep: [-65deg, +65deg] with smooth luxury resistance
+      // Vertical tilt: [-35deg, +35deg]
+      const nextRotateY = clamp(pointer.startRotateY + dragX * 0.32, -65, 65);
+      const nextRotateX = clamp(pointer.startRotateX - dragY * 0.24, -35, 35);
+
+      setWorldView((current) => ({
+        ...current,
+        rotateX: nextRotateX,
+        rotateY: nextRotateY,
+        dragging: isDragging
+      }));
+    },
+    [cancelHoverHide]
+  );
 
   const endPointer = useCallback((event: ReactPointerEvent<HTMLElement>) => {
     pointerRef.current.active = false;
@@ -390,13 +444,18 @@ event.currentTarget.setPointerCapture(event.pointerId);
     setWorldView((current) => ({ ...current, dragging: false }));
   }, []);
 
-  const handleWorldWheel = useCallback((event: ReactWheelEvent<HTMLElement>) => {
-    setWorldView((current) => {
-      const delta = event.deltaY < 0 ? 0.06 : -0.06;
-      const nextZoom = clamp(current.zoom + delta, 0.75, 1.45);
-      return { ...current, zoom: nextZoom };
-    });
-  }, []);
+  // Wheel scroll drives On-Scroll Depth Gallery Corridor
+  const handleWorldWheel = useCallback(
+    (event: ReactWheelEvent<HTMLElement>) => {
+      cancelHoverEnter();
+      cancelHoverHide();
+      setHoveredSlug(null);
+
+      const delta = event.deltaY * 0.0022;
+      cameraSlotTargetRef.current = Math.max(0, cameraSlotTargetRef.current + delta);
+    },
+    [cancelHoverEnter, cancelHoverHide]
+  );
 
   const leaveWorld = useCallback(() => {
     if (pointerRef.current.active) {
@@ -415,7 +474,7 @@ event.currentTarget.setPointerCapture(event.pointerId);
 
   const openProduct = useCallback(
     (product: Product) => {
-      if (pointerRef.current.distance > dragThreshold) {
+      if (cameraSlotTargetRef.current < 0.05 && pointerRef.current.distance > dragThreshold) {
         return;
       }
       router.push(`/products/${product.slug}`);
@@ -426,6 +485,8 @@ event.currentTarget.setPointerCapture(event.pointerId);
   const reloadNextProductSet = useCallback(() => {
     cancelHoverHide();
     setHoveredSlug(null);
+    cameraSlotTargetRef.current = 0;
+    setCameraSlot(0);
     setProductSetIndex((index) => (index + 1) % productSetCount);
     setWorldView({
       rotateX: 0,
@@ -461,9 +522,6 @@ event.currentTarget.setPointerCapture(event.pointerId);
       return;
     }
 
-    // Core hero and feature cards land between 1200ms and 1580ms.
-    // Floating mini badges cruise in through 2100ms.
-    // Reveal UI chrome at 1500ms with a 600ms smooth fade so everything completes together seamlessly.
     const uiRevealTimeMs = 1500;
 
     const timer = window.setTimeout(() => {
@@ -474,66 +532,175 @@ event.currentTarget.setPointerCapture(event.pointerId);
     return () => window.clearTimeout(timer);
   }, [mounted]);
 
-if (!mounted) {
-return <section className="world-shell reference-showcase" aria-label="Loading product showcase" />;
-}
+  if (!mounted) {
+    return <section className="world-shell reference-showcase" aria-label="Loading product showcase" />;
+  }
 
-const hoveredProduct = hoveredSlug ? worldProducts.find((product) => product.slug === hoveredSlug) ?? null : null;
+  // -------------------------------------------------------------
+  // Transition Blending between 3D Showcase World and Depth Corridor
+  // -------------------------------------------------------------
+  const isInShowcase = cameraSlot < 0.03 && cameraSlotTargetRef.current < 0.03;
+  const showcaseOpacity = Math.max(0, 1 - cameraSlot / 0.45);
+  const corridorOpacity = Math.min(1, Math.max(0, (cameraSlot - 0.03) / 0.35));
 
-return (
-<section
-className={[
-"world-shell",
-"reference-showcase",
-hoveredSlug ? "is-hovering" : "",
-worldPaused ? "is-paused" : "",
-worldView.dragging ? "is-dragging" : "",
-showUI ? "ui-ready" : "ui-hidden"
-]
-.filter(Boolean)
-.join(" ")}
-ref={sectionRef}
-aria-label="Interactive product showcase"
-onPointerDown={beginWorldPointer}
-onPointerMove={movePointer}
-onPointerUp={endPointer}
-onPointerCancel={endPointer}
-onPointerLeave={leaveWorld}
-onWheel={handleWorldWheel}
->
-<div className="world-stage" style={stageStyle}>
-{worldProducts.map((product, index) => {
-const slotForProduct = activeSlots[index] ?? activeSlots[activeSlots.length - 1] ?? desktopReferenceSlots[0];
+  // -------------------------------------------------------------
+  // Strict 2-Plate Active Render Window for Depth Corridor
+  // -------------------------------------------------------------
+  const total = orderedProducts.length;
+  const baseIndex = Math.floor(cameraSlot);
+  const fraction = cameraSlot - baseIndex;
+  const focalIndex = ((baseIndex % total) + total) % total;
+  const approachingIndex = (((baseIndex + 1) % total) + total) % total;
 
-return (
-  <ReferenceWorldProduct
-    key={product.id}
-    product={product}
-    slot={slotForProduct}
-    flyInIndex={index}
-    isFlyingIn={!showUI}
-    isDimmed={Boolean(hoveredSlug && hoveredSlug !== product.slug)}
-    isHovered={hoveredSlug === product.slug}
-    onPreviewEnter={handleCardPreviewEnter}
-    onPreviewLeave={handleCardPreviewLeave}
-    onPointerDown={beginPointer}
-    onPointerMove={movePointer}
-    onPointerEnd={endPointer}
-    onOpen={openProduct}
-  />
-);
-})}
-</div>
+  const focalProduct = orderedProducts[focalIndex];
+  const approachingProduct = orderedProducts[approachingIndex];
 
+  // Staggered dual-plate layout calculations
+  const focalStyle: CSSProperties = {
+    transform: `translate3d(${-fraction * 34}%, 0, ${-fraction * 180}px) scale(${1 - fraction * 0.16})`,
+    opacity: 1 - fraction * 0.85,
+    zIndex: 10,
+    pointerEvents: fraction < 0.5 ? "auto" : "none"
+  };
+
+  const approachingStyle: CSSProperties = {
+    transform: `translate3d(${(1 - fraction) * 34}%, 0, ${(fraction - 1) * 220}px) scale(${0.82 + fraction * 0.18})`,
+    opacity: 0.25 + fraction * 0.75,
+    zIndex: 20,
+    pointerEvents: fraction >= 0.5 ? "auto" : "none"
+  };
+
+  const hoveredProduct = hoveredSlug ? worldProducts.find((product) => product.slug === hoveredSlug) ?? null : null;
+
+  return (
+    <section
+      className={[
+        "world-shell",
+        "reference-showcase",
+        isInShowcase ? "is-in-showcase" : "is-in-corridor",
+        hoveredSlug ? "is-hovering" : "",
+        worldPaused ? "is-paused" : "",
+        worldView.dragging ? "is-dragging" : "",
+        showUI ? "ui-ready" : "ui-hidden"
+      ]
+        .filter(Boolean)
+        .join(" ")}
+      ref={sectionRef}
+      aria-label="Interactive product showcase"
+      onPointerDown={beginWorldPointer}
+      onPointerMove={movePointer}
+      onPointerUp={endPointer}
+      onPointerCancel={endPointer}
+      onPointerLeave={leaveWorld}
+      onWheel={handleWorldWheel}
+    >
+      {/* ------------------------------------------------------------- */}
+      {/* Layer 1: Resting 3D Showcase World (from 18edb0a)            */}
+      {/* ------------------------------------------------------------- */}
+      {showcaseOpacity > 0 ? (
+        <div
+          className="world-stage"
+          style={{
+            ...stageStyle,
+            opacity: showcaseOpacity,
+            pointerEvents: isInShowcase ? "auto" : "none"
+          }}
+        >
+          {worldProducts.map((product, index) => {
+            const slotForProduct =
+              activeSlots[index] ?? activeSlots[activeSlots.length - 1] ?? desktopReferenceSlots[0];
+
+            return (
+              <ReferenceWorldProduct
+                key={product.id}
+                product={product}
+                slot={slotForProduct}
+                flyInIndex={index}
+                isFlyingIn={!showUI}
+                isDimmed={Boolean(hoveredSlug && hoveredSlug !== product.slug)}
+                isHovered={hoveredSlug === product.slug}
+                onPreviewEnter={handleCardPreviewEnter}
+                onPreviewLeave={handleCardPreviewLeave}
+                onPointerDown={beginPointer}
+                onPointerMove={movePointer}
+                onPointerEnd={endPointer}
+                onOpen={openProduct}
+              />
+            );
+          })}
+        </div>
+      ) : null}
+
+      {/* ------------------------------------------------------------- */}
+      {/* Layer 2: On-Scroll Staggered Dual-Plate Depth Corridor        */}
+      {/* ------------------------------------------------------------- */}
+      {corridorOpacity > 0 && (
+        <div
+          className="depth-gallery-viewport"
+          style={{
+            opacity: corridorOpacity,
+            pointerEvents: corridorOpacity > 0.1 ? "auto" : "none"
+          }}
+        >
+          <div className="depth-gallery-bg" aria-hidden="true">
+            <div className="bg-blob-a" />
+            <div className="bg-blob-b" />
+          </div>
+
+          <div className="depth-gallery-plates-container">
+            {focalProduct && (
+              <DepthPlate
+                product={focalProduct}
+                slotKind="focal"
+                style={focalStyle}
+                language={language}
+                t={t}
+                tCategory={tCategory}
+                onSelect={openProduct}
+              />
+            )}
+            {approachingProduct && (
+              <DepthPlate
+                product={approachingProduct}
+                slotKind="approaching"
+                style={approachingStyle}
+                language={language}
+                t={t}
+                tCategory={tCategory}
+                onSelect={openProduct}
+              />
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* Instructions HUD                                              */}
+      {/* ------------------------------------------------------------- */}
       <div className="world-instructions" aria-hidden="true">
-        {t("drag_to_rotate")}
-        <br />
-        {t("hover_for_details")}
-        <br />
-        {t("scroll_to_zoom")}
+        {isInShowcase ? (
+          <>
+            {t("drag_to_rotate")}
+            <br />
+            {t("hover_for_details")}
+            <br />
+            {t("scroll_to_explore")}
+          </>
+        ) : (
+          <>
+            {language === "bn" ? "স্ক্রোল করে নেভিগেট করুন" : "SCROLL TO NAVIGATE"}
+            <br />
+            {language === "bn" ? "বিস্তারিত দেখতে ক্লিক করুন" : "CLICK TO VIEW DETAILS"}
+            <br />
+            {language === "bn" ? "রিলোডে ক্লিক করে রিসেট করুন" : "RELOAD TO RESET"}
+          </>
+        )}
       </div>
 
-      {hoveredProduct ? (
+      {/* ------------------------------------------------------------- */}
+      {/* Card Hover Center Preview Bar (In Showcase Mode)               */}
+      {/* ------------------------------------------------------------- */}
+      {isInShowcase && hoveredProduct ? (
         <div className="world-center-preview">
           <Link
             href={`/products/${hoveredProduct.slug}`}
@@ -566,25 +733,44 @@ return (
         </div>
       ) : null}
 
-      {productSetCount > 1 ? (
-        <div className="world-set-controls" aria-label="Home page product sets">
-          <span className="world-set-count">
-            {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} / {formatNumber(String(productSetCount).padStart(2, "0"))} {t("pages")} • {formatNumber(products.length)} {t("products")}
-          </span>
-        </div>
-      ) : null}
+      {/* ------------------------------------------------------------- */}
+      {/* Product Sets / Corridor Progress Counter                     */}
+      {/* ------------------------------------------------------------- */}
+      <div className="world-set-controls" aria-label="Home page product sets">
+        <span className="world-set-count">
+          {isInShowcase ? (
+            productSetCount > 1 ? (
+              <>
+                {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} /{" "}
+                {formatNumber(String(productSetCount).padStart(2, "0"))} {t("pages")} •{" "}
+                {formatNumber(products.length)} {t("products")}
+              </>
+            ) : (
+              <>{formatNumber(products.length)} {t("products")}</>
+            )
+          ) : (
+            <>
+              {formatNumber(String(focalIndex + 1).padStart(2, "0"))} /{" "}
+              {formatNumber(String(total).padStart(2, "0"))} {t("products")}
+            </>
+          )}
+        </span>
+      </div>
 
-<div className="sr-only">
-{worldProducts.map((product) => (
-<a key={product.slug} href={`/products/${product.slug}`}>
-{product.title}
-</a>
-))}
-</div>
-</section>
-);
+      <div className="sr-only">
+        {worldProducts.map((product) => (
+          <a key={product.slug} href={`/products/${product.slug}`}>
+            {product.title}
+          </a>
+        ))}
+      </div>
+    </section>
+  );
 }
 
+// -------------------------------------------------------------
+// Reference Showcase Card Component (from 18edb0a)
+// -------------------------------------------------------------
 type ReferenceWorldProductProps = {
   product: Product;
   slot: ReferenceShowcaseSlot;
@@ -664,9 +850,118 @@ function ReferenceWorldProduct({
   );
 }
 
+// -------------------------------------------------------------
+// Staggered Dual-Plate Depth Corridor Plate Component
+// -------------------------------------------------------------
+type DepthPlateProps = {
+  product: Product;
+  slotKind: "focal" | "approaching";
+  style: CSSProperties;
+  language: "en" | "bn";
+  t: (key: TranslationKey) => string;
+  tCategory: (cat: string) => string;
+  onSelect: (product: Product) => void;
+};
 
+function DepthPlate({
+  product,
+  slotKind,
+  style,
+  language,
+  t,
+  tCategory,
+  onSelect
+}: DepthPlateProps) {
+  const formattedPrice = formatPrice(product.price);
+  const formattedOldPrice = product.old_price ? formatPrice(product.old_price) : null;
+  const hasDiscount = Boolean(product.old_price && product.old_price > product.price);
 
+  const stockLabel =
+    product.stock === "In stock"
+      ? language === "bn"
+        ? "স্টকে আছে"
+        : "In stock"
+      : product.stock === "Low stock"
+      ? language === "bn"
+        ? "সীমিত স্টক"
+        : "Low stock"
+      : language === "bn"
+      ? "স্টক শেষ"
+      : "Out of stock";
 
+  const stockDotClass =
+    product.stock === "In stock"
+      ? ""
+      : product.stock === "Low stock"
+      ? "stock-low"
+      : "stock-out";
+
+  const plateStyle: CSSProperties = {
+    ...style,
+    "--plate-accent": product.accent || "#3385ff"
+  } as CSSProperties;
+
+  return (
+    <button
+      type="button"
+      className={`depth-plate depth-plate-${slotKind}`}
+      data-plate-slot={slotKind}
+      style={plateStyle}
+      aria-label={`${product.title} - ${formattedPrice}`}
+      onPointerDown={(e) => {
+        if (style.pointerEvents !== "none") {
+          e.stopPropagation();
+        }
+      }}
+      onClick={(e) => {
+        if (style.pointerEvents === "none") {
+          e.preventDefault();
+          return;
+        }
+        onSelect(product);
+      }}
+    >
+      {/* Top Bar: Category Badge & Stock Indicator */}
+      <div className="depth-plate-top">
+        <span className="depth-plate-badge">{tCategory(product.category)}</span>
+        <div className="depth-plate-stock">
+          <span className={`depth-plate-stock-dot ${stockDotClass}`} />
+          <span>{stockLabel}</span>
+        </div>
+      </div>
+
+      {/* Media Artwork */}
+      <div className="depth-plate-media">
+        <div className="depth-plate-art-wrap">
+          <ProductArtwork product={product} compact={false} />
+        </div>
+      </div>
+
+      {/* Bottom Info Bar */}
+      <div className="depth-plate-bottom">
+        <h2 className="depth-plate-title">{product.title}</h2>
+
+        <div className="depth-plate-footer">
+          <div className="depth-plate-price-box">
+            <span className="depth-plate-price">{formattedPrice}</span>
+            {hasDiscount && formattedOldPrice ? (
+              <span className="depth-plate-old-price">{formattedOldPrice}</span>
+            ) : null}
+          </div>
+
+          <div className="depth-plate-cta" aria-hidden="true">
+            <span>{t("view_details")}</span>
+            <ArrowUpRight size={13} />
+          </div>
+        </div>
+      </div>
+    </button>
+  );
+}
+
+// -------------------------------------------------------------
+// Canonical Placement & Helper Functions (from 18edb0a)
+// -------------------------------------------------------------
 const canonicalHomeSlugs = [
   // Center Column:
   "atomos-ninja-v", // Slot 0: Center Hero (Zoom Ninje V)
@@ -777,7 +1072,8 @@ function getShowcaseStageScale(viewportSize: ViewportSize, slots: ReferenceShowc
 function getShowcaseStageStyle(
   scale: number,
   viewportSize: ViewportSize,
-  worldView: WorldViewState
+  worldView: WorldViewState,
+  cameraSlot = 0
 ): CSSProperties & Record<`--${string}`, string> {
   const verticalOffset =
     viewportSize.width < 700
@@ -786,8 +1082,10 @@ function getShowcaseStageStyle(
       ? "-18px"
       : "-14px";
 
+  const effectiveScale = scale * worldView.zoom * (1 + cameraSlot * 0.08);
+
   return {
-    "--world-stage-scale": String(scale * worldView.zoom),
+    "--world-stage-scale": String(effectiveScale),
     "--world-stage-offset-y": verticalOffset,
     "--world-rotate-x": `${worldView.rotateX}deg`,
     "--world-rotate-y": `${worldView.rotateY}deg`,
@@ -797,33 +1095,33 @@ function getShowcaseStageStyle(
 }
 
 function transformShowcaseSlots(
-slots: ReferenceShowcaseSlot[],
-xMultiplier: number,
-yMultiplier: number
+  slots: ReferenceShowcaseSlot[],
+  xMultiplier: number,
+  yMultiplier: number
 ): ReferenceShowcaseSlot[] {
-return slots.map((cardSlot) => ({
-...cardSlot,
-x: Math.round(cardSlot.x * xMultiplier),
-y: Math.round(cardSlot.y * yMultiplier)
-}));
+  return slots.map((cardSlot) => ({
+    ...cardSlot,
+    x: Math.round(cardSlot.x * xMultiplier),
+    y: Math.round(cardSlot.y * yMultiplier)
+  }));
 }
 
 function getShowcaseBounds(slots: ReferenceShowcaseSlot[]): ShowcaseBounds {
-return slots.reduce<ShowcaseBounds>(
-(bounds, currentSlot) => {
-const slotScale = currentSlot.scale ?? 1;
-const halfWidth = (currentSlot.width * slotScale) / 2;
-const halfHeight = (currentSlot.height * slotScale) / 2;
+  return slots.reduce<ShowcaseBounds>(
+    (bounds, currentSlot) => {
+      const slotScale = currentSlot.scale ?? 1;
+      const halfWidth = (currentSlot.width * slotScale) / 2;
+      const halfHeight = (currentSlot.height * slotScale) / 2;
 
-return {
-minX: Math.min(bounds.minX, currentSlot.x - halfWidth),
-maxX: Math.max(bounds.maxX, currentSlot.x + halfWidth),
-minY: Math.min(bounds.minY, currentSlot.y - halfHeight),
-maxY: Math.max(bounds.maxY, currentSlot.y + halfHeight)
-};
-},
-{ minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity }
-);
+      return {
+        minX: Math.min(bounds.minX, currentSlot.x - halfWidth),
+        maxX: Math.max(bounds.maxX, currentSlot.x + halfWidth),
+        minY: Math.min(bounds.minY, currentSlot.y - halfHeight),
+        maxY: Math.max(bounds.maxY, currentSlot.y + halfHeight)
+      };
+    },
+    { minX: Infinity, maxX: -Infinity, minY: Infinity, maxY: -Infinity }
+  );
 }
 
 function getReferenceCardStyle(
@@ -833,11 +1131,14 @@ function getReferenceCardStyle(
 ): CSSProperties & Record<`--${string}`, string> {
   const slotScale = cardSlot.scale ?? 1;
   const hoverScale = slotScale + (cardSlot.kind === "hero" ? 0.22 : cardSlot.kind === "mini" ? 0.35 : 0.28);
-  const duration = cardSlot.duration ?? Number((6.8 + ((Math.abs(cardSlot.x * 3 + cardSlot.y * 7) + index * 11) % 35) * 0.08).toFixed(2));
+  const duration =
+    cardSlot.duration ??
+    Number((6.8 + ((Math.abs(cardSlot.x * 3 + cardSlot.y * 7) + index * 11) % 35) * 0.08).toFixed(2));
   const floatX = cardSlot.floatX ?? 0;
   const floatY = cardSlot.floatY ?? (cardSlot.kind === "mini" ? -5 : -7);
   const floatRotate = cardSlot.floatRotate ?? (cardSlot.kind === "mini" ? 0.35 : 0.22);
-  const cardDepth = cardSlot.kind === "hero" ? 72 : cardSlot.kind === "feature" ? 32 : cardSlot.kind === "medium" ? 10 : -26;
+  const cardDepth =
+    cardSlot.kind === "hero" ? 72 : cardSlot.kind === "feature" ? 32 : cardSlot.kind === "medium" ? 10 : -26;
 
   return {
     zIndex: cardSlot.zIndex,
@@ -865,31 +1166,31 @@ function getReferenceCardStyle(
 }
 
 function getLegacySizeClass(kind: ShowcaseCardKind): string {
-if (kind === "mini") {
-return "size-small";
-}
+  if (kind === "mini") {
+    return "size-small";
+  }
 
-if (kind === "hero") {
-return "size-hero";
-}
+  if (kind === "hero") {
+    return "size-hero";
+  }
 
-return kind === "feature" ? "size-large" : "size-medium";
+  return kind === "feature" ? "size-large" : "size-medium";
 }
 
 function slot(
-x: number,
-y: number,
-width: number,
-height: number,
-zIndex: number,
-kind: ShowcaseCardKind,
-options: Omit<ReferenceShowcaseSlot, "x" | "y" | "width" | "height" | "zIndex" | "kind"> = {}
+  x: number,
+  y: number,
+  width: number,
+  height: number,
+  zIndex: number,
+  kind: ShowcaseCardKind,
+  options: Omit<ReferenceShowcaseSlot, "x" | "y" | "width" | "height" | "zIndex" | "kind"> = {}
 ): ReferenceShowcaseSlot {
-return { x, y, width, height, zIndex, kind, ...options };
+  return { x, y, width, height, zIndex, kind, ...options };
 }
 
 function clamp(value: number, min: number, max: number): number {
-return Math.min(max, Math.max(min, value));
+  return Math.min(max, Math.max(min, value));
 }
 
 function getFlyInOrigin(slot: ReferenceShowcaseSlot, index: number): "top" | "bottom" | "left" | "right" {

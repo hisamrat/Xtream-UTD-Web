@@ -22,6 +22,7 @@ export type TranslationKey =
   | "drag_to_rotate"
   | "hover_for_details"
   | "scroll_to_zoom"
+  | "scroll_to_explore"
   | "view_details"
   | "in_stock"
   | "low_stock"
@@ -79,7 +80,8 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     close: "Close",
     drag_to_rotate: "DRAG TO ROTATE",
     hover_for_details: "HOVER FOR DETAILS",
-    scroll_to_zoom: "SCROLL TO ZOOM",
+    scroll_to_zoom: "SCROLL TO EXPLORE",
+    scroll_to_explore: "SCROLL TO EXPLORE",
     view_details: "View Details",
     in_stock: "In stock",
     low_stock: "Low stock",
@@ -136,7 +138,8 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     close: "বন্ধ করুন",
     drag_to_rotate: "ঘোরাতে ড্র্যাগ করুন",
     hover_for_details: "বিস্তারিত দেখতে হোভার করুন",
-    scroll_to_zoom: "জুম করতে স্ক্রোল করুন",
+    scroll_to_zoom: "এক্সপ্লোর করতে স্ক্রোল করুন",
+    scroll_to_explore: "এক্সপ্লোর করতে স্ক্রোল করুন",
     view_details: "বিস্তারিত দেখুন",
     in_stock: "স্টকে আছে",
     low_stock: "সীমিত স্টক",
