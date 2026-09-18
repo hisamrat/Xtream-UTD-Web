@@ -33,6 +33,12 @@ export function BottomSwitch() {
     window.setTimeout(() => setReloading(false), 500);
   }, []);
 
+  const handleHomeClick = useCallback(() => {
+    if (onHome) {
+      window.dispatchEvent(new CustomEvent("xtream-utd:world-home"));
+    }
+  }, [onHome]);
+
   // When on Home, Home sits in the center slot (slot 2) and All Products is in slot 1.
   // When on Products, All Products sits in the center slot (slot 2) and Home is in slot 1.
   // When on other pages, Home is in slot 1 and All Products is in slot 2.
@@ -59,7 +65,7 @@ export function BottomSwitch() {
           <span>{t("nav_products")}</span>
         </Link>
       ) : (
-        <Link href="/" aria-current={onHome ? "page" : undefined}>
+        <Link href="/" onClick={handleHomeClick} aria-current={onHome ? "page" : undefined}>
           <Home size={16} aria-hidden="true" />
           <span>{t("nav_home")}</span>
         </Link>
@@ -67,7 +73,7 @@ export function BottomSwitch() {
 
       {/* Slot 2 (Center - Active Primary Page) */}
       {isCenterHome ? (
-        <Link href="/" aria-current={onHome ? "page" : undefined}>
+        <Link href="/" onClick={handleHomeClick} aria-current={onHome ? "page" : undefined}>
           <Home size={16} aria-hidden="true" />
           <span>{t("nav_home")}</span>
         </Link>

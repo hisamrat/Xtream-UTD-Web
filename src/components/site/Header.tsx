@@ -25,6 +25,12 @@ export function Header({ products }: HeaderProps) {
   const [homeUIReady, setHomeUIReady] = useState(false);
   const isHomePage = pathname === "/";
 
+  const handleHomeClick = () => {
+    if (isHomePage) {
+      window.dispatchEvent(new CustomEvent("xtream-utd:world-home"));
+    }
+  };
+
   useEffect(() => {
     document.body.classList.toggle("modal-open", menuOpen || searchOpen);
     return () => document.body.classList.remove("modal-open");
@@ -57,12 +63,13 @@ export function Header({ products }: HeaderProps) {
     <>
       <header className="site-header" style={headerStyle}>
         <div className="header-left">
-          <Link href="/" className="wordmark" aria-label="Xtream UTD home">
+          <Link href="/" className="wordmark" onClick={handleHomeClick} aria-label="Xtream UTD home">
             <span>{siteConfig.name}</span>
           </Link>
           <nav className="desktop-nav" aria-label="Main Navigation">
             <Link
               href="/"
+              onClick={handleHomeClick}
               className={`desktop-nav-link ${pathname === "/" ? "is-active" : ""}`}
             >
               {t("nav_home")}
@@ -107,7 +114,7 @@ export function Header({ products }: HeaderProps) {
         <div className="mobile-menu" role="dialog" aria-modal="true" aria-label="Mobile menu">
           <div className="mobile-menu-panel">
             <div className="mobile-menu-header">
-              <Link href="/" className="wordmark" onClick={() => setMenuOpen(false)}>
+              <Link href="/" className="wordmark" onClick={() => { setMenuOpen(false); handleHomeClick(); }}>
                 <span>{siteConfig.name}</span>
               </Link>
               <button className="icon-button" type="button" onClick={() => setMenuOpen(false)} aria-label="Close menu">
@@ -115,7 +122,7 @@ export function Header({ products }: HeaderProps) {
               </button>
             </div>
             <div className="quick-actions">
-              <Link className="pill-button" href="/" onClick={() => setMenuOpen(false)}>
+              <Link className="pill-button" href="/" onClick={() => { setMenuOpen(false); handleHomeClick(); }}>
                 <Home size={16} aria-hidden="true" />
                 {t("nav_home")}
               </Link>
