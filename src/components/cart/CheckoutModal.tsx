@@ -11,7 +11,6 @@ import {
   Plus,
   Send,
   ShieldCheck,
-  ShoppingBag,
   Trash2,
   Truck,
   X
@@ -207,7 +206,6 @@ PLEASE CONFIRM MY ORDER!`;
       <div className="checkout-modal-panel">
         <div className="checkout-modal-header">
           <div className="checkout-title-group">
-            <ShoppingBag size={20} className="text-accent" aria-hidden="true" />
             <h2>{language === "bn" ? "অর্ডার চেকআউট" : "Complete Your Order"}</h2>
           </div>
           <button

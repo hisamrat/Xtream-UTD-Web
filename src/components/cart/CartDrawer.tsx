@@ -26,7 +26,6 @@ export function CartDrawer() {
         {/* Header */}
         <div className="cart-drawer-header">
           <div className="cart-header-title-row">
-            <ShoppingBag size={20} className="text-accent" aria-hidden="true" />
             <h2>{language === "bn" ? "শপিং কার্ট" : "Your Shopping Cart"}</h2>
             <span className="cart-count-badge">{formatNumber(totalCount)}</span>
           </div>

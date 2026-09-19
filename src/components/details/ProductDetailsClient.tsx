@@ -8,16 +8,12 @@ import {
   MessageCircle,
   Minus,
   Plus,
-  RotateCcw,
-  RotateCw,
   Share2,
   ShieldCheck,
   ShoppingCart,
-  Sparkles,
   Truck
 } from "lucide-react";
-import { useEffect, useMemo, useRef, useState } from "react";
-import type { PointerEvent as ReactPointerEvent } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { ProductArtwork } from "@/components/products/ProductArtwork";
 import { ProductCard } from "@/components/products/ProductCard";
 import { PriceDisplay } from "@/components/products/PriceDisplay";
@@ -34,11 +30,6 @@ type ProductDetailsClientProps = {
   allProducts: Product[];
 };
 
-type GalleryDragState = {
-  active: boolean;
-  x: number;
-};
-
 export function ProductDetailsClient({ product, relatedProducts, allProducts }: ProductDetailsClientProps) {
   const { t, language, tCategory, formatNumber } = useLanguage();
   const { addItem, openCheckout } = useCart();
@@ -50,18 +41,15 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
     availableVariants[0] ?? "Standard"
   );
   const [selectedGalleryIndex, setSelectedGalleryIndex] = useState(0);
-  const [galleryRotation, setGalleryRotation] = useState(0);
-  const [galleryRotating, setGalleryRotating] = useState(false);
   const [quantity, setQuantity] = useState(1);
   const [modalOpen, setModalOpen] = useState(false);
   const [recentProductSlugs, setRecentProductSlugs] = useState<string[]>([]);
   const [cartAdded, setCartAdded] = useState(false);
-  const galleryDragRef = useRef<GalleryDragState>({ active: false, x: 0 });
 
   const thumbnailLabels = useMemo(
     () => [
       language === "bn" ? "সামনের দৃশ্য" : "Front View",
-      language === "bn" ? "৩৬০° এঙ্গেল দৃশ্য" : "360° Angle View",
+      language === "bn" ? "এঙ্গেল দৃশ্য" : "Angle View",
       language === "bn" ? "পার্শ্ব দৃশ্য" : "Side View",
       language === "bn" ? "ডিটেইল ভিউ" : "Detail View"
     ],
@@ -81,8 +69,6 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
 
   const handleSelectThumbnail = (index: number) => {
     setSelectedGalleryIndex(index);
-    const angles = [0, 90, 180, 270];
-    setGalleryRotation(angles[index % 4] ?? 0);
   };
 
   const recentlyViewedProducts = useMemo(
@@ -111,36 +97,7 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
 
   useEffect(() => {
     setSelectedGalleryIndex(0);
-    setGalleryRotation(0);
   }, [product.slug]);
-
-  const rotateGallery = (amount: number) => {
-    setGalleryRotation((rotation) => normalizeRotation(rotation + amount));
-  };
-
-  const startGalleryRotation = (event: ReactPointerEvent<HTMLDivElement>) => {
-    galleryDragRef.current = { active: true, x: event.clientX };
-    setGalleryRotating(true);
-    event.currentTarget.setPointerCapture(event.pointerId);
-  };
-
-  const moveGalleryRotation = (event: ReactPointerEvent<HTMLDivElement>) => {
-    if (!galleryDragRef.current.active) {
-      return;
-    }
-
-    const delta = event.clientX - galleryDragRef.current.x;
-    galleryDragRef.current.x = event.clientX;
-    rotateGallery(delta * 1.15);
-  };
-
-  const endGalleryRotation = (event: ReactPointerEvent<HTMLDivElement>) => {
-    galleryDragRef.current.active = false;
-    setGalleryRotating(false);
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-  };
 
   const handleAddToCart = () => {
     if (product.stock === "Out of stock") return;
@@ -177,23 +134,13 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
         />
 
         <div className="details-layout">
-          {/* Left Column: Interactive 3D Showcase */}
+          {/* Left Column: Product Showcase Gallery */}
           <div className="details-gallery">
-            <div className={`gallery-main ${galleryRotating ? "is-rotating" : ""}`}>
-              <div className="gallery-badge-360">
-                <Sparkles size={13} className="text-accent" aria-hidden="true" />
-                <span>{language === "bn" ? "৩৬০° ড্র্যাগ ভিউ" : "360° Drag to Rotate"}</span>
-              </div>
-
+            <div className="gallery-main">
               <div
                 className="gallery-rotator"
-                onPointerDown={startGalleryRotation}
-                onPointerMove={moveGalleryRotation}
-                onPointerUp={endGalleryRotation}
-                onPointerCancel={endGalleryRotation}
-                style={{ transform: `rotateY(${galleryRotation}deg)` }}
                 role="img"
-                aria-label={`${product.title} rotatable product preview`}
+                aria-label={`${product.title} product preview`}
               >
                 <ProductArtwork product={product} />
               </div>
@@ -201,27 +148,6 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
               <div className="gallery-caption">
                 <span>{thumbnailLabels[selectedGalleryIndex] || `Gallery image ${selectedGalleryIndex + 1}`}</span>
                 <strong>{selectedGalleryIndex + 1} / 4</strong>
-              </div>
-
-              <div className="gallery-rotate-actions" aria-label="Rotate product preview">
-                <button
-                  className="icon-button"
-                  type="button"
-                  onClick={() => rotateGallery(-45)}
-                  aria-label="Rotate product left"
-                  title="Rotate Left"
-                >
-                  <RotateCcw size={16} aria-hidden="true" />
-                </button>
-                <button
-                  className="icon-button"
-                  type="button"
-                  onClick={() => rotateGallery(45)}
-                  aria-label="Rotate product right"
-                  title="Rotate Right"
-                >
-                  <RotateCw size={16} aria-hidden="true" />
-                </button>
               </div>
             </div>
 
@@ -473,8 +399,4 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
       />
     </>
   );
-}
-
-function normalizeRotation(rotation: number): number {
-  return ((rotation % 360) + 360) % 360;
 }

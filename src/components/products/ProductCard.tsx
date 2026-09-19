@@ -1,14 +1,29 @@
 "use client";
 
 import Link from "next/link";
-import { ArrowUpRight, Check, ShoppingCart } from "lucide-react";
+import { ArrowUpRight, Check, Plus } from "lucide-react";
 import { useState } from "react";
 import type { Product } from "@/lib/product-schema";
 import { useLanguage } from "@/components/site/LanguageProvider";
 import { useCart } from "@/components/cart/CartProvider";
+import { formatPrice, hasValidOldPrice } from "@/lib/format";
 import { ProductArtwork } from "./ProductArtwork";
-import { PriceDisplay } from "./PriceDisplay";
-import { StockStatus } from "./StockStatus";
+
+function getQuickHighlight(product: Product, language?: string): string {
+  if (product.best_seller) {
+    return language === "bn" ? "বেস্ট সেলার" : "BEST SELLER";
+  }
+  if (product.new_arrival) {
+    return language === "bn" ? "নতুন কালেকশন" : "NEW ARRIVAL";
+  }
+  if (product.discount_percentage && product.discount_percentage > 0) {
+    return language === "bn" ? `${product.discount_percentage}% ছাড়` : `${product.discount_percentage}% OFF`;
+  }
+  if (product.badge && product.badge.trim().length > 0) {
+    return product.badge.trim().toUpperCase();
+  }
+  return "";
+}
 
 type ProductCardProps = {
   product: Product;
@@ -18,11 +33,14 @@ type ProductCardProps = {
 };
 
 export function ProductCard({ product, compact = false, selected = false, onClick }: ProductCardProps) {
-  const { t, tCategory } = useLanguage();
+  const { t, tCategory, language } = useLanguage();
   const { addItem } = useCart();
   const [added, setAdded] = useState(false);
 
   const isOutOfStock = product.stock === "Out of stock";
+  const hasOld = hasValidOldPrice(product);
+
+  const quickHighlight = getQuickHighlight(product, language);
 
   const className = [
     "product-card",
@@ -50,51 +68,77 @@ export function ProductCard({ product, compact = false, selected = false, onClic
       onClick={onClick}
       aria-label={`View details for ${product.title}, ${product.category}, ${product.stock}`}
     >
+      {/* 1. Full Fit Image Container */}
       <div className="product-media">
+        {/* Top Badges (Left: Quick Highlights, Right: Clean / Sold Out only) */}
         <div className="product-media-header">
-          <div className="product-media-badges">
-            <StockStatus stock={product.stock} dotOnly />
-            {product.badge ? <span className="badge badge-featured">{product.badge}</span> : null}
-          </div>
+          {quickHighlight ? (
+            <span className="card-top-badge badge-highlight" title={quickHighlight}>
+              {quickHighlight}
+            </span>
+          ) : null}
+
+          {isOutOfStock ? (
+            <span className="card-top-badge badge-stock-out">
+              {language === "bn" ? "স্টক শেষ" : "SOLD OUT"}
+            </span>
+          ) : null}
         </div>
 
-        <ProductArtwork product={product} compact={compact} />
+        {/* Full-bleed centered vector artwork */}
+        <div className="product-artwork-container">
+          <ProductArtwork product={product} compact={compact} />
+        </div>
+
+        {/* Hover Action Overlay: Bottom-Left "+ Add to Cart", Bottom-Right "View Details" icon */}
+        <div className="product-card-hover-actions">
+          <button
+            type="button"
+            className={`card-hover-cart-btn ${added ? "is-added" : ""}`}
+            onClick={handleAddToCart}
+            disabled={isOutOfStock}
+            title={added ? t("added_to_cart") : t("add_to_cart")}
+            aria-label={`${t("add_to_cart")} ${product.title}`}
+          >
+            {added ? (
+              <>
+                <Check size={14} className="quick-cart-check" aria-hidden="true" />
+                <span>{language === "bn" ? "যোগ হয়েছে" : "ADDED"}</span>
+              </>
+            ) : isOutOfStock ? (
+              <span>{language === "bn" ? "স্টক শেষ" : "SOLD OUT"}</span>
+            ) : (
+              <>
+                <Plus size={14} aria-hidden="true" />
+                <span>{language === "bn" ? "কার্টে যোগ করুন" : "ADD TO CART"}</span>
+              </>
+            )}
+          </button>
+
+          <span
+            className="card-hover-details-btn"
+            title={t("view_details")}
+            aria-label={`View details for ${product.title}`}
+          >
+            <ArrowUpRight size={16} aria-hidden="true" />
+          </span>
+        </div>
       </div>
 
+      {/* 2. Product Meta Info Below Image (Matching Reference Image 1) */}
       <div className="product-meta">
-        <div className="product-meta-header">
+        <div className="product-meta-left">
+          <h3 className="product-title" title={product.title}>
+            {product.title}
+          </h3>
           <span className="product-category">{tCategory(product.category)}</span>
         </div>
-        <h3 className="product-title">{product.title}</h3>
-        <PriceDisplay product={product} showDiscount={!compact} />
-      </div>
-
-      <div className="product-card-footer">
-        <button
-          type="button"
-          className={`card-quick-cart-btn ${added ? "is-added" : ""}`}
-          onClick={handleAddToCart}
-          disabled={isOutOfStock}
-          title={added ? t("added_to_cart") : t("add_to_cart")}
-          aria-label={`${t("add_to_cart")} ${product.title}`}
-        >
-          {added ? (
-            <>
-              <Check size={14} className="quick-cart-check" aria-hidden="true" />
-              <span className="cart-btn-label">{t("added_to_cart")}</span>
-            </>
-          ) : (
-            <>
-              <ShoppingCart size={14} aria-hidden="true" />
-              <span className="cart-btn-label">{t("add_to_cart")}</span>
-            </>
-          )}
-        </button>
-
-        <span className="view-details-action">
-          <span>{t("view_details")}</span>
-          <ArrowUpRight size={13} className="view-details-arrow" aria-hidden="true" />
-        </span>
+        <div className="product-meta-right">
+          <div className="product-price-block">
+            <span className="current-price">{formatPrice(product.price)}</span>
+            {hasOld ? <span className="old-price">{formatPrice(product.old_price)}</span> : null}
+          </div>
+        </div>
       </div>
     </Link>
   );

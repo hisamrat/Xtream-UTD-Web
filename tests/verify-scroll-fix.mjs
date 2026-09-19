@@ -33,7 +33,12 @@ async function main() {
     // Scroll down to activate carousel
     await page.mouse.move(720, 450);
     await page.mouse.wheel(0, 300);
-    await page.waitForTimeout(800);
+    await page.waitForTimeout(1200);
+
+    await page.screenshot({
+      path: "C:/Users/Samrat/.gemini/antigravity/brain/d5ea8804-7845-48c1-b286-2331514028f4/carousel-larger-side-cards.png"
+    });
+    console.log("Captured carousel-larger-side-cards.png");
 
     let carouselClass = await page.$eval(".world-shell", (el) => el.className);
     console.log("After scroll down, world-shell classes:", carouselClass);

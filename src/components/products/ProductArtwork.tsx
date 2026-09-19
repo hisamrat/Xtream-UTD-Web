@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import type { Product } from "@/lib/product-schema";
 import type { CSSProperties } from "react";
 
@@ -8,6 +11,7 @@ type ProductArtworkProps = {
 
 export function ProductArtwork({ product, compact = false }: ProductArtworkProps) {
   const accent = product.accent || "#3385FF";
+  const [imageError, setImageError] = useState(false);
 
   if (compact) {
     return (
@@ -22,6 +26,8 @@ export function ProductArtwork({ product, compact = false }: ProductArtworkProps
     );
   }
 
+  const realImageSrc = `/products/${product.slug}/main.jpg`;
+
   return (
     <div
       aria-hidden="true"
@@ -29,7 +35,19 @@ export function ProductArtwork({ product, compact = false }: ProductArtworkProps
       style={{ "--art-accent": accent } as CSSProperties}
       data-compact="false"
     >
-      <HardwareVectorArtwork kind={product.kind} accent={accent} title={product.title} />
+      {!imageError ? (
+        <div className="product-real-image-wrap">
+          <img
+            src={realImageSrc}
+            alt={product.title}
+            className="product-real-image"
+            onError={() => setImageError(true)}
+            loading="lazy"
+          />
+        </div>
+      ) : (
+        <HardwareVectorArtwork kind={product.kind} accent={accent} title={product.title} />
+      )}
     </div>
   );
 }

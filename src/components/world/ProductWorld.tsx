@@ -302,18 +302,18 @@ export function ProductWorld({ products }: ProductWorldProps) {
         return;
       }
 
-      // Mathematical replica of Framer 3D Scale Carousel:
-      // Center card is 1.0x; step 1 card is 0.38x; step 2 is 0.30x; step 3 is 0.23x...
+      // Vanishing Arc Scale Model:
+      // Center card is 1.0x; step 1 card is 0.48x; step 2 is 0.317x; step 3 is 0.209x; outer wings shrink & smoothly vanish
       let scale: number;
       let integratedW: number;
 
       if (absD <= 1.0) {
-        scale = 0.38 + 0.62 * Math.pow(Math.cos((absD * Math.PI) / 2), 2);
-        integratedW = cardWidth * (0.69 * absD + (0.31 / Math.PI) * Math.sin(Math.PI * absD));
+        scale = 0.48 + 0.52 * Math.pow(Math.cos((absD * Math.PI) / 2), 2);
+        integratedW = cardWidth * (0.74 * absD + (0.26 / Math.PI) * Math.sin(Math.PI * absD));
       } else {
         const excess = absD - 1.0;
-        scale = 0.38 * Math.pow(0.78, excess);
-        integratedW = cardWidth * (0.69 + 1.5294 * (1 - Math.pow(0.78, excess)));
+        scale = 0.48 * Math.pow(0.66, excess);
+        integratedW = cardWidth * (0.74 + 1.1553 * (1 - Math.pow(0.66, excess)));
       }
 
       const sign = d >= 0 ? 1 : -1;
@@ -321,11 +321,13 @@ export function ProductWorld({ products }: ProductWorldProps) {
       const x = sign * (integratedW + absD * cardGapPx);
       const y = 0;
       const z = -absD * 18;
-      const rotateY = -sign * Math.min(14, absD * 3.5);
-      const opacity = Math.max(0, Math.min(1, 1 - Math.pow(absD / VISIBLE_RANGE, 2.4)));
+      const rotateY = -sign * Math.min(14, absD * 3.4);
 
-      // Depth blur on side cards matching reference site
-      const blur = absD <= 0.4 ? 0 : Math.min(5.5, (absD - 0.4) * 1.5);
+      // Smooth cosine opacity fade so cards gracefully vanish at outer ends
+      const opacity = absD <= 5.5 ? Math.pow(Math.cos((absD * Math.PI) / 11), 2) : 0;
+
+      // Subtle photographic depth blur
+      const blur = absD <= 0.4 ? 0 : Math.min(6.0, (absD - 0.4) * 1.4);
       const zIndex = Math.round(100 - absD * 8);
 
       // HUD elements (top title, viewfinder brackets, bottom price) only visible on center card

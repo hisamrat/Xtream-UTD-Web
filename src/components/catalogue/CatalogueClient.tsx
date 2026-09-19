@@ -78,7 +78,6 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
   const sortMenuRef = useRef<HTMLDivElement>(null);
   const [isPending, startTransition] = useTransition();
   const [filtersOpen, setFiltersOpen] = useState(false);
-  const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [categoryDropdownOpen, setCategoryDropdownOpen] = useState(false);
   const [sortDropdownOpen, setSortDropdownOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
@@ -148,9 +147,9 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
   );
 
   useEffect(() => {
-    document.body.classList.toggle("modal-open", filtersOpen || mobileFiltersOpen);
+    document.body.classList.toggle("modal-open", filtersOpen);
     return () => document.body.classList.remove("modal-open");
-  }, [filtersOpen, mobileFiltersOpen]);
+  }, [filtersOpen]);
 
   useEffect(() => {
     setCurrentPage((page) => Math.min(page, pageCount));
@@ -160,7 +159,6 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
     const closeOnEscape = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         setFiltersOpen(false);
-        setMobileFiltersOpen(false);
         setCategoryDropdownOpen(false);
         setSortDropdownOpen(false);
       }
@@ -189,16 +187,6 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
     value: CatalogueFilters[Key]
   ) => updateFilters({ ...filters, [key]: value });
 
-  const toggleCategory = (category: string) => {
-    const current = new Set(filters.categories ?? []);
-    if (current.has(category)) {
-      current.delete(category);
-    } else {
-      current.add(category);
-    }
-    updateFilters({ ...filters, categories: Array.from(current) });
-  };
-
   const toggleAvailability = (stock: StockStatus) => {
     const current = new Set(filters.availability ?? []);
     if (current.has(stock)) {
@@ -213,24 +201,23 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
     updateFilters({ sort: "featured" });
   };
 
+  const setPricePreset = (min: number | undefined, max: number | undefined) => {
+    updateFilters({ ...filters, priceMin: min, priceMax: max });
+  };
+
   const filterPanel = (
     <FilterPanel
-      categories={categories}
-      categoryCounts={categoryCounts}
       priceRange={priceRange}
       filters={filters}
       resultCount={results.length}
-      onCategoryToggle={toggleCategory}
       onAvailabilityToggle={toggleAvailability}
       onBooleanToggle={(key) => setFilterValue(key, !filters[key])}
-      onSort={(sort) => setFilterValue("sort", sort)}
       onPriceMin={(value) => setFilterValue("priceMin", value)}
       onPriceMax={(value) => setFilterValue("priceMax", value)}
+      onPricePreset={setPricePreset}
       onClear={clearFilters}
-      onApply={() => {
-        setFiltersOpen(false);
-        setMobileFiltersOpen(false);
-      }}
+      onApply={() => setFiltersOpen(false)}
+      onClose={() => setFiltersOpen(false)}
     />
   );
 
@@ -258,11 +245,13 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
             ? (language === "bn" ? "অনুসন্ধান ফলাফল" : "Search results")
             : (language === "bn" ? "প্রোডাক্টস" : "Products")}
         </h1>
-        {filters.query ? (
-          <p className="page-lede">
-            {language === "bn" ? `"${filters.query}" এর জন্য ফলাফল` : `Results for “${filters.query}”`}
-          </p>
-        ) : null}
+        <p className="page-lede">
+          {filters.query
+            ? (language === "bn" ? `"${filters.query}" এর জন্য ফলাফল` : `Results for “${filters.query}”`)
+            : (language === "bn"
+                ? "প্রফেশনাল ক্রিয়েটরদের জন্য সিনেমা ক্যামেরা, স্টুডিও অডিও, প্রিসিশন গিম্বল ও বিশেষ গ্যাজেটের প্রিমিয়াম কালেকশন।"
+                : "Explore our curated collection of cinema cameras, professional studio audio, precision gimbal stabilizers, and creator gear engineered for performance.")}
+        </p>
       </div>
 
       <div className="catalogue-toolbar-container">
@@ -352,20 +341,18 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
           <button
             className={`filter-trigger-btn ${activeFilterCount > 0 ? "has-active-filters" : ""}`}
             type="button"
-            onClick={() => {
-              if (isMobile) {
-                setMobileFiltersOpen(true);
-              } else {
-                setFiltersOpen((open) => !open);
-              }
-            }}
-            aria-expanded={filtersOpen || mobileFiltersOpen}
+            onClick={() => setFiltersOpen((open) => !open)}
+            aria-expanded={filtersOpen}
           >
-            <SlidersHorizontal size={15} aria-hidden="true" />
-            <span>{language === "bn" ? "ফিল্টার" : "Filters"}</span>
-            {activeFilterCount > 0 ? (
-              <span className="filter-count-badge">{formatNumber(activeFilterCount)}</span>
-            ) : null}
+            <SlidersHorizontal size={15} className="filter-btn-icon" aria-hidden="true" />
+            <span className="filter-btn-label">{language === "bn" ? "ফিল্টার" : "Filters"}</span>
+            <span className="filter-btn-end" aria-hidden={activeFilterCount === 0}>
+              {activeFilterCount > 0 ? (
+                <span className="filter-count-badge">{formatNumber(activeFilterCount)}</span>
+              ) : (
+                <span className="filter-btn-spacer" aria-hidden="true" />
+              )}
+            </span>
           </button>
         </div>
 
@@ -432,7 +419,7 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
       ) : null}
 
       {filtersOpen ? (
-        <div className="filter-backdrop desktop-filter" role="dialog" aria-modal="true" aria-label="Filter products">
+        <div className="filter-backdrop" role="dialog" aria-modal="true" aria-label="Filter products">
           <button
             className="filter-scrim"
             type="button"
@@ -506,15 +493,6 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
           </div>
         </div>
       )}
-
-      {mobileFiltersOpen ? (
-        <div className="sheet-backdrop" role="dialog" aria-modal="true" aria-label="Filter products">
-          <div className="sheet-panel">
-            <div className="sheet-handle" />
-            {filterPanel}
-          </div>
-        </div>
-      ) : null}
     </section>
   );
 }
@@ -522,95 +500,89 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
 type BooleanFilterKey = "newArrivals" | "bestSellers" | "discounted";
 
 type FilterPanelProps = {
-  categories: string[];
-  categoryCounts: Record<string, number>;
   priceRange: { min: number; max: number };
   filters: CatalogueFilters;
   resultCount: number;
-  onCategoryToggle: (category: string) => void;
   onAvailabilityToggle: (stock: StockStatus) => void;
   onBooleanToggle: (key: BooleanFilterKey) => void;
-  onSort: (sort: SortKey) => void;
   onPriceMin: (value: number | undefined) => void;
   onPriceMax: (value: number | undefined) => void;
+  onPricePreset: (min: number | undefined, max: number | undefined) => void;
   onClear: () => void;
   onApply: () => void;
+  onClose: () => void;
 };
 
 function FilterPanel({
-  categories,
-  categoryCounts,
   priceRange,
   filters,
   resultCount,
-  onCategoryToggle,
   onAvailabilityToggle,
   onBooleanToggle,
-  onSort,
   onPriceMin,
   onPriceMax,
+  onPricePreset,
   onClear,
-  onApply
+  onApply,
+  onClose
 }: FilterPanelProps) {
+  const { language } = useLanguage();
+
   return (
     <>
       <div className="filter-panel-header">
-        <p className="section-kicker">Filter products</p>
-        <h2 className="filter-title">Find the right product quickly</h2>
-        <p className="filter-match">{resultCount} products match</p>
+        <h2 className="filter-modal-title">
+          {language === "bn" ? "ফিল্টার পণ্য" : "Filter Products"}
+        </h2>
+        <button
+          type="button"
+          className="filter-close-btn"
+          onClick={onClose}
+          aria-label={language === "bn" ? "ফিল্টার বন্ধ করুন" : "Close filters"}
+          title={language === "bn" ? "ফিল্টার বন্ধ করুন" : "Close"}
+        >
+          <X size={20} aria-hidden="true" />
+        </button>
       </div>
 
+      {/* 1. Quick Highlights */}
       <div className="filter-section">
-        <span className="filter-heading">Quick Highlights</span>
-        <div className="filter-grid">
+        <span className="filter-heading">{language === "bn" ? "হাইলাইটস" : "Quick Highlights"}</span>
+        <div className="filter-grid filter-grid-3">
           <button
-            className="filter-choice"
+            className="filter-choice filter-choice-stacked"
             type="button"
             aria-pressed={filters.newArrivals ?? false}
             onClick={() => onBooleanToggle("newArrivals")}
           >
-            🔥 New Arrivals
+            <span className="filter-choice-icon" aria-hidden="true">🔥</span>
+            <span className="filter-choice-text">{language === "bn" ? "নতুন আগমন" : "New Arrivals"}</span>
           </button>
           <button
-            className="filter-choice"
+            className="filter-choice filter-choice-stacked"
             type="button"
             aria-pressed={filters.bestSellers ?? false}
             onClick={() => onBooleanToggle("bestSellers")}
           >
-            ⭐ Best Sellers
+            <span className="filter-choice-icon" aria-hidden="true">⭐</span>
+            <span className="filter-choice-text">{language === "bn" ? "সেরা বিক্রিত" : "Best Sellers"}</span>
           </button>
           <button
-            className="filter-choice"
+            className="filter-choice filter-choice-stacked"
             type="button"
             aria-pressed={filters.discounted ?? false}
             onClick={() => onBooleanToggle("discounted")}
           >
-            🏷️ Discounted Deals
+            <span className="filter-choice-icon" aria-hidden="true">🏷️</span>
+            <span className="filter-choice-text">{language === "bn" ? "ছাড়ের ডিল" : "Discount Deals"}</span>
           </button>
         </div>
       </div>
 
+      {/* 2. Availability */}
       <div className="filter-section">
-        <span className="filter-heading">Category</span>
-        <div className="filter-grid">
-          {categories.map((category) => (
-            <button
-              key={category}
-              className="filter-choice"
-              type="button"
-              aria-pressed={filters.categories?.includes(category) ?? false}
-              onClick={() => onCategoryToggle(category)}
-            >
-              <span>{category}</span>
-              <span className="filter-badge-count">{categoryCounts[category] ?? 0}</span>
-            </button>
-          ))}
-        </div>
-      </div>
-
-      <div className="filter-section">
-        <span className="filter-heading">Availability</span>
-        <div className="filter-grid">
+        <span className="filter-heading">{language === "bn" ? "প্রাপ্যতা" : "Availability"}</span>
+        <div className="filter-grid filter-grid-3">
           {stockStatuses.map((stock) => (
             <button
               key={stock}
@@ -625,9 +597,10 @@ function FilterPanel({
         </div>
       </div>
 
+      {/* 3. Price Quick Presets */}
       <div className="filter-section">
-        <span className="filter-heading">Price Quick Presets</span>
-        <div className="filter-grid">
+        <span className="filter-heading">{language === "bn" ? "মূল্য প্রিসেট" : "Price Quick Presets"}</span>
+        <div className="filter-grid filter-grid-2">
           {pricePresets.map((preset) => {
             const isSelected = filters.priceMin === preset.min && filters.priceMax === preset.max;
             return (
@@ -638,74 +611,63 @@ function FilterPanel({
                 aria-pressed={isSelected}
                 onClick={() => {
                   if (isSelected) {
-                    onPriceMin(undefined);
-                    onPriceMax(undefined);
+                    onPricePreset(undefined, undefined);
                   } else {
-                    onPriceMin(preset.min);
-                    onPriceMax(preset.max);
+                    onPricePreset(preset.min, preset.max);
                   }
                 }}
               >
-                {preset.label}
+                <span>{preset.label}</span>
               </button>
             );
           })}
         </div>
       </div>
 
+      {/* 4. Price Range (BDT ৳) */}
       <div className="filter-section">
-        <span className="filter-heading">Price Range (BDT ৳)</span>
-        <div className="filter-grid">
-          <label className="field-label">
-            Minimum (৳)
-            <input
-              className="field"
-              type="number"
-              min={priceRange.min}
-              max={priceRange.max}
-              value={filters.priceMin ?? ""}
-              placeholder={formatPrice(priceRange.min)}
-              onChange={(event) => onPriceMin(event.target.value ? Number(event.target.value) : undefined)}
-            />
+        <span className="filter-heading">{language === "bn" ? "মূল্য পরিসীমা (৳)" : "Price Range (BDT ৳)"}</span>
+        <div className="filter-grid filter-grid-2">
+          <label className="filter-field-label">
+            <span className="filter-field-title">{language === "bn" ? "সর্বনিম্ন (৳)" : "Minimum (৳)"}</span>
+            <div className="filter-input-wrap">
+              <span className="filter-currency-symbol" aria-hidden="true">৳</span>
+              <input
+                className="filter-number-input"
+                type="number"
+                min={priceRange.min}
+                max={priceRange.max}
+                value={filters.priceMin ?? ""}
+                placeholder={String(priceRange.min)}
+                onChange={(event) => onPriceMin(event.target.value ? Number(event.target.value) : undefined)}
+              />
+            </div>
           </label>
-          <label className="field-label">
-            Maximum (৳)
-            <input
-              className="field"
-              type="number"
-              min={priceRange.min}
-              max={priceRange.max}
-              value={filters.priceMax ?? ""}
-              placeholder={formatPrice(priceRange.max)}
-              onChange={(event) => onPriceMax(event.target.value ? Number(event.target.value) : undefined)}
-            />
+          <label className="filter-field-label">
+            <span className="filter-field-title">{language === "bn" ? "সর্বোচ্চ (৳)" : "Maximum (৳)"}</span>
+            <div className="filter-input-wrap">
+              <span className="filter-currency-symbol" aria-hidden="true">৳</span>
+              <input
+                className="filter-number-input"
+                type="number"
+                min={priceRange.min}
+                max={priceRange.max}
+                value={filters.priceMax ?? ""}
+                placeholder={String(priceRange.max)}
+                onChange={(event) => onPriceMax(event.target.value ? Number(event.target.value) : undefined)}
+              />
+            </div>
           </label>
         </div>
       </div>
 
-      <div className="filter-section">
-        <span className="filter-heading">Sort Order</span>
-        <div className="filter-grid">
-          {sortOptions.map((option) => (
-            <button
-              key={option.value}
-              className="filter-choice"
-              type="button"
-              aria-pressed={(filters.sort ?? "newest") === option.value}
-              onClick={() => onSort(option.value)}
-            >
-              {option.label}
-            </button>
-          ))}
-        </div>
-      </div>
-
+      {/* 5. Actions */}
       <div className="filter-actions">
-        <button className="pill-button filter-clear-btn" type="button" onClick={onClear}>
-          Clear all
+        <button className="filter-clear-btn" type="button" onClick={onClear}>
+          {language === "bn" ? "ফিল্টার মুছুন" : "Clear all"}
         </button>
-        <button className="pill-button primary filter-apply-btn" type="button" onClick={onApply}>
-          Apply Filters ({resultCount})
+        <button className="filter-apply-btn" type="button" onClick={onApply}>
+          {language === "bn" ? `ফিল্টার প্রয়োগ (${resultCount})` : `Apply Filters (${resultCount})`}
         </button>
       </div>
     </>

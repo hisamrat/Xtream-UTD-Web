@@ -77,7 +77,6 @@ export function SearchOverlay({ products, open, onClose }: SearchOverlayProps) {
         {/* Header with Title & Close Icon (Matching Complete Your Order design) */}
         <div className="search-modal-header">
           <div className="search-modal-title-wrap">
-            <Search className="search-modal-header-icon" size={20} aria-hidden="true" />
             <h2 className="search-modal-title">
               {language === "bn" ? "পণ্য অনুসন্ধান" : "Search Products"}
             </h2>
