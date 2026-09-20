@@ -33,18 +33,18 @@ async function main() {
     const isVisible = await drawer.isVisible();
     console.log("Filter modal visible:", isVisible);
 
-    // Click a Price Preset (e.g. ৳30,000 - ৳60,000)
-    const presetBtn = page.locator(".filter-choice", { hasText: "30,000" }).first();
-    console.log("Clicking price preset...");
-    await presetBtn.click();
+    // Click Availability option (e.g. In stock)
+    const inStockBtn = page.locator(".filter-choice", { hasText: "In stock" }).first();
+    console.log("Clicking In stock option...");
+    await inStockBtn.click();
     await page.waitForTimeout(500);
 
-    const isPressed = await presetBtn.getAttribute("aria-pressed");
-    const presetBg = await presetBtn.evaluate((el) => window.getComputedStyle(el).backgroundColor);
-    const presetColor = await presetBtn.evaluate((el) => window.getComputedStyle(el).color);
-    console.log("Price Preset aria-pressed:", isPressed);
-    console.log("Price Preset background-color:", presetBg);
-    console.log("Price Preset text color:", presetColor);
+    const isPressed = await inStockBtn.getAttribute("aria-pressed");
+    const choiceBg = await inStockBtn.evaluate((el) => window.getComputedStyle(el).backgroundColor);
+    const choiceColor = await inStockBtn.evaluate((el) => window.getComputedStyle(el).color);
+    console.log("In stock aria-pressed:", isPressed);
+    console.log("In stock background-color:", choiceBg);
+    console.log("In stock text color:", choiceColor);
 
     // Click another choice (e.g. 🔥 New Arrivals)
     const newArrivalsBtn = page.locator(".filter-choice", { hasText: "New Arrivals" });

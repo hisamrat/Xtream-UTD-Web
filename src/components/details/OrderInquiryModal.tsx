@@ -128,15 +128,15 @@ export function OrderInquiryModal({
               <span>{formatPrice(product.price)}</span>
             </div>
             <div className="action-row success-actions">
-              <button className="pill-button light" type="button" onClick={onClose}>
+              <button className="button light" type="button" onClick={onClose}>
                 Continue Shopping
               </button>
-              <button className="pill-button" type="button" onClick={copyMessage}>
+              <button className="button" type="button" onClick={copyMessage}>
                 <Copy size={16} aria-hidden="true" />
                 {copied ? "Copied Summary" : "Copy Summary"}
               </button>
               <button
-                className="pill-button primary"
+                className="button primary"
                 type="button"
                 onClick={openMessenger}
                 disabled={isEditablePlaceholder(siteConfig.order.messengerUrl)}

@@ -30,13 +30,6 @@ const sortOptions: Array<{ label: string; value: SortKey }> = [
   { label: "Title (A-Z)", value: "title" }
 ];
 
-const pricePresets = [
-  { label: "Under ৳10,000", min: undefined, max: 10000 },
-  { label: "৳10,000 - ৳30,000", min: 10000, max: 30000 },
-  { label: "৳30,000 - ৳60,000", min: 30000, max: 60000 },
-  { label: "Over ৳60,000", min: 60000, max: undefined }
-];
-
 const productsPerPage = 12;
 
 function getVisiblePaginationPages(
@@ -201,10 +194,6 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
     updateFilters({ sort: "featured" });
   };
 
-  const setPricePreset = (min: number | undefined, max: number | undefined) => {
-    updateFilters({ ...filters, priceMin: min, priceMax: max });
-  };
-
   const filterPanel = (
     <FilterPanel
       priceRange={priceRange}
@@ -214,7 +203,6 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
       onBooleanToggle={(key) => setFilterValue(key, !filters[key])}
       onPriceMin={(value) => setFilterValue("priceMin", value)}
       onPriceMax={(value) => setFilterValue("priceMax", value)}
-      onPricePreset={setPricePreset}
       onClear={clearFilters}
       onApply={() => setFiltersOpen(false)}
       onClose={() => setFiltersOpen(false)}
@@ -483,10 +471,10 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
             <h2>No products match your search.</h2>
             <p className="page-lede">Try another phrase or clear the current filters.</p>
             <div className="inline-action-row">
-              <button className="pill-button light" type="button" onClick={() => setFilterValue("query", "")}>
+              <button className="button light" type="button" onClick={() => setFilterValue("query", "")}>
                 Clear Search
               </button>
-              <button className="pill-button primary" type="button" onClick={clearFilters}>
+              <button className="button primary" type="button" onClick={clearFilters}>
                 {language === "bn" ? "সকল প্রোডাক্ট দেখুন" : "View Products"}
               </button>
             </div>
@@ -507,7 +495,6 @@ type FilterPanelProps = {
   onBooleanToggle: (key: BooleanFilterKey) => void;
   onPriceMin: (value: number | undefined) => void;
   onPriceMax: (value: number | undefined) => void;
-  onPricePreset: (min: number | undefined, max: number | undefined) => void;
   onClear: () => void;
   onApply: () => void;
   onClose: () => void;
@@ -521,7 +508,6 @@ function FilterPanel({
   onBooleanToggle,
   onPriceMin,
   onPriceMax,
-  onPricePreset,
   onClear,
   onApply,
   onClose
@@ -597,34 +583,7 @@ function FilterPanel({
         </div>
       </div>
 
-      {/* 3. Price Quick Presets */}
-      <div className="filter-section">
-        <span className="filter-heading">{language === "bn" ? "মূল্য প্রিসেট" : "Price Quick Presets"}</span>
-        <div className="filter-grid filter-grid-2">
-          {pricePresets.map((preset) => {
-            const isSelected = filters.priceMin === preset.min && filters.priceMax === preset.max;
-            return (
-              <button
-                key={preset.label}
-                className="filter-choice"
-                type="button"
-                aria-pressed={isSelected}
-                onClick={() => {
-                  if (isSelected) {
-                    onPricePreset(undefined, undefined);
-                  } else {
-                    onPricePreset(preset.min, preset.max);
-                  }
-                }}
-              >
-                <span>{preset.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      </div>
-
-      {/* 4. Price Range (BDT ৳) */}
+      {/* 3. Price Range (BDT ৳) */}
       <div className="filter-section">
         <span className="filter-heading">{language === "bn" ? "মূল্য পরিসীমা (৳)" : "Price Range (BDT ৳)"}</span>
         <div className="filter-grid filter-grid-2">

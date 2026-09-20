@@ -61,7 +61,10 @@ export function Header({ products }: HeaderProps) {
 
   return (
     <>
-      <header className="site-header" style={headerStyle}>
+      <header
+        className={`site-header ${isHomePage ? "is-home-header" : "is-solid-header"}`}
+        style={headerStyle}
+      >
         <div className="header-left">
           <Link href="/" className="wordmark" onClick={handleHomeClick} aria-label="Xtream UTD home">
             <span>{siteConfig.name}</span>
@@ -122,16 +125,16 @@ export function Header({ products }: HeaderProps) {
               </button>
             </div>
             <div className="quick-actions">
-              <Link className="pill-button" href="/" onClick={() => { setMenuOpen(false); handleHomeClick(); }}>
+              <Link className="button" href="/" onClick={() => { setMenuOpen(false); handleHomeClick(); }}>
                 <Home size={16} aria-hidden="true" />
                 {t("nav_home")}
               </Link>
-              <Link className="pill-button" href="/products" onClick={() => setMenuOpen(false)}>
+              <Link className="button" href="/products" onClick={() => setMenuOpen(false)}>
                 <LayoutGrid size={16} aria-hidden="true" />
                 {t("nav_products")}
               </Link>
               <button
-                className="pill-button"
+                className="button"
                 type="button"
                 onClick={() => {
                   setMenuOpen(false);
@@ -141,24 +144,24 @@ export function Header({ products }: HeaderProps) {
                 <Search size={16} aria-hidden="true" />
                 {t("search_products")}
               </button>
-              <button className="pill-button primary" type="button" onClick={() => { setMenuOpen(false); openCart(); }}>
+              <button className="button primary" type="button" onClick={() => { setMenuOpen(false); openCart(); }}>
                 <ShoppingCart size={16} aria-hidden="true" />
                 <span>{t("cart")}</span>
                 {totalCount > 0 ? <span className="cart-count-badge-inline">{totalCount}</span> : null}
               </button>
-              <Link className="pill-button" href="/about" onClick={() => setMenuOpen(false)}>
+              <Link className="button" href="/about" onClick={() => setMenuOpen(false)}>
                 <Info size={16} aria-hidden="true" />
                 {t("nav_about")}
               </Link>
-              <Link className="pill-button" href="/contact" onClick={() => setMenuOpen(false)}>
+              <Link className="button" href="/contact" onClick={() => setMenuOpen(false)}>
                 <MessageCircle size={16} aria-hidden="true" />
                 {t("nav_contact")}
               </Link>
-              <button className="pill-button" type="button" onClick={toggleLanguage}>
+              <button className="button" type="button" onClick={toggleLanguage}>
                 <Languages size={16} aria-hidden="true" />
                 {language === "en" ? t("switch_to_bangla") : t("switch_to_english")}
               </button>
-              <button className="pill-button" type="button" onClick={toggleTheme}>
+              <button className="button" type="button" onClick={toggleTheme}>
                 {theme === "dark" ? <Sun size={16} aria-hidden="true" /> : <Moon size={16} aria-hidden="true" />}
                 {theme === "dark" ? "Switch to Light Theme" : "Switch to Dark Theme"}
               </button>

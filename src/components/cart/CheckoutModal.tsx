@@ -248,7 +248,7 @@ PLEASE CONFIRM MY ORDER!`;
               </a>
               <button
                 type="button"
-                className={`pill-button light checkout-success-copy-btn ${copied ? "is-copied" : ""}`}
+                className={`button light checkout-success-copy-btn ${copied ? "is-copied" : ""}`}
                 onClick={handleCopyOrder}
               >
                 {copied ? <Check size={15} aria-hidden="true" /> : <Copy size={15} aria-hidden="true" />}
@@ -571,7 +571,7 @@ PLEASE CONFIRM MY ORDER!`;
                 </button>
                 <button
                   type="button"
-                  className={`checkout-copy-btn ${copied ? "is-copied" : ""}`}
+                  className={`button light checkout-copy-btn ${copied ? "is-copied" : ""}`}
                   onClick={handleCopyOrder}
                   disabled={items.length === 0}
                   aria-label="Copy formatted order message"

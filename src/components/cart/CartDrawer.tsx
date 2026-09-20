@@ -127,8 +127,9 @@ export function CartDrawer() {
                   <ShoppingCart size={18} aria-hidden="true" />
                   <span>{language === "bn" ? "চেকআউট করুন" : "Proceed to Checkout"}</span>
                 </button>
-                <button type="button" className="pill-button clear-cart-btn" onClick={clearCart}>
-                  {language === "bn" ? "কার্ট মুছুন" : "Clear Cart"}
+                <button type="button" className="button light clear-cart-btn" onClick={clearCart}>
+                  <Trash2 size={15} aria-hidden="true" />
+                  <span>{language === "bn" ? "কার্ট মুছুন" : "Clear Cart"}</span>
                 </button>
               </div>
             </div>

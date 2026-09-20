@@ -16,6 +16,7 @@
     "currency": "BDT",
     "discount_percentage": 6,
     "quantity_available": 12,
+    "cover_image": "/products/sony-a7-iv/cover.webp",
     "main_image": "/products/sony-a7-iv/main.webp",
     "gallery_images": [
       "/products/sony-a7-iv/01.webp"
@@ -72,6 +73,7 @@
     "currency": "BDT",
     "discount_percentage": 6,
     "quantity_available": 18,
+    "cover_image": "/products/dji-rs-3-pro/cover.webp",
     "main_image": "/products/dji-rs-3-pro/main.webp",
     "gallery_images": [
       "/products/dji-rs-3-pro/01.webp"
@@ -124,6 +126,7 @@
     "currency": "BDT",
     "discount_percentage": 7,
     "quantity_available": 10,
+    "cover_image": "/products/sennheiser-hd-660s/cover.webp",
     "main_image": "/products/sennheiser-hd-660s/main.webp",
     "gallery_images": [
       "/products/sennheiser-hd-660s/01.webp"
@@ -174,6 +177,7 @@
     "currency": "BDT",
     "discount_percentage": 9,
     "quantity_available": 6,
+    "cover_image": "/products/blackmagic-pocket-cinema-6k/cover.webp",
     "main_image": "/products/blackmagic-pocket-cinema-6k/main.webp",
     "gallery_images": [
       "/products/blackmagic-pocket-cinema-6k/01.webp"
@@ -225,6 +229,7 @@
     "currency": "BDT",
     "discount_percentage": 11,
     "quantity_available": 24,
+    "cover_image": "/products/rode-wireless-go-ii/cover.webp",
     "main_image": "/products/rode-wireless-go-ii/main.webp",
     "gallery_images": [
       "/products/rode-wireless-go-ii/01.webp"
@@ -276,6 +281,7 @@
     "currency": "BDT",
     "discount_percentage": 11,
     "quantity_available": 30,
+    "cover_image": "/products/godox-sl60w/cover.webp",
     "main_image": "/products/godox-sl60w/main.webp",
     "gallery_images": [
       "/products/godox-sl60w/01.webp"
@@ -327,6 +333,7 @@
     "currency": "BDT",
     "discount_percentage": 10,
     "quantity_available": 22,
+    "cover_image": "/products/manfrotto-monitor-mount/cover.webp",
     "main_image": "/products/manfrotto-monitor-mount/main.webp",
     "gallery_images": [
       "/products/manfrotto-monitor-mount/01.webp"
@@ -378,6 +385,7 @@
     "currency": "BDT",
     "discount_percentage": 8,
     "quantity_available": 15,
+    "cover_image": "/products/aputure-120d-ii/cover.webp",
     "main_image": "/products/aputure-120d-ii/main.webp",
     "gallery_images": [
       "/products/aputure-120d-ii/01.webp"
@@ -429,6 +437,7 @@
     "currency": "BDT",
     "discount_percentage": 5,
     "quantity_available": 8,
+    "cover_image": "/products/canon-eos-r5/cover.webp",
     "main_image": "/products/canon-eos-r5/main.webp",
     "gallery_images": [
       "/products/canon-eos-r5/01.webp"
@@ -481,6 +490,7 @@
     "currency": "BDT",
     "discount_percentage": 8,
     "quantity_available": 16,
+    "cover_image": "/products/atomos-ninja-v/cover.webp",
     "main_image": "/products/atomos-ninja-v/main.webp",
     "gallery_images": [
       "/products/atomos-ninja-v/01.webp"
@@ -532,6 +542,7 @@
     "currency": "BDT",
     "discount_percentage": 6,
     "quantity_available": 14,
+    "cover_image": "/products/sigma-24-70mm-f2-8/cover.webp",
     "main_image": "/products/sigma-24-70mm-f2-8/main.webp",
     "gallery_images": [
       "/products/sigma-24-70mm-f2-8/01.webp"
@@ -583,6 +594,7 @@
     "currency": "BDT",
     "discount_percentage": 6,
     "quantity_available": 5,
+    "cover_image": "/products/aputure-1200-ji/cover.webp",
     "main_image": "/products/aputure-1200-ji/main.webp",
     "gallery_images": [
       "/products/aputure-1200-ji/01.webp"
@@ -634,6 +646,7 @@
     "currency": "BDT",
     "discount_percentage": 11,
     "quantity_available": 20,
+    "cover_image": "/products/manfrotto-tripod-mt055/cover.webp",
     "main_image": "/products/manfrotto-tripod-mt055/main.webp",
     "gallery_images": [
       "/products/manfrotto-tripod-mt055/01.webp"
@@ -684,6 +697,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-01/cover.webp",
     "main_image": "/products/mini-01/main.webp",
     "gallery_images": [
       "/products/mini-01/01.webp"
@@ -725,6 +739,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-02/cover.webp",
     "main_image": "/products/mini-02/main.webp",
     "gallery_images": [
       "/products/mini-02/01.webp"
@@ -766,6 +781,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-03/cover.webp",
     "main_image": "/products/mini-03/main.webp",
     "gallery_images": [
       "/products/mini-03/01.webp"
@@ -807,6 +823,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-04/cover.webp",
     "main_image": "/products/mini-04/main.webp",
     "gallery_images": [
       "/products/mini-04/01.webp"
@@ -848,6 +865,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-05/cover.webp",
     "main_image": "/products/mini-05/main.webp",
     "gallery_images": [
       "/products/mini-05/01.webp"
@@ -889,6 +907,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-06/cover.webp",
     "main_image": "/products/mini-06/main.webp",
     "gallery_images": [
       "/products/mini-06/01.webp"
@@ -930,6 +949,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-07/cover.webp",
     "main_image": "/products/mini-07/main.webp",
     "gallery_images": [
       "/products/mini-07/01.webp"
@@ -971,6 +991,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-08/cover.webp",
     "main_image": "/products/mini-08/main.webp",
     "gallery_images": [
       "/products/mini-08/01.webp"
@@ -1012,6 +1033,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-09/cover.webp",
     "main_image": "/products/mini-09/main.webp",
     "gallery_images": [
       "/products/mini-09/01.webp"
@@ -1053,6 +1075,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-10/cover.webp",
     "main_image": "/products/mini-10/main.webp",
     "gallery_images": [
       "/products/mini-10/01.webp"
@@ -1094,6 +1117,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-11/cover.webp",
     "main_image": "/products/mini-11/main.webp",
     "gallery_images": [
       "/products/mini-11/01.webp"
@@ -1135,6 +1159,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-12/cover.webp",
     "main_image": "/products/mini-12/main.webp",
     "gallery_images": [
       "/products/mini-12/01.webp"
@@ -1176,6 +1201,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-13/cover.webp",
     "main_image": "/products/mini-13/main.webp",
     "gallery_images": [
       "/products/mini-13/01.webp"
@@ -1217,6 +1243,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-14/cover.webp",
     "main_image": "/products/mini-14/main.webp",
     "gallery_images": [
       "/products/mini-14/01.webp"
@@ -1258,6 +1285,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-15/cover.webp",
     "main_image": "/products/mini-15/main.webp",
     "gallery_images": [
       "/products/mini-15/01.webp"
@@ -1299,6 +1327,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-16/cover.webp",
     "main_image": "/products/mini-16/main.webp",
     "gallery_images": [
       "/products/mini-16/01.webp"
@@ -1340,6 +1369,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-17/cover.webp",
     "main_image": "/products/mini-17/main.webp",
     "gallery_images": [
       "/products/mini-17/01.webp"
@@ -1381,6 +1411,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-18/cover.webp",
     "main_image": "/products/mini-18/main.webp",
     "gallery_images": [
       "/products/mini-18/01.webp"
@@ -1422,6 +1453,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-19/cover.webp",
     "main_image": "/products/mini-19/main.webp",
     "gallery_images": [
       "/products/mini-19/01.webp"
@@ -1463,6 +1495,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-20/cover.webp",
     "main_image": "/products/mini-20/main.webp",
     "gallery_images": [
       "/products/mini-20/01.webp"
@@ -1504,6 +1537,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-21/cover.webp",
     "main_image": "/products/mini-21/main.webp",
     "gallery_images": [
       "/products/mini-21/01.webp"
@@ -1545,6 +1579,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 50,
+    "cover_image": "/products/mini-22/cover.webp",
     "main_image": "/products/mini-22/main.webp",
     "gallery_images": [
       "/products/mini-22/01.webp"
@@ -1586,6 +1621,7 @@
     "currency": "BDT",
     "discount_percentage": 27,
     "quantity_available": 25,
+    "cover_image": "/products/portable-folding-laptop-stand/cover.webp",
     "main_image": "/products/portable-folding-laptop-stand/main.webp",
     "gallery_images": [
       "/products/portable-folding-laptop-stand/01.webp",
@@ -1640,6 +1676,7 @@
     "currency": "BDT",
     "discount_percentage": 18,
     "quantity_available": 26,
+    "cover_image": "/products/aurora-sunset-projector-lamp/cover.webp",
     "main_image": "/products/aurora-sunset-projector-lamp/main.webp",
     "gallery_images": [
       "/products/aurora-sunset-projector-lamp/01.webp",
@@ -1694,6 +1731,7 @@
     "currency": "BDT",
     "discount_percentage": 19,
     "quantity_available": 27,
+    "cover_image": "/products/mini-wireless-earbuds/cover.webp",
     "main_image": "/products/mini-wireless-earbuds/main.webp",
     "gallery_images": [
       "/products/mini-wireless-earbuds/01.webp",
@@ -1748,6 +1786,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 28,
+    "cover_image": "/products/magnetic-phone-holder/cover.webp",
     "main_image": "/products/magnetic-phone-holder/main.webp",
     "gallery_images": [
       "/products/magnetic-phone-holder/01.webp",
@@ -1802,6 +1841,7 @@
     "currency": "BDT",
     "discount_percentage": 16,
     "quantity_available": 4,
+    "cover_image": "/products/rechargeable-mini-fan/cover.webp",
     "main_image": "/products/rechargeable-mini-fan/main.webp",
     "gallery_images": [
       "/products/rechargeable-mini-fan/01.webp",
@@ -1856,6 +1896,7 @@
     "currency": "BDT",
     "discount_percentage": 16,
     "quantity_available": 30,
+    "cover_image": "/products/slim-power-bank-10000mah/cover.webp",
     "main_image": "/products/slim-power-bank-10000mah/main.webp",
     "gallery_images": [
       "/products/slim-power-bank-10000mah/01.webp",
@@ -1910,6 +1951,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 31,
+    "cover_image": "/products/compact-bluetooth-keyboard/cover.webp",
     "main_image": "/products/compact-bluetooth-keyboard/main.webp",
     "gallery_images": [
       "/products/compact-bluetooth-keyboard/01.webp",
@@ -1964,6 +2006,7 @@
     "currency": "BDT",
     "discount_percentage": 12,
     "quantity_available": 32,
+    "cover_image": "/products/smart-fitness-watch/cover.webp",
     "main_image": "/products/smart-fitness-watch/main.webp",
     "gallery_images": [
       "/products/smart-fitness-watch/01.webp",
@@ -2018,6 +2061,7 @@
     "currency": "BDT",
     "discount_percentage": 15,
     "quantity_available": 33,
+    "cover_image": "/products/touch-desk-light/cover.webp",
     "main_image": "/products/touch-desk-light/main.webp",
     "gallery_images": [
       "/products/touch-desk-light/01.webp",
@@ -2072,6 +2116,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 34,
+    "cover_image": "/products/silicone-cable-organizer/cover.webp",
     "main_image": "/products/silicone-cable-organizer/main.webp",
     "gallery_images": [
       "/products/silicone-cable-organizer/01.webp",
@@ -2126,6 +2171,7 @@
     "currency": "BDT",
     "discount_percentage": 12,
     "quantity_available": 35,
+    "cover_image": "/products/portable-bluetooth-speaker/cover.webp",
     "main_image": "/products/portable-bluetooth-speaker/main.webp",
     "gallery_images": [
       "/products/portable-bluetooth-speaker/01.webp",
@@ -2180,6 +2226,7 @@
     "currency": "BDT",
     "discount_percentage": 13,
     "quantity_available": 36,
+    "cover_image": "/products/rgb-light-bar-pair/cover.webp",
     "main_image": "/products/rgb-light-bar-pair/main.webp",
     "gallery_images": [
       "/products/rgb-light-bar-pair/01.webp",
@@ -2234,6 +2281,7 @@
     "currency": "BDT",
     "discount_percentage": 13,
     "quantity_available": 37,
+    "cover_image": "/products/foldable-phone-tripod/cover.webp",
     "main_image": "/products/foldable-phone-tripod/main.webp",
     "gallery_images": [
       "/products/foldable-phone-tripod/01.webp",
@@ -2288,6 +2336,7 @@
     "currency": "BDT",
     "discount_percentage": 16,
     "quantity_available": 4,
+    "cover_image": "/products/usb-c-multiport-hub/cover.webp",
     "main_image": "/products/usb-c-multiport-hub/main.webp",
     "gallery_images": [
       "/products/usb-c-multiport-hub/01.webp",
@@ -2342,6 +2391,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 39,
+    "cover_image": "/products/silent-wireless-mouse/cover.webp",
     "main_image": "/products/silent-wireless-mouse/main.webp",
     "gallery_images": [
       "/products/silent-wireless-mouse/01.webp",
@@ -2396,6 +2446,7 @@
     "currency": "BDT",
     "discount_percentage": 15,
     "quantity_available": 40,
+    "cover_image": "/products/extended-desk-mat/cover.webp",
     "main_image": "/products/extended-desk-mat/main.webp",
     "gallery_images": [
       "/products/extended-desk-mat/01.webp",
@@ -2450,6 +2501,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 41,
+    "cover_image": "/products/mini-air-humidifier/cover.webp",
     "main_image": "/products/mini-air-humidifier/main.webp",
     "gallery_images": [
       "/products/mini-air-humidifier/01.webp",
@@ -2504,6 +2556,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 42,
+    "cover_image": "/products/insulated-travel-bottle/cover.webp",
     "main_image": "/products/insulated-travel-bottle/main.webp",
     "gallery_images": [
       "/products/insulated-travel-bottle/01.webp",
@@ -2558,6 +2611,7 @@
     "currency": "BDT",
     "discount_percentage": 15,
     "quantity_available": 43,
+    "cover_image": "/products/tech-travel-organizer/cover.webp",
     "main_image": "/products/tech-travel-organizer/main.webp",
     "gallery_images": [
       "/products/tech-travel-organizer/01.webp",
@@ -2612,6 +2666,7 @@
     "currency": "BDT",
     "discount_percentage": 16,
     "quantity_available": 44,
+    "cover_image": "/products/clip-on-ring-light/cover.webp",
     "main_image": "/products/clip-on-ring-light/main.webp",
     "gallery_images": [
       "/products/clip-on-ring-light/01.webp",
@@ -2666,6 +2721,7 @@
     "currency": "BDT",
     "discount_percentage": 15,
     "quantity_available": 45,
+    "cover_image": "/products/smart-wifi-plug/cover.webp",
     "main_image": "/products/smart-wifi-plug/main.webp",
     "gallery_images": [
       "/products/smart-wifi-plug/01.webp",
@@ -2720,6 +2776,7 @@
     "currency": "BDT",
     "discount_percentage": 18,
     "quantity_available": 46,
+    "cover_image": "/products/mini-desktop-vacuum/cover.webp",
     "main_image": "/products/mini-desktop-vacuum/main.webp",
     "gallery_images": [
       "/products/mini-desktop-vacuum/01.webp",
@@ -2774,6 +2831,7 @@
     "currency": "BDT",
     "discount_percentage": 14,
     "quantity_available": 0,
+    "cover_image": "/products/fast-charging-adapter-25w/cover.webp",
     "main_image": "/products/fast-charging-adapter-25w/main.webp",
     "gallery_images": [
       "/products/fast-charging-adapter-25w/01.webp",
@@ -2828,6 +2886,7 @@
     "currency": "BDT",
     "discount_percentage": 14,
     "quantity_available": 48,
+    "cover_image": "/products/portable-neck-fan/cover.webp",
     "main_image": "/products/portable-neck-fan/main.webp",
     "gallery_images": [
       "/products/portable-neck-fan/01.webp",
@@ -2882,6 +2941,7 @@
     "currency": "BDT",
     "discount_percentage": 25,
     "quantity_available": 30,
+    "cover_image": "/products/led-motion-sensor-night-light/cover.webp",
     "main_image": "/products/led-motion-sensor-night-light/main.webp",
     "gallery_images": [
       "/products/led-motion-sensor-night-light/01.webp",
@@ -2936,6 +2996,7 @@
     "currency": "BDT",
     "discount_percentage": 16,
     "quantity_available": 24,
+    "cover_image": "/products/magnetic-wall-lamp/cover.webp",
     "main_image": "/products/magnetic-wall-lamp/main.webp",
     "gallery_images": [
       "/products/magnetic-wall-lamp/01.webp",
@@ -2990,6 +3051,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 20,
+    "cover_image": "/products/three-d-led-digital-clock/cover.webp",
     "main_image": "/products/three-d-led-digital-clock/main.webp",
     "gallery_images": [
       "/products/three-d-led-digital-clock/01.webp",
@@ -3044,6 +3106,7 @@
     "currency": "BDT",
     "discount_percentage": 20,
     "quantity_available": 45,
+    "cover_image": "/products/keyboard-cleaning-kit/cover.webp",
     "main_image": "/products/keyboard-cleaning-kit/main.webp",
     "gallery_images": [
       "/products/keyboard-cleaning-kit/01.webp",
@@ -3098,6 +3161,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 35,
+    "cover_image": "/products/silicone-folding-water-bottle/cover.webp",
     "main_image": "/products/silicone-folding-water-bottle/main.webp",
     "gallery_images": [
       "/products/silicone-folding-water-bottle/01.webp",
@@ -3152,6 +3216,7 @@
     "currency": "BDT",
     "discount_percentage": 31,
     "quantity_available": 38,
+    "cover_image": "/products/mini-laptop-kickstand-pair/cover.webp",
     "main_image": "/products/mini-laptop-kickstand-pair/main.webp",
     "gallery_images": [
       "/products/mini-laptop-kickstand-pair/01.webp",
@@ -3206,6 +3271,7 @@
     "currency": "BDT",
     "discount_percentage": 15,
     "quantity_available": 5,
+    "cover_image": "/products/rgb-neon-rope-light/cover.webp",
     "main_image": "/products/rgb-neon-rope-light/main.webp",
     "gallery_images": [
       "/products/rgb-neon-rope-light/01.webp",
@@ -3260,6 +3326,7 @@
     "currency": "BDT",
     "discount_percentage": 19,
     "quantity_available": 26,
+    "cover_image": "/products/rechargeable-wall-sconce/cover.webp",
     "main_image": "/products/rechargeable-wall-sconce/main.webp",
     "gallery_images": [
       "/products/rechargeable-wall-sconce/01.webp",
@@ -3314,6 +3381,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 16,
+    "cover_image": "/products/transparent-desk-clock/cover.webp",
     "main_image": "/products/transparent-desk-clock/main.webp",
     "gallery_images": [
       "/products/transparent-desk-clock/01.webp",
@@ -3368,6 +3436,7 @@
     "currency": "BDT",
     "discount_percentage": 19,
     "quantity_available": 21,
+    "cover_image": "/products/k9-crystal-ball-night-light/cover.webp",
     "main_image": "/products/k9-crystal-ball-night-light/main.webp",
     "gallery_images": [
       "/products/k9-crystal-ball-night-light/01.webp",
@@ -3422,6 +3491,7 @@
     "currency": "BDT",
     "discount_percentage": 19,
     "quantity_available": 42,
+    "cover_image": "/products/electric-milk-frother/cover.webp",
     "main_image": "/products/electric-milk-frother/main.webp",
     "gallery_images": [
       "/products/electric-milk-frother/01.webp",
@@ -3476,6 +3546,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 33,
+    "cover_image": "/products/perpetual-desk-calendar/cover.webp",
     "main_image": "/products/perpetual-desk-calendar/main.webp",
     "gallery_images": [
       "/products/perpetual-desk-calendar/01.webp",
@@ -3530,6 +3601,7 @@
     "currency": "BDT",
     "discount_percentage": 19,
     "quantity_available": 18,
+    "cover_image": "/products/tulip-mirror-night-lamp/cover.webp",
     "main_image": "/products/tulip-mirror-night-lamp/main.webp",
     "gallery_images": [
       "/products/tulip-mirror-night-lamp/01.webp",
@@ -3584,6 +3656,7 @@
     "currency": "BDT",
     "discount_percentage": 28,
     "quantity_available": 40,
+    "cover_image": "/products/laptop-cooling-feet/cover.webp",
     "main_image": "/products/laptop-cooling-feet/main.webp",
     "gallery_images": [
       "/products/laptop-cooling-feet/01.webp",
@@ -3638,6 +3711,7 @@
     "currency": "BDT",
     "discount_percentage": 15,
     "quantity_available": 27,
+    "cover_image": "/products/motion-cabinet-light/cover.webp",
     "main_image": "/products/motion-cabinet-light/main.webp",
     "gallery_images": [
       "/products/motion-cabinet-light/01.webp",
@@ -3692,6 +3766,7 @@
     "currency": "BDT",
     "discount_percentage": 19,
     "quantity_available": 50,
+    "cover_image": "/products/phone-camera-cleaning-brush/cover.webp",
     "main_image": "/products/phone-camera-cleaning-brush/main.webp",
     "gallery_images": [
       "/products/phone-camera-cleaning-brush/01.webp",
@@ -3746,6 +3821,7 @@
     "currency": "BDT",
     "discount_percentage": 20,
     "quantity_available": 23,
+    "cover_image": "/products/mini-portable-mixer/cover.webp",
     "main_image": "/products/mini-portable-mixer/main.webp",
     "gallery_images": [
       "/products/mini-portable-mixer/01.webp",
@@ -3800,6 +3876,7 @@
     "currency": "BDT",
     "discount_percentage": 22,
     "quantity_available": 19,
+    "cover_image": "/products/three-d-moon-crystal-lamp/cover.webp",
     "main_image": "/products/three-d-moon-crystal-lamp/main.webp",
     "gallery_images": [
       "/products/three-d-moon-crystal-lamp/01.webp",
@@ -3854,6 +3931,7 @@
     "currency": "BDT",
     "discount_percentage": 18,
     "quantity_available": 5,
+    "cover_image": "/products/wireless-charging-pad/cover.webp",
     "main_image": "/products/wireless-charging-pad/main.webp",
     "gallery_images": [
       "/products/wireless-charging-pad/01.webp",
@@ -3908,6 +3986,7 @@
     "currency": "BDT",
     "discount_percentage": 20,
     "quantity_available": 29,
+    "cover_image": "/products/foldable-tablet-stand/cover.webp",
     "main_image": "/products/foldable-tablet-stand/main.webp",
     "gallery_images": [
       "/products/foldable-tablet-stand/01.webp",
@@ -3962,6 +4041,7 @@
     "currency": "BDT",
     "discount_percentage": 26,
     "quantity_available": 44,
+    "cover_image": "/products/bluetooth-cleaning-earbud-pen/cover.webp",
     "main_image": "/products/bluetooth-cleaning-earbud-pen/main.webp",
     "gallery_images": [
       "/products/bluetooth-cleaning-earbud-pen/01.webp",
@@ -4016,6 +4096,7 @@
     "currency": "BDT",
     "discount_percentage": 15,
     "quantity_available": 25,
+    "cover_image": "/products/compact-selfie-stick-tripod/cover.webp",
     "main_image": "/products/compact-selfie-stick-tripod/main.webp",
     "gallery_images": [
       "/products/compact-selfie-stick-tripod/01.webp",
@@ -4070,6 +4151,7 @@
     "currency": "BDT",
     "discount_percentage": 18,
     "quantity_available": 31,
+    "cover_image": "/products/smart-led-strip-controller/cover.webp",
     "main_image": "/products/smart-led-strip-controller/main.webp",
     "gallery_images": [
       "/products/smart-led-strip-controller/01.webp",
@@ -4124,6 +4206,7 @@
     "currency": "BDT",
     "discount_percentage": 18,
     "quantity_available": 22,
+    "cover_image": "/products/rechargeable-wooden-night-light/cover.webp",
     "main_image": "/products/rechargeable-wooden-night-light/main.webp",
     "gallery_images": [
       "/products/rechargeable-wooden-night-light/01.webp",
@@ -4178,6 +4261,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 52,
+    "cover_image": "/products/desk-cable-clip-set/cover.webp",
     "main_image": "/products/desk-cable-clip-set/main.webp",
     "gallery_images": [
       "/products/desk-cable-clip-set/01.webp",
@@ -4232,6 +4316,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 34,
+    "cover_image": "/products/mini-key-switch-tester/cover.webp",
     "main_image": "/products/mini-key-switch-tester/main.webp",
     "gallery_images": [
       "/products/mini-key-switch-tester/01.webp",
@@ -4286,6 +4371,7 @@
     "currency": "BDT",
     "discount_percentage": 24,
     "quantity_available": 43,
+    "cover_image": "/products/travel-perfume-atomizer/cover.webp",
     "main_image": "/products/travel-perfume-atomizer/main.webp",
     "gallery_images": [
       "/products/travel-perfume-atomizer/01.webp",
@@ -4340,6 +4426,7 @@
     "currency": "BDT",
     "discount_percentage": 16,
     "quantity_available": 4,
+    "cover_image": "/products/portable-handheld-fan/cover.webp",
     "main_image": "/products/portable-handheld-fan/main.webp",
     "gallery_images": [
       "/products/portable-handheld-fan/01.webp",
@@ -4394,6 +4481,7 @@
     "currency": "BDT",
     "discount_percentage": 24,
     "quantity_available": 47,
+    "cover_image": "/products/usb-reading-light/cover.webp",
     "main_image": "/products/usb-reading-light/main.webp",
     "gallery_images": [
       "/products/usb-reading-light/01.webp",
@@ -4448,6 +4536,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 55,
+    "cover_image": "/products/phone-lanyard-holder/cover.webp",
     "main_image": "/products/phone-lanyard-holder/main.webp",
     "gallery_images": [
       "/products/phone-lanyard-holder/01.webp",
@@ -4502,6 +4591,7 @@
     "currency": "BDT",
     "discount_percentage": 22,
     "quantity_available": 60,
+    "cover_image": "/products/type-c-braided-cable/cover.webp",
     "main_image": "/products/type-c-braided-cable/main.webp",
     "gallery_images": [
       "/products/type-c-braided-cable/01.webp",
@@ -4557,6 +4647,7 @@
     "currency": "BDT",
     "discount_percentage": 19,
     "quantity_available": 32,
+    "cover_image": "/products/compact-card-reader/cover.webp",
     "main_image": "/products/compact-card-reader/main.webp",
     "gallery_images": [
       "/products/compact-card-reader/01.webp",
@@ -4611,6 +4702,7 @@
     "currency": "BDT",
     "discount_percentage": 17,
     "quantity_available": 17,
+    "cover_image": "/products/mini-speaker-clock/cover.webp",
     "main_image": "/products/mini-speaker-clock/main.webp",
     "gallery_images": [
       "/products/mini-speaker-clock/01.webp",
@@ -4665,6 +4757,7 @@
     "currency": "BDT",
     "discount_percentage": 18,
     "quantity_available": 28,
+    "cover_image": "/products/smart-sensor-door-light/cover.webp",
     "main_image": "/products/smart-sensor-door-light/main.webp",
     "gallery_images": [
       "/products/smart-sensor-door-light/01.webp",
@@ -4719,6 +4812,7 @@
     "currency": "BDT",
     "discount_percentage": 0,
     "quantity_available": 36,
+    "cover_image": "/products/desktop-press-coaster/cover.webp",
     "main_image": "/products/desktop-press-coaster/main.webp",
     "gallery_images": [
       "/products/desktop-press-coaster/01.webp",
@@ -4773,6 +4867,7 @@
     "currency": "BDT",
     "discount_percentage": 25,
     "quantity_available": 39,
+    "cover_image": "/products/magnetic-charging-cable-set/cover.webp",
     "main_image": "/products/magnetic-charging-cable-set/main.webp",
     "gallery_images": [
       "/products/magnetic-charging-cable-set/01.webp",

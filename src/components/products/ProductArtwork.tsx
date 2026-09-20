@@ -7,13 +7,57 @@ import type { CSSProperties } from "react";
 type ProductArtworkProps = {
   product: Product;
   compact?: boolean;
+  viewIndex?: number;
+  isThumbnail?: boolean;
+  imageRole?: "cover" | "main" | "gallery" | "thumbnail";
+  imageSrc?: string;
 };
 
-export function ProductArtwork({ product, compact = false }: ProductArtworkProps) {
+function resolveCandidateList(product: Product, imageRole: string, viewIndex: number, imageSrc?: string): string[] {
+  const list: string[] = [];
+
+  const addPath = (p?: string | null) => {
+    if (!p) return;
+    if (p.startsWith("/products/")) {
+      list.push(p.replace(/\.webp$/, ".jpg"));
+    } else {
+      list.push(p);
+    }
+  };
+
+  if (imageSrc) {
+    addPath(imageSrc);
+  }
+
+  if (imageRole === "cover") {
+    addPath(product.cover_image);
+    addPath(product.main_image);
+  } else if (imageRole === "thumbnail" || imageRole === "gallery") {
+    if (product.gallery_images && product.gallery_images[viewIndex]) {
+      addPath(product.gallery_images[viewIndex]);
+    }
+    addPath(product.cover_image);
+    addPath(product.main_image);
+  } else {
+    addPath(product.main_image);
+  }
+
+  return Array.from(new Set(list));
+}
+
+export function ProductArtwork({
+  product,
+  compact = false,
+  viewIndex = 0,
+  isThumbnail = false,
+  imageRole = "main",
+  imageSrc
+}: ProductArtworkProps) {
   const accent = product.accent || "#3385FF";
+  const [currentSrcIndex, setCurrentSrcIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
 
-  if (compact) {
+  if (compact && !isThumbnail) {
     return (
       <div
         aria-hidden="true"
@@ -26,27 +70,40 @@ export function ProductArtwork({ product, compact = false }: ProductArtworkProps
     );
   }
 
-  const realImageSrc = `/products/${product.slug}/main.jpg`;
+  const candidateSources = resolveCandidateList(product, imageRole, viewIndex, imageSrc);
+  const activeSrc = candidateSources[currentSrcIndex] || `/products/${product.slug}/main.jpg`;
+
+  const handleImageError = () => {
+    if (currentSrcIndex < candidateSources.length - 1) {
+      setCurrentSrcIndex((prev) => prev + 1);
+    } else {
+      setImageError(true);
+    }
+  };
 
   return (
     <div
       aria-hidden="true"
-      className={`product-art product-art-full art-${product.kind}`}
+      className={`product-art product-art-full art-${product.kind} ${isThumbnail ? "product-art-thumb" : ""}`}
       style={{ "--art-accent": accent } as CSSProperties}
       data-compact="false"
+      data-view-index={viewIndex}
     >
       {!imageError ? (
         <div className="product-real-image-wrap">
           <img
-            src={realImageSrc}
+            key={activeSrc}
+            src={activeSrc}
             alt={product.title}
             className="product-real-image"
-            onError={() => setImageError(true)}
-            loading="lazy"
+            onError={handleImageError}
+            loading={isThumbnail ? "eager" : "lazy"}
           />
         </div>
       ) : (
-        <HardwareVectorArtwork kind={product.kind} accent={accent} title={product.title} />
+        <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
+          <HardwareVectorArtwork kind={product.kind} accent={accent} title={product.title} />
+        </div>
       )}
     </div>
   );

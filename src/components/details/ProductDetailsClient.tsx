@@ -56,13 +56,12 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
     [language]
   );
 
-  const thumbnails = useMemo(() => {
-    const base = [product.main_image, ...product.gallery_images];
-    const list: string[] = [...base];
-    let i = 0;
+  const thumbnailItems = useMemo(() => {
+    const cover = product.cover_image || product.main_image;
+    const gallery = product.gallery_images && product.gallery_images.length > 0 ? product.gallery_images : [];
+    const list: string[] = [cover, ...gallery];
     while (list.length < 4) {
-      list.push(base[i % base.length] || product.main_image);
-      i++;
+      list.push(cover);
     }
     return list.slice(0, 4);
   }, [product]);
@@ -142,27 +141,37 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
                 role="img"
                 aria-label={`${product.title} product preview`}
               >
-                <ProductArtwork product={product} />
+                <ProductArtwork
+                  product={product}
+                  viewIndex={selectedGalleryIndex}
+                  imageRole={selectedGalleryIndex === 0 ? "cover" : "gallery"}
+                  imageSrc={thumbnailItems[selectedGalleryIndex]}
+                />
               </div>
 
               <div className="gallery-caption">
-                <span>{thumbnailLabels[selectedGalleryIndex] || `Gallery image ${selectedGalleryIndex + 1}`}</span>
                 <strong>{selectedGalleryIndex + 1} / 4</strong>
               </div>
             </div>
 
             {/* Thumbnail Navigation Row */}
             <div className="thumbnail-row" aria-label="Product gallery previews">
-              {thumbnails.map((thumbnail, index) => (
+              {thumbnailItems.map((thumbnailSrc, index) => (
                 <button
-                  key={`${thumbnail}-${index}`}
+                  key={`${thumbnailSrc}-${index}`}
                   className="thumbnail-button"
                   type="button"
                   aria-pressed={selectedGalleryIndex === index}
                   onClick={() => handleSelectThumbnail(index)}
                   aria-label={`${product.title} ${thumbnailLabels[index] || `gallery image ${index + 1}`}`}
                 >
-                  <ProductArtwork product={product} compact />
+                  <ProductArtwork
+                    product={product}
+                    viewIndex={index}
+                    isThumbnail
+                    imageRole={index === 0 ? "cover" : "thumbnail"}
+                    imageSrc={thumbnailSrc}
+                  />
                   <span className="thumbnail-index">{index + 1}</span>
                 </button>
               ))}
@@ -268,7 +277,7 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
 
             <div className="details-secondary-actions">
               <button
-                className="pill-button light details-inquiry-btn"
+                className="button light details-inquiry-btn"
                 type="button"
                 onClick={() => setModalOpen(true)}
               >
@@ -277,7 +286,7 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
               </button>
 
               <button
-                className="pill-button light details-share-btn"
+                className="button light details-share-btn"
                 type="button"
                 onClick={shareProduct}
                 title="Share Product"

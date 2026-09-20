@@ -19,6 +19,7 @@ export const productSchema = z.object({
   currency: z.literal("BDT"),
   discount_percentage: z.number().nonnegative(),
   quantity_available: z.number().int().nonnegative(),
+  cover_image: z.string().optional(),
   main_image: z.string().min(1),
   gallery_images: z.array(z.string().min(1)),
   video: z.string().nullable(),

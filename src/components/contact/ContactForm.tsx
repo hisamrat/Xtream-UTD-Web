@@ -192,7 +192,7 @@ export function ContactForm({ products = [] }: ContactFormProps) {
           </a>
           <button
             type="button"
-            className="pill-button"
+            className="button"
             onClick={() => {
               setSubmitted(false);
               setForm(initialState);
