@@ -941,14 +941,9 @@ export function ProductWorld({ products }: ProductWorldProps) {
                   onSelect={() => handleCarouselCardClick(product, i)}
                 />
 
-                {/* Bottom Bar: Price (Outside / Centered Below Card) */}
+                {/* Bottom Bar: Category (Outside / Centered Below Card) */}
                 <div className="carousel-focus-bottom carousel-card-hud">
-                  <div className="carousel-focus-price-wrap">
-                    <span className="carousel-focus-price">{formatPrice(product.price)}</span>
-                    {product.old_price && product.old_price > product.price ? (
-                      <span className="carousel-focus-old-price">{formatPrice(product.old_price)}</span>
-                    ) : null}
-                  </div>
+                  <span className="carousel-focus-category">{tCategory(product.category)}</span>
                 </div>
               </div>
             ))}

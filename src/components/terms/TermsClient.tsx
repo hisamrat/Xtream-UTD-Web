@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect } from "react";
 import {
   Clock,
   Package,
@@ -14,6 +15,17 @@ import { Breadcrumb } from "@/components/site/Breadcrumb";
 
 export function TermsClient() {
   const { language } = useLanguage();
+
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.location.hash === "#pre-order") {
+      const el = document.getElementById("pre-order");
+      if (el) {
+        window.setTimeout(() => {
+          el.scrollIntoView({ behavior: "smooth", block: "start" });
+        }, 120);
+      }
+    }
+  }, []);
 
   const trustPerks = [
     {

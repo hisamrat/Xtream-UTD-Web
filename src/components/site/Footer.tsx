@@ -78,7 +78,11 @@ export function Footer() {
   const quickLinks = [
     { label: t("nav_contact"), href: "/contact" },
     { label: t("nav_about"), href: "/about" },
-    { label: t("nav_terms"), href: "/terms" }
+    { label: t("nav_terms"), href: "/terms" },
+    {
+      label: language === "bn" ? "প্রি-অর্ডার শর্তাবলী" : "Pre Order Terms & Conditions",
+      href: "/terms#pre-order"
+    }
   ];
 
   const scrollToTop = () => {
@@ -167,11 +171,15 @@ export function Footer() {
             <h3 className="footer-col-title">{t("central_hub")}</h3>
             <div className="footer-hub-card">
               <div className="hub-item">
-                <MapPin size={16} className="hub-item-icon text-accent" aria-hidden="true" />
+                <span className="hub-icon-badge" aria-hidden="true">
+                  <MapPin size={15} />
+                </span>
                 <span className="hub-location">{siteConfig.business.location}</span>
               </div>
               <div className="hub-item">
-                <Clock size={16} className="hub-item-icon text-accent" aria-hidden="true" />
+                <span className="hub-icon-badge" aria-hidden="true">
+                  <Clock size={15} />
+                </span>
                 <span className="hub-schedule">
                   {isEditablePlaceholder(siteConfig.business.hours)
                     ? (language === "bn" ? "প্রতিদিন: সকাল ৯:০০ – রাত ১০:০০ (BST)" : "Everyday: 9:00 AM – 10:00 PM (BST)")
@@ -185,9 +193,11 @@ export function Footer() {
                   rel="noopener noreferrer"
                   className="hub-fb-link"
                 >
-                  <FacebookIcon size={15} />
-                  <span>facebook.com/xtreamutd</span>
-                  <ExternalLink size={12} aria-hidden="true" />
+                  <span className="hub-icon-badge" aria-hidden="true">
+                    <FacebookIcon size={14} />
+                  </span>
+                  <span className="hub-fb-text">facebook.com/xtreamutd</span>
+                  <ExternalLink size={12} className="hub-external-icon" aria-hidden="true" />
                 </a>
               </div>
               <span className="hub-note">
