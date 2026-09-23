@@ -58,9 +58,13 @@ export function Footer() {
     const handleScroll = () => {
       setShowBackToTop(window.scrollY > 280);
     };
+
     window.addEventListener("scroll", handleScroll, { passive: true });
     handleScroll();
-    return () => window.removeEventListener("scroll", handleScroll);
+
+    return () => {
+      window.removeEventListener("scroll", handleScroll);
+    };
   }, []);
 
   // The footer is rendered on every page EXCEPT the home page ("/")

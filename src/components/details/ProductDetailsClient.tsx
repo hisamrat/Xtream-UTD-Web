@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import {
+  ArrowRight,
   Check,
   CheckCircle2,
   FileText,
@@ -373,9 +374,22 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
         </div>
 
         {/* Related Products */}
-        <section className="related-section">
-          <div className="related-header">
-            <p className="section-kicker">{t("related_products")}</p>
+        <section className="related-section" aria-labelledby="related-products-heading">
+          <div className="explore-section-header">
+            <div className="explore-section-header-left">
+              <span className="explore-section-kicker">{t("related_products_kicker")}</span>
+              <h2 id="related-products-heading" className="explore-section-title">
+                {t("related_products_title")}
+              </h2>
+            </div>
+            <Link
+              href={`/products?category=${encodeURIComponent(product.category)}`}
+              className="explore-shop-all-link"
+              aria-label={`${t("shop_all")} ${product.category}`}
+            >
+              <span>{t("shop_all")}</span>
+              <ArrowRight size={15} aria-hidden="true" />
+            </Link>
           </div>
           <div className="product-grid related-grid">
             {relatedProducts.map((relatedProduct) => (
@@ -386,9 +400,22 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
 
         {/* Recently Viewed Products */}
         {recentlyViewedProducts.length ? (
-          <section className="related-section">
-            <div className="related-header">
-              <p className="section-kicker">{t("recently_viewed")}</p>
+          <section className="related-section" aria-labelledby="recently-viewed-heading">
+            <div className="explore-section-header">
+              <div className="explore-section-header-left">
+                <span className="explore-section-kicker">{t("recently_viewed_kicker")}</span>
+                <h2 id="recently-viewed-heading" className="explore-section-title">
+                  {t("recently_viewed_title")}
+                </h2>
+              </div>
+              <Link
+                href="/products"
+                className="explore-shop-all-link"
+                aria-label={`${t("shop_all")} products`}
+              >
+                <span>{t("shop_all")}</span>
+                <ArrowRight size={15} aria-hidden="true" />
+              </Link>
             </div>
             <div className="product-grid related-grid">
               {recentlyViewedProducts.map((recentProduct) => (

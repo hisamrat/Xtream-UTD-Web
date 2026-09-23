@@ -31,6 +31,7 @@ export type TranslationKey =
   | "products"
   | "opening_product_details"
   | "featured_product"
+  | "catalogue_kicker"
   | "catalogue_title"
   | "catalogue_desc"
   | "all_categories"
@@ -60,13 +61,34 @@ export type TranslationKey =
   | "new_products"
   | "add_to_cart"
   | "added_to_cart"
-  | "cart";
+  | "cart"
+  | "click_to_view_detail"
+  | "reload_to_reset"
+  | "feature_authentic_title"
+  | "feature_authentic_desc"
+  | "feature_dispatch_title"
+  | "feature_dispatch_desc"
+  | "feature_cod_title"
+  | "feature_cod_desc"
+  | "feature_support_title"
+  | "feature_support_desc"
+  | "most_wanted"
+  | "top_selling_title"
+  | "shop_all"
+  | "reviews_kicker"
+  | "reviews_title"
+  | "nav_explore"
+  | "related_products_kicker"
+  | "related_products_title"
+  | "recently_viewed_kicker"
+  | "recently_viewed_title";
 
 const translations: Record<Language, Record<TranslationKey, string>> = {
   en: {
     nav_home: "Home",
     nav_reload: "Reload",
     nav_products: "Products",
+    nav_explore: "Explore",
     nav_contact: "Contact",
     nav_about: "About Us",
     nav_terms: "Terms & Conditions",
@@ -90,8 +112,9 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     products: "Products",
     opening_product_details: "Opening product details",
     featured_product: "Featured product",
-    catalogue_title: "Products",
-    catalogue_desc: "Browse professional creator gear, cameras, audio, gimbals, lighting, and accessories.",
+    catalogue_kicker: "TRENDY GADGETS & ACCESSORIES",
+    catalogue_title: "Useful Gadgets & Accessories, Chosen for Everyday Life",
+    catalogue_desc: "Explore our curated collection of trending gadgets, smart desk accessories, ambient lighting, and everyday essentials with delivery across Bangladesh.",
     all_categories: "All Categories",
     sort_newest: "Newest first",
     sort_featured: "Featured",
@@ -119,12 +142,32 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     new_products: "New Products",
     add_to_cart: "Add to Cart",
     added_to_cart: "Added",
-    cart: "Shopping Cart"
+    cart: "Shopping Cart",
+    click_to_view_detail: "CLICK TO VIEW DETAIL",
+    reload_to_reset: "RELOAD TO RESET",
+    feature_authentic_title: "100% Authentic Product",
+    feature_authentic_desc: "100% authentic guarantee",
+    feature_dispatch_title: "64-District Dispatch",
+    feature_dispatch_desc: "Dhaka ৳70 & nationwide ৳130",
+    feature_cod_title: "Cash on Delivery",
+    feature_cod_desc: "Nationwide in 2–3 days",
+    feature_support_title: "Support Hours",
+    feature_support_desc: "Everyday: 9:00 AM – 10:00 PM",
+    most_wanted: "MOST WANTED",
+    top_selling_title: "The ones people come back for",
+    shop_all: "SHOP ALL",
+    reviews_kicker: "CUSTOMER REVIEWS & FEEDBACK",
+    reviews_title: "What people say after a year",
+    related_products_kicker: "RELATED PRODUCTS",
+    related_products_title: "Gear tailored to your setup",
+    recently_viewed_kicker: "RECENTLY VIEWED",
+    recently_viewed_title: "Pick up where you left off"
   },
   bn: {
     nav_home: "হোম",
     nav_reload: "রিলোড",
     nav_products: "প্রোডাক্টস",
+    nav_explore: "এক্সপ্লোর",
     nav_contact: "যোগাযোগ",
     nav_about: "আমাদের সম্পর্কে",
     nav_terms: "শর্তাবলী",
@@ -148,8 +191,9 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     products: "প্রোডাক্ট",
     opening_product_details: "প্রোডাক্টের বিবরণ খোলা হচ্ছে",
     featured_product: "জনপ্রিয় প্রোডাক্ট",
-    catalogue_title: "প্রোডাক্টস",
-    catalogue_desc: "প্রফেশনাল ক্রিয়েটর গিয়ার, ক্যামেরা, অডিও, গিম্বল, লাইটিং এবং এক্সেসরিজ কালেকশন।",
+    catalogue_kicker: "ট্রেন্ডি গ্যাজেট ও এক্সেসরিজ",
+    catalogue_title: "প্রয়োজনীয় গ্যাজেট ও এক্সেসরিজ, ডেস্ক ও দৈনন্দিন জীবনের জন্য",
+    catalogue_desc: "আপনার ডেস্ক সেটআপ, বাসা ও দৈনন্দিন ব্যবহারের জন্য ১০০% আসল স্মার্ট গ্যাজেট, লাইফস্টাইল এক্সেসরিজ এবং লাইটিংয়ের বিশ্বস্ত কালেকশন।",
     all_categories: "সকল ক্যাটাগরি",
     sort_newest: "নতুন প্রোডাক্ট আগে",
     sort_featured: "জনপ্রিয়",
@@ -177,7 +221,26 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     new_products: "নতুন প্রোডাক্ট",
     add_to_cart: "কার্টে যোগ করুন",
     added_to_cart: "যোগ হয়েছে",
-    cart: "শপিং কার্ট"
+    cart: "শপিং কার্ট",
+    click_to_view_detail: "বিস্তারিত দেখতে ক্লিক করুন",
+    reload_to_reset: "রিলোডে ক্লিক করে রিসেট করুন",
+    feature_authentic_title: "১০০% আসল পণ্য",
+    feature_authentic_desc: "শতভাগ অরিজিনাল গ্যারান্টি",
+    feature_dispatch_title: "৬৪ জেলায় ডেলিভারি",
+    feature_dispatch_desc: "ঢাকা ৳৭০ এবং সারা দেশে ৳১৩০",
+    feature_cod_title: "ক্যাশ অন ডেলিভারি",
+    feature_cod_desc: "সারা দেশে ২–৩ দিনে",
+    feature_support_title: "সাপোর্ট সময়",
+    feature_support_desc: "প্রতিদিন: সকাল ৯:০০ – রাত ১০:০০",
+    most_wanted: "সবচেয়ে জনপ্রিয়",
+    top_selling_title: "সবার পছন্দের সেরা কালেকশন",
+    shop_all: "সব প্রোডাক্ট দেখুন",
+    reviews_kicker: "গ্রাহকদের বাস্তব রিভিউ ও মতামত",
+    reviews_title: "আমাদের কাস্টমারদের বাস্তব অভিজ্ঞতা",
+    related_products_kicker: "সম্পর্কিত প্রোডাক্ট",
+    related_products_title: "আপনার সেটআপের জন্য প্রয়োজনীয় গিয়ার",
+    recently_viewed_kicker: "সম্প্রতি দেখা প্রোডাক্ট",
+    recently_viewed_title: "আপনার সম্প্রতি দেখা আইটেমসমূহ"
   }
 };
 

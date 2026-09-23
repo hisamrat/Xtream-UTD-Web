@@ -23,7 +23,20 @@ export function Header({ products }: HeaderProps) {
   const [menuOpen, setMenuOpen] = useState(false);
   const [searchOpen, setSearchOpen] = useState(false);
   const [homeUIReady, setHomeUIReady] = useState(false);
+  const [isScrolled, setIsScrolled] = useState(false);
+
   const isHomePage = pathname === "/";
+  const isExplorePage = pathname === "/explore";
+  const isTransparentHeader = isHomePage || (isExplorePage && !isScrolled);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 20);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const handleHomeClick = () => {
     if (isHomePage) {
@@ -62,7 +75,7 @@ export function Header({ products }: HeaderProps) {
   return (
     <>
       <header
-        className={`site-header ${isHomePage ? "is-home-header" : "is-solid-header"}`}
+        className={`site-header ${isTransparentHeader ? "is-home-header is-transparent-nav" : "is-solid-header"}`}
         style={headerStyle}
       >
         <div className="header-left">

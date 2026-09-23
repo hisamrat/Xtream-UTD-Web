@@ -34,7 +34,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   const products = getAllProducts();
 
   return (
-    <html lang="en" className={inter.variable} data-theme="dark" data-scroll-behavior="smooth" suppressHydrationWarning>
+    <html lang="en" className={inter.variable} data-theme="dark" suppressHydrationWarning>
+      <head>
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `(function(){try{if('scrollRestoration' in history){history.scrollRestoration='manual';}window.scrollTo(0,0);}catch(e){}})();`
+          }}
+        />
+      </head>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider>
           <LanguageProvider>

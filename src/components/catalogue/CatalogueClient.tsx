@@ -65,7 +65,7 @@ function getVisiblePaginationPages(
 export function CatalogueClient({ products, initialFilters }: CatalogueClientProps) {
   const router = useRouter();
   const pathname = usePathname();
-  const { language, formatNumber, tCategory } = useLanguage();
+  const { t, language, formatNumber, tCategory } = useLanguage();
   const productGridRef = useRef<HTMLDivElement>(null);
   const categoryMenuRef = useRef<HTMLDivElement>(null);
   const sortMenuRef = useRef<HTMLDivElement>(null);
@@ -228,17 +228,53 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
       />
 
       <div className="catalogue-hero">
-        <h1 className="page-title">
-          {filters.query
-            ? (language === "bn" ? "অনুসন্ধান ফলাফল" : "Search results")
-            : (language === "bn" ? "প্রোডাক্টস" : "Products")}
+        <h1 className="page-title catalogue-title">
+          {filters.query ? (
+            language === "bn" ? (
+              <>
+                “{filters.query}” <br />
+                <span className="text-accent">এর অনুসন্ধান ফলাফল</span>
+              </>
+            ) : (
+              <>
+                Search Results for <br />
+                <span className="text-accent">“{filters.query}”</span>
+              </>
+            )
+          ) : selectedCategory ? (
+            language === "bn" ? (
+              <>
+                {tCategory(selectedCategory)} <br />
+                <span className="text-accent">প্রিমিয়াম কালেকশন</span>
+              </>
+            ) : (
+              <>
+                {selectedCategory} <br />
+                <span className="text-accent">Curated Collection</span>
+              </>
+            )
+          ) : language === "bn" ? (
+            <>
+              প্রয়োজনীয় গ্যাজেট ও এক্সেসরিজ, <br />
+              <span className="text-accent">ডেস্ক, বাসা ও দৈনন্দিন জীবনের জন্য।</span>
+            </>
+          ) : (
+            <>
+              Useful Gadgets & Accessories, <br />
+              <span className="text-accent">Chosen for Everyday Life.</span>
+            </>
+          )}
         </h1>
         <p className="page-lede">
           {filters.query
-            ? (language === "bn" ? `"${filters.query}" এর জন্য ফলাফল` : `Results for “${filters.query}”`)
-            : (language === "bn"
-                ? "প্রফেশনাল ক্রিয়েটরদের জন্য সিনেমা ক্যামেরা, স্টুডিও অডিও, প্রিসিশন গিম্বল ও বিশেষ গ্যাজেটের প্রিমিয়াম কালেকশন।"
-                : "Explore our curated collection of cinema cameras, professional studio audio, precision gimbal stabilizers, and creator gear engineered for performance.")}
+            ? (language === "bn"
+                ? `“${filters.query}” এর সাথে মিলে যাওয়া সকল অথেনটিক গ্যাজেট ও প্রোডাক্ট তালিকা।`
+                : `Browse all available gadgets and accessories matching “${filters.query}”.`)
+            : selectedCategory
+            ? (language === "bn"
+                ? `${tCategory(selectedCategory)} ক্যাটাগরির ট্রেন্ডি গ্যাজেট ও এক্সেসরিজ, সাশ্রয়ী মূল্য এবং দেশজুড়ে ক্যাশ অন ডেলিভারি।`
+                : `Discover authentic ${selectedCategory.toLowerCase()} with clear pricing and nationwide delivery across Bangladesh.`)
+            : t("catalogue_desc")}
         </p>
       </div>
 

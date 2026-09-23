@@ -142,18 +142,9 @@ const mobileReferenceSlots: ReferenceShowcaseSlot[] = [
   slot(300, 90, 56, 56, 18, "mini", { opacity: 0.88 })
 ];
 
-// -------------------------------------------------------------
-// -------------------------------------------------------------
-// Framer 3D Scale Carousel Mathematical Model & Physics Constants
-// Matched to https://3dscalecarousel.framer.website
-const CAROUSEL_PERSPECTIVE = 1400;
-const VISIBLE_RANGE = 7.5; // Render 15 cards across the horizon
-const CAROUSEL_EASE = 0.14;
-const WHEEL_GAIN = 0.0036;
-
 export function ProductWorld({ products }: ProductWorldProps) {
   const router = useRouter();
-  const { t, formatNumber, tCategory, language } = useLanguage();
+  const { t, formatNumber, tCategory } = useLanguage();
   const prioritizedProducts = useMemo(() => prioritizeWorldProducts(products), [products]);
   const [mounted, setMounted] = useState(false);
   const [showUI, setShowUI] = useState(false);
@@ -170,18 +161,8 @@ export function ProductWorld({ products }: ProductWorldProps) {
   });
   const [productSetIndex, setProductSetIndex] = useState(0);
 
-  type WorldMode = "showcase" | "carousel";
-  const [worldMode, setWorldMode] = useState<WorldMode>("showcase");
-
-  // -------------------------------------------------------------
-  // On-Scroll 3D Scale Carousel State & Physics Engine
-  // -------------------------------------------------------------
-  const [cameraSlot, setCameraSlot] = useState(0);
-  const cameraSlotTargetRef = useRef(0);
-  const cameraSlotCurrentRef = useRef(0);
-  const plateNodesRef = useRef<(HTMLDivElement | null)[]>([]);
-  const bgRef = useRef<HTMLDivElement | null>(null);
-  const lastInputTimeRef = useRef(0);
+  const isNavigatingRef = useRef(false);
+  const [isNavigatingToExplore, setIsNavigatingToExplore] = useState(false);
 
   const sectionRef = useRef<HTMLElement | null>(null);
   const pointerRef = useRef<PointerState>({
@@ -210,173 +191,15 @@ export function ProductWorld({ products }: ProductWorldProps) {
   );
   const activeSlots = showcaseSlots.slice(0, worldProducts.length);
   const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
-  const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView, cameraSlot);
+  const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView);
 
-  // Carousel products array: loop array to ensure at least 18 cards for continuous 3D fan ribbon
-  const carouselProducts = useMemo(() => {
-    const baseList = worldProducts.length >= 2 ? worldProducts : products;
-    if (baseList.length === 0) return [];
-    let list = [...baseList];
-    while (list.length < 18) {
-      list = [...list, ...baseList];
-    }
-    return list;
-  }, [worldProducts, products]);
-
-  // Responsive dynamic dimensions reserving vertical space for header (70px), floating dock (90px), top title, and bottom bar
-  const cardHeight = useMemo(() => {
-    const maxAvailableH = Math.max(220, viewportSize.height - 250);
-
-    if (viewportSize.width < 700) {
-      return Math.min(maxAvailableH, Math.min(340, Math.max(240, Math.round(viewportSize.height * 0.42))));
-    }
-    if (viewportSize.width < 1024) {
-      return Math.min(maxAvailableH, Math.min(420, Math.max(300, Math.round(viewportSize.height * 0.48))));
-    }
-    if (viewportSize.width < 1440) {
-      return Math.min(maxAvailableH, Math.min(490, Math.max(360, Math.round(viewportSize.height * 0.54))));
-    }
-    return Math.min(maxAvailableH, Math.min(554, Math.max(400, Math.round(viewportSize.height * 0.58))));
-  }, [viewportSize.width, viewportSize.height]);
-
-  const cardWidth = useMemo(() => {
-    // 3:4 portrait aspect ratio (0.74 : 1) matching https://3dscalecarousel.framer.website (410px x 554px)
-    const targetW = Math.round(cardHeight * 0.74);
-
-    if (viewportSize.width < 700) {
-      return Math.min(250, Math.max(180, Math.round(viewportSize.width * 0.60)));
-    }
-    if (viewportSize.width < 1024) {
-      return Math.min(310, Math.max(220, targetW));
-    }
-    if (viewportSize.width < 1440) {
-      return Math.min(365, Math.max(270, targetW));
-    }
-    return Math.min(410, Math.max(300, targetW));
-  }, [cardHeight, viewportSize.width]);
-
-  const cardGapPx = useMemo(() => {
-    // Gap between adjacent cards matching Framer reference site (~11px)
-    if (viewportSize.width < 700) {
-      return 8;
-    }
-    if (viewportSize.width < 1024) {
-      return 10;
-    }
-    return 11;
-  }, [viewportSize.width]);
-
-  // Track user interaction time to pause autoplay during active user engagement
+  // Track user interaction time
   const lastUserInteractionTimeRef = useRef<number>(Date.now());
 
-  // Autoplay Engine: auto move cards smoothly every 3.2 seconds matching Framer reference site
+  // Prefetch /explore as soon as Home page mounts for instant, zero-delay scroll transition
   useEffect(() => {
-    if (!mounted || worldPaused || worldMode !== "carousel") return;
-
-    const interval = window.setInterval(() => {
-      const now = Date.now();
-      // Only auto-advance if user has been idle for >= 3200ms and not dragging
-      if (now - lastUserInteractionTimeRef.current >= 3200 && !pointerRef.current.active) {
-        cameraSlotTargetRef.current += 1.0;
-      }
-    }, 3200);
-
-    return () => window.clearInterval(interval);
-  }, [mounted, worldPaused, worldMode]);
-
-  // Frame Loop (Framer 3D Scale Carousel rAF Momentum Engine)
-  useEffect(() => {
-    let rafId: number;
-
-    const place = (
-      node: HTMLDivElement | null,
-      d: number
-    ) => {
-      if (!node) return;
-      const absD = Math.abs(d);
-
-      if (absD > VISIBLE_RANGE) {
-        node.style.visibility = "hidden";
-        node.style.opacity = "0";
-        node.style.pointerEvents = "none";
-        return;
-      }
-
-      // Vanishing Arc Scale Model:
-      // Center card is 1.0x; step 1 card is 0.48x; step 2 is 0.317x; step 3 is 0.209x; outer wings shrink & smoothly vanish
-      let scale: number;
-      let integratedW: number;
-
-      if (absD <= 1.0) {
-        scale = 0.48 + 0.52 * Math.pow(Math.cos((absD * Math.PI) / 2), 2);
-        integratedW = cardWidth * (0.74 * absD + (0.26 / Math.PI) * Math.sin(Math.PI * absD));
-      } else {
-        const excess = absD - 1.0;
-        scale = 0.48 * Math.pow(0.66, excess);
-        integratedW = cardWidth * (0.74 + 1.1553 * (1 - Math.pow(0.66, excess)));
-      }
-
-      const sign = d >= 0 ? 1 : -1;
-      // Fixed centered placement strictly driven by scroll position without mousemove displacement
-      const x = sign * (integratedW + absD * cardGapPx);
-      const y = 0;
-      const z = -absD * 18;
-      const rotateY = -sign * Math.min(14, absD * 3.4);
-
-      // Smooth cosine opacity fade so cards gracefully vanish at outer ends
-      const opacity = absD <= 5.5 ? Math.pow(Math.cos((absD * Math.PI) / 11), 2) : 0;
-
-      // Subtle photographic depth blur
-      const blur = absD <= 0.4 ? 0 : Math.min(6.0, (absD - 0.4) * 1.4);
-      const zIndex = Math.round(100 - absD * 8);
-
-      // HUD elements (top title, viewfinder brackets, bottom price) only visible on center card
-      const hudOpacity = Math.max(0, Math.min(1, 1 - absD * 1.8));
-      node.style.setProperty("--hud-opacity", hudOpacity.toFixed(3));
-      node.style.setProperty("--hud-pointer", hudOpacity > 0.75 ? "auto" : "none");
-
-      node.style.visibility = "visible";
-      node.style.opacity = opacity.toFixed(3);
-      node.style.transform = `translate3d(${x.toFixed(2)}px, ${y.toFixed(2)}px, ${z.toFixed(2)}px) rotateY(${rotateY.toFixed(2)}deg) scale(${scale.toFixed(4)})`;
-      node.style.filter = blur > 0.3 ? `blur(${blur.toFixed(1)}px)` : "none";
-      node.style.zIndex = String(zIndex);
-      node.style.pointerEvents = opacity > 0.2 ? "auto" : "none";
-    };
-
-    const tick = () => {
-      rafId = requestAnimationFrame(tick);
-      const count = carouselProducts.length;
-      if (count < 2) return;
-
-      // Magnetic resting snap to nearest card when idle
-      if (Date.now() - lastInputTimeRef.current > 140) {
-        const nearest = Math.round(cameraSlotTargetRef.current);
-        cameraSlotTargetRef.current += (nearest - cameraSlotTargetRef.current) * 0.12;
-      }
-
-      cameraSlotCurrentRef.current += (cameraSlotTargetRef.current - cameraSlotCurrentRef.current) * CAROUSEL_EASE;
-      const position = cameraSlotCurrentRef.current;
-
-      setCameraSlot(position);
-
-      const focusIndex = ((Math.round(position) % count) + count) % count;
-      const activeProd = carouselProducts[focusIndex];
-      if (activeProd && activeProd.accent && bgRef.current) {
-        bgRef.current.style.setProperty("--active-tint", activeProd.accent);
-      }
-
-      for (let i = 0; i < count; i += 1) {
-        let d = ((i - position) % count);
-        while (d > count / 2) d -= count;
-        while (d < -count / 2) d += count;
-
-        place(plateNodesRef.current[i], d);
-      }
-    };
-
-    rafId = requestAnimationFrame(tick);
-    return () => cancelAnimationFrame(rafId);
-  }, [carouselProducts, cardGapPx, cardWidth, cardHeight]);
+    router.prefetch("/explore");
+  }, [router]);
 
   const cancelHoverEnter = useCallback(() => {
     if (hoverEnterTimerRef.current !== null) {
@@ -398,6 +221,16 @@ export function ProductWorld({ products }: ProductWorldProps) {
     closeCooldownUntilRef.current = Date.now() + 450;
     setHoveredSlug(null);
   }, [cancelHoverEnter, cancelHoverHide]);
+
+  const navigateToExplore = useCallback(() => {
+    if (isNavigatingRef.current) return;
+    isNavigatingRef.current = true;
+    setIsNavigatingToExplore(true);
+    cancelHoverEnter();
+    cancelHoverHide();
+    setHoveredSlug(null);
+    router.push("/explore");
+  }, [cancelHoverEnter, cancelHoverHide, router]);
 
   const showProductPreviewImmediate = useCallback(
     (slug: string) => {
@@ -434,7 +267,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
   const handleCardPreviewEnter = useCallback(
     (slug: string) => {
-      if (worldView.dragging || Math.abs(cameraSlotTargetRef.current) > 0.05) {
+      if (worldView.dragging) {
         return;
       }
       showProductPreviewWithDelay(slug, 140);
@@ -468,10 +301,6 @@ export function ProductWorld({ products }: ProductWorldProps) {
       startRotateX: 0,
       startRotateY: 0
     };
-    cameraSlotTargetRef.current = 0;
-    cameraSlotCurrentRef.current = 0;
-    setCameraSlot(0);
-    setWorldMode("showcase");
   }, [cancelHoverEnter, cancelHoverHide]);
 
   const reloadNextProductSet = useCallback(() => {
@@ -496,54 +325,22 @@ export function ProductWorld({ products }: ProductWorldProps) {
       startRotateX: 0,
       startRotateY: 0
     };
-    cameraSlotTargetRef.current = 0;
-    cameraSlotCurrentRef.current = 0;
-    setCameraSlot(0);
-
-    if (worldMode === "carousel") {
-      setWorldMode("showcase");
-    } else {
-      setProductSetIndex((prev) => (prev + 1) % productSetCount);
-      setWorldMode("showcase");
-    }
-  }, [cancelHoverEnter, cancelHoverHide, productSetCount, worldMode]);
+    setProductSetIndex((prev) => (prev + 1) % productSetCount);
+  }, [cancelHoverEnter, cancelHoverHide, productSetCount]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
       if (event.key === "Escape") {
         closePreview();
-        if (worldMode === "carousel") {
-          returnToShowcaseHome();
-        }
-      } else if (event.key === "ArrowDown" || event.key === "PageDown" || event.key === "ArrowRight") {
+      } else if (event.key === "ArrowDown" || event.key === "PageDown") {
         event.preventDefault();
-        lastUserInteractionTimeRef.current = Date.now();
-        if (worldMode === "showcase") {
-          setWorldMode("carousel");
-          cameraSlotTargetRef.current = 1.0;
-          cameraSlotCurrentRef.current = 0;
-        } else {
-          cameraSlotTargetRef.current += 1.0;
-        }
-      } else if (event.key === "ArrowUp" || event.key === "PageUp" || event.key === "ArrowLeft") {
-        event.preventDefault();
-        lastUserInteractionTimeRef.current = Date.now();
-        if (worldMode === "showcase") {
-          setWorldMode("carousel");
-          cameraSlotTargetRef.current = -1.0;
-          cameraSlotCurrentRef.current = 0;
-        } else {
-          cameraSlotTargetRef.current -= 1.0;
-        }
-      } else if (event.key === "Home") {
-        event.preventDefault();
-        returnToShowcaseHome();
+        navigateToExplore();
       }
     };
 
     window.addEventListener("keydown", handleKeyDown);
     return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [closePreview, returnToShowcaseHome, worldMode]);
+  }, [closePreview, navigateToExplore]);
 
   useEffect(() => {
     setMounted(true);
@@ -623,14 +420,13 @@ export function ProductWorld({ products }: ProductWorldProps) {
         startRotateX: worldView.rotateX,
         startRotateY: worldView.rotateY
       };
-      // Note: do not set pointer capture on pointerdown so child button click events can fire cleanly
     },
     [showUI, worldView.rotateX, worldView.rotateY]
   );
 
   const movePointer = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
-      if (!showUI || worldMode !== "showcase") {
+      if (!showUI) {
         return;
       }
       lastUserInteractionTimeRef.current = Date.now();
@@ -667,42 +463,50 @@ export function ProductWorld({ products }: ProductWorldProps) {
         dragging: isDragging
       }));
     },
-    [showUI, worldMode, cancelHoverHide]
+    [showUI, cancelHoverHide]
   );
 
-  const endPointer = useCallback((event: ReactPointerEvent<HTMLElement>) => {
-    lastUserInteractionTimeRef.current = Date.now();
-    pointerRef.current.active = false;
-    if (event.currentTarget.hasPointerCapture(event.pointerId)) {
-      event.currentTarget.releasePointerCapture(event.pointerId);
-    }
-    setWorldView((current) => ({ ...current, dragging: false }));
-  }, []);
-
-  // Wheel scroll drives On-Scroll 3D Scale Carousel
-  const handleWorldWheel = useCallback(
-    (event: ReactWheelEvent<HTMLElement>) => {
-      if (!showUI) {
-        return;
-      }
+  const endPointer = useCallback(
+    (event: ReactPointerEvent<HTMLElement>) => {
       lastUserInteractionTimeRef.current = Date.now();
-      cancelHoverEnter();
-      cancelHoverHide();
-      setHoveredSlug(null);
+      const pointer = pointerRef.current;
+      const dragUpward = pointer.startY - event.clientY;
 
-      const delta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
-      if (Math.abs(delta) < 2) return;
+      pointer.active = false;
+      if (event.currentTarget.hasPointerCapture(event.pointerId)) {
+        event.currentTarget.releasePointerCapture(event.pointerId);
+      }
+      setWorldView((current) => ({ ...current, dragging: false }));
 
-      if (worldMode === "showcase") {
-        setWorldMode("carousel");
-        cameraSlotTargetRef.current = delta > 0 ? 1.0 : -1.0;
-        cameraSlotCurrentRef.current = 0;
-      } else {
-        cameraSlotTargetRef.current += delta * WHEEL_GAIN;
+      // On touch swipe-up, smoothly transition to /explore
+      if (event.pointerType === "touch" && dragUpward > 65) {
+        navigateToExplore();
       }
     },
-    [showUI, worldMode, cancelHoverEnter, cancelHoverHide]
+    [navigateToExplore]
   );
+
+  // Wheel scroll on Home page navigates to /explore
+  const handleWorldWheel = useCallback(
+    (event: ReactWheelEvent<HTMLElement>) => {
+      const delta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+      if (Math.abs(delta) < 8) return;
+      navigateToExplore();
+    },
+    [navigateToExplore]
+  );
+
+  useEffect(() => {
+    if (!mounted) return;
+    const handleNativeWheel = (e: WheelEvent) => {
+      const delta = Math.abs(e.deltaY) > Math.abs(e.deltaX) ? e.deltaY : e.deltaX;
+      if (Math.abs(delta) > 8) {
+        navigateToExplore();
+      }
+    };
+    window.addEventListener("wheel", handleNativeWheel, { passive: true });
+    return () => window.removeEventListener("wheel", handleNativeWheel);
+  }, [mounted, navigateToExplore]);
 
   const leaveWorld = useCallback(() => {
     if (pointerRef.current.active) {
@@ -714,11 +518,9 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
   const handleSectionPointerMove = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
-      if (worldMode === "showcase") {
-        movePointer(event);
-      }
+      movePointer(event);
     },
-    [movePointer, worldMode]
+    [movePointer]
   );
 
   const handleSectionPointerLeave = useCallback(() => {
@@ -727,43 +529,19 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
   const beginWorldPointer = useCallback(
     (event: ReactPointerEvent<HTMLElement>) => {
-      if (worldMode === "showcase") {
-        beginPointer(event);
-      }
+      beginPointer(event);
     },
-    [beginPointer, worldMode]
+    [beginPointer]
   );
 
   const openProduct = useCallback(
     (product: Product) => {
-      if (worldMode === "showcase" && pointerRef.current.distance > dragThreshold) {
+      if (pointerRef.current.distance > dragThreshold) {
         return;
       }
       router.push(`/products/${product.slug}`);
     },
-    [router, worldMode]
-  );
-
-  const handleCarouselCardClick = useCallback(
-    (product: Product, index: number) => {
-      lastUserInteractionTimeRef.current = Date.now();
-      if (pointerRef.current.distance > dragThreshold) {
-        return;
-      }
-      const count = carouselProducts.length;
-      let d = ((index - cameraSlotCurrentRef.current) % count);
-      while (d > count / 2) d -= count;
-      while (d < -count / 2) d += count;
-
-      if (Math.abs(d) < 0.65) {
-        // Direct click on active center card -> navigate to product detail
-        router.push(`/products/${product.slug}`);
-      } else {
-        // Click on side card in carousel -> smoothly animate it to center!
-        cameraSlotTargetRef.current += d;
-      }
-    },
-    [carouselProducts.length, router]
+    [router]
   );
 
   useEffect(() => {
@@ -801,13 +579,6 @@ export function ProductWorld({ products }: ProductWorldProps) {
     return <section className="world-shell reference-showcase" aria-label="Loading product showcase" />;
   }
 
-  // -------------------------------------------------------------
-  // Transition Blending between 3D Showcase World and 3D Scale Carousel
-  // -------------------------------------------------------------
-  const isInShowcase = worldMode === "showcase";
-  const showcaseOpacity = isInShowcase ? 1 : 0;
-  const carouselOpacity = isInShowcase ? 0 : 1;
-
   const hoveredProduct = hoveredSlug ? worldProducts.find((product) => product.slug === hoveredSlug) ?? null : null;
 
   return (
@@ -816,7 +587,8 @@ export function ProductWorld({ products }: ProductWorldProps) {
       className={[
         "world-shell",
         "reference-showcase",
-        isInShowcase ? "is-in-showcase" : "is-in-carousel",
+        "is-in-showcase",
+        isNavigatingToExplore ? "is-navigating-to-explore" : "",
         hoveredSlug ? "is-hovering" : "",
         worldPaused ? "is-paused" : "",
         worldView.dragging ? "is-dragging" : "",
@@ -826,8 +598,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
         .join(" ")}
       style={
         {
-          "--showcase-opacity": showcaseOpacity,
-          "--carousel-opacity": carouselOpacity
+          "--showcase-opacity": "1"
         } as CSSProperties
       }
       aria-label="Interactive 3D Product World"
@@ -840,144 +611,60 @@ export function ProductWorld({ products }: ProductWorldProps) {
       onPointerLeave={handleSectionPointerLeave}
     >
       {/* ------------------------------------------------------------- */}
-      {/* Layer 1: Resting Showcase 3D Grid (from 18edb0a)              */}
+      {/* Layer 1: Resting Showcase 3D Grid                             */}
       {/* ------------------------------------------------------------- */}
-      {showcaseOpacity > 0 ? (
-        <div
-          className="world-stage showcase-stage"
-          style={{
-            ...stageStyle,
-            opacity: showcaseOpacity,
-            pointerEvents: showcaseOpacity > 0.1 ? "auto" : "none"
-          }}
-        >
-          {activeSlots.map((cardSlot, index) => {
-            const product = worldProducts[index];
-            if (!product) {
-              return null;
-            }
+      <div
+        className="world-stage showcase-stage"
+        style={{
+          ...stageStyle,
+          opacity: 1,
+          pointerEvents: "auto"
+        }}
+      >
+        {activeSlots.map((cardSlot, index) => {
+          const product = worldProducts[index];
+          if (!product) {
+            return null;
+          }
 
-            const isHovered = hoveredSlug === product.slug;
-            const isDimmed = Boolean(hoveredSlug && !isHovered);
+          const isHovered = hoveredSlug === product.slug;
+          const isDimmed = Boolean(hoveredSlug && !isHovered);
 
-            return (
-              <ReferenceWorldProduct
-                key={`showcase-card-${product.id}-${index}`}
-                product={product}
-                slot={cardSlot}
-                isFlyingIn={!showUI}
-                isDimmed={isDimmed}
-                isHovered={isHovered}
-                flyInIndex={index}
-                onPreviewEnter={handleCardPreviewEnter}
-                onPreviewLeave={handleCardPreviewLeave}
-                onPointerDown={beginPointer}
-                onPointerMove={movePointer}
-                onPointerEnd={endPointer}
-                onOpen={openProduct}
-              />
-            );
-          })}
-        </div>
-      ) : null}
-
-      {/* ------------------------------------------------------------- */}
-      {/* Layer 2: Framer 3D Scale Carousel System                      */}
-      {/* ------------------------------------------------------------- */}
-      {carouselOpacity > 0 && (
-        <div
-          className="scale-carousel-viewport"
-          style={{
-            opacity: carouselOpacity,
-            pointerEvents: carouselOpacity > 0.1 ? "auto" : "none",
-            perspective: `${CAROUSEL_PERSPECTIVE}px`,
-            perspectiveOrigin: "50% 50%"
-          }}
-        >
-          <div className="scale-carousel-bg" ref={bgRef} aria-hidden="true">
-            <div className="bg-blob-a" />
-            <div className="bg-blob-b" />
-          </div>
-
-          <div className="scale-carousel-plates-container">
-            {carouselProducts.map((product, i) => (
-              <div
-                key={`carousel-card-${product.id}-${i}`}
-                ref={(el) => {
-                  plateNodesRef.current[i] = el;
-                }}
-                className="scale-carousel-card-slot"
-                style={{
-                  position: "absolute",
-                  left: "50%",
-                  top: "50%",
-                  width: cardWidth,
-                  height: cardHeight,
-                  marginLeft: -cardWidth / 2,
-                  marginTop: -cardHeight / 2 - 14,
-                  overflow: "visible",
-                  backfaceVisibility: "hidden",
-                  visibility: "hidden",
-                  opacity: 0,
-                  willChange: "transform, opacity, filter"
-                }}
-              >
-                {/* Top Product Title (Outside / Above Card) */}
-                <div className="carousel-focus-top carousel-card-hud">
-                  <span className="carousel-focus-title">{product.title}</span>
-                </div>
-
-                {/* 4 Optical Corner Viewfinder Brackets */}
-                <div className="carousel-viewfinder-frame carousel-card-hud" aria-hidden="true">
-                  <span className="viewfinder-bracket bracket-tl" />
-                  <span className="viewfinder-bracket bracket-tr" />
-                  <span className="viewfinder-bracket bracket-bl" />
-                  <span className="viewfinder-bracket bracket-br" />
-                </div>
-
-                {/* The Clean Media Artwork Card */}
-                <ScaleCarouselCard
-                  product={product}
-                  onSelect={() => handleCarouselCardClick(product, i)}
-                />
-
-                {/* Bottom Bar: Category (Outside / Centered Below Card) */}
-                <div className="carousel-focus-bottom carousel-card-hud">
-                  <span className="carousel-focus-category">{tCategory(product.category)}</span>
-                </div>
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
+          return (
+            <ReferenceWorldProduct
+              key={`showcase-card-${product.id}-${index}`}
+              product={product}
+              slot={cardSlot}
+              isFlyingIn={!showUI}
+              isDimmed={isDimmed}
+              isHovered={isHovered}
+              flyInIndex={index}
+              onPreviewEnter={handleCardPreviewEnter}
+              onPreviewLeave={handleCardPreviewLeave}
+              onPointerDown={beginPointer}
+              onPointerMove={movePointer}
+              onPointerEnd={endPointer}
+              onOpen={openProduct}
+            />
+          );
+        })}
+      </div>
 
       {/* ------------------------------------------------------------- */}
       {/* Instructions HUD                                              */}
       {/* ------------------------------------------------------------- */}
       <div className="world-instructions" aria-hidden="true">
-        {isInShowcase ? (
-          <>
-            {t("drag_to_rotate")}
-            <br />
-            {t("hover_for_details")}
-            <br />
-            {t("scroll_to_explore")}
-          </>
-        ) : (
-          <>
-            {language === "bn" ? "স্ক্রোল করে দেখুন" : "SCROLL TO ROTATE"}
-            <br />
-            {language === "bn" ? "বিস্তারিত দেখতে ক্লিক করুন" : "CLICK TO VIEW DETAIL"}
-            <br />
-            {language === "bn" ? "রিলোডে ক্লিক করে রিসেট করুন" : "RELOAD TO RESET"}
-          </>
-        )}
+        {t("drag_to_rotate")}
+        <br />
+        {t("hover_for_details")}
+        <br />
+        {t("scroll_to_explore")}
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* Card Hover Center Preview Bar (In Showcase Mode)               */}
+      {/* Card Hover Center Preview Bar                                  */}
       {/* ------------------------------------------------------------- */}
-      {isInShowcase && hoveredProduct ? (
+      {hoveredProduct ? (
         <div className="world-center-preview">
           <Link
             href={`/products/${hoveredProduct.slug}`}
@@ -1011,9 +698,9 @@ export function ProductWorld({ products }: ProductWorldProps) {
       ) : null}
 
       {/* ------------------------------------------------------------- */}
-      {/* Product Sets Counter (Hidden in 3D Carousel)                   */}
+      {/* Product Sets Counter                                           */}
       {/* ------------------------------------------------------------- */}
-      {isInShowcase && productSetCount > 1 ? (
+      {productSetCount > 1 ? (
         <div className="world-set-controls" aria-label="Home page product sets">
           <span className="world-set-count">
             {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} /{" "}
@@ -1112,49 +799,6 @@ function ReferenceWorldProduct({
         </span>
       ) : null}
       <span className="sr-only">{product.title}</span>
-    </button>
-  );
-}
-
-// -------------------------------------------------------------
-// Framer 3D Scale Carousel Card Component (Clean Media Artwork Card)
-// -------------------------------------------------------------
-type ScaleCarouselCardProps = {
-  product: Product;
-  onSelect: () => void;
-};
-
-function ScaleCarouselCard({
-  product,
-  onSelect
-}: ScaleCarouselCardProps) {
-  const cardStyle: CSSProperties = {
-    "--card-accent": product.accent || "#3385ff"
-  } as CSSProperties;
-
-  return (
-    <button
-      type="button"
-      className="scale-carousel-card"
-      style={cardStyle}
-      aria-label={`View details for ${product.title}`}
-      onClick={(e) => {
-        e.stopPropagation();
-        onSelect();
-      }}
-      onKeyDown={(e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          onSelect();
-        }
-      }}
-    >
-      {/* Background / Full-Bleed Media Artwork */}
-      <div className="scale-carousel-media">
-        <div className="scale-carousel-art-wrap">
-          <ProductArtwork product={product} compact={false} />
-        </div>
-      </div>
     </button>
   );
 }
@@ -1272,8 +916,7 @@ function getShowcaseStageScale(viewportSize: ViewportSize, slots: ReferenceShowc
 function getShowcaseStageStyle(
   scale: number,
   viewportSize: ViewportSize,
-  worldView: WorldViewState,
-  cameraSlot = 0
+  worldView: WorldViewState
 ): CSSProperties & Record<`--${string}`, string> {
   const verticalOffset =
     viewportSize.width < 700
@@ -1282,7 +925,7 @@ function getShowcaseStageStyle(
       ? "-18px"
       : "-14px";
 
-  const effectiveScale = scale * worldView.zoom * (1 + cameraSlot * 0.08);
+  const effectiveScale = scale * worldView.zoom;
 
   return {
     "--world-stage-scale": String(effectiveScale),
