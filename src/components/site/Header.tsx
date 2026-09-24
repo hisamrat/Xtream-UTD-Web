@@ -146,22 +146,6 @@ export function Header({ products }: HeaderProps) {
                 <LayoutGrid size={16} aria-hidden="true" />
                 {t("nav_products")}
               </Link>
-              <button
-                className="button"
-                type="button"
-                onClick={() => {
-                  setMenuOpen(false);
-                  setSearchOpen(true);
-                }}
-              >
-                <Search size={16} aria-hidden="true" />
-                {t("search_products")}
-              </button>
-              <button className="button primary" type="button" onClick={() => { setMenuOpen(false); openCart(); }}>
-                <ShoppingCart size={16} aria-hidden="true" />
-                <span>{t("cart")}</span>
-                {totalCount > 0 ? <span className="cart-count-badge-inline">{totalCount}</span> : null}
-              </button>
               <Link className="button" href="/about" onClick={() => setMenuOpen(false)}>
                 <Info size={16} aria-hidden="true" />
                 {t("nav_about")}

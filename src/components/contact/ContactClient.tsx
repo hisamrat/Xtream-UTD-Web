@@ -39,7 +39,7 @@ export function ContactClient({ products }: ContactClientProps) {
   ];
 
   return (
-    <main className="page-main contact-page-main">
+    <main className="page-main contact-page-main contact-page">
       <Breadcrumb items={[{ label: language === "bn" ? "যোগাযোগ" : "Contact" }]} />
       {/* Contact Hero Section */}
       <section className="contact-hero-section">

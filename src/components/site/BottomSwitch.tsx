@@ -16,6 +16,19 @@ export function BottomSwitch() {
   const onContact = pathname.startsWith("/contact");
   const [reloading, setReloading] = useState(false);
   const [homeUIReady, setHomeUIReady] = useState(false);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+
+  // Hide bottom dock when scrolling down into content
+  useEffect(() => {
+    const handleScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      setIsScrolledDown(scrollY > 40);
+    };
+
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   // On the home page, hide until the fly-in animation completes
   useEffect(() => {
@@ -57,16 +70,16 @@ export function BottomSwitch() {
           ? {
               opacity: homeUIReady ? 1 : 0,
               pointerEvents: homeUIReady ? "auto" : "none",
-              transition: homeUIReady ? "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)" : "none"
+              transition: homeUIReady ? "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)" : "none"
             }
-          : {}
+          : undefined
       }
     >
-      {/* Left Navigation Arrow on Explore Page */}
+      {/* Left Navigation Arrow on Explore Page (Hides on Scroll) */}
       {onExplore ? (
         <button
           type="button"
-          className="bottom-dock-arrow bottom-dock-arrow-prev"
+          className={`bottom-dock-arrow bottom-dock-arrow-prev ${isScrolledDown ? "is-scrolled-hidden" : ""}`}
           onClick={handlePrev}
           aria-label="Previous product"
           title="Previous product"
@@ -140,11 +153,11 @@ export function BottomSwitch() {
         )}
       </nav>
 
-      {/* Right Navigation Arrow on Explore Page */}
+      {/* Right Navigation Arrow on Explore Page (Hides on Scroll) */}
       {onExplore ? (
         <button
           type="button"
-          className="bottom-dock-arrow bottom-dock-arrow-next"
+          className={`bottom-dock-arrow bottom-dock-arrow-next ${isScrolledDown ? "is-scrolled-hidden" : ""}`}
           onClick={handleNext}
           aria-label="Next product"
           title="Next product"

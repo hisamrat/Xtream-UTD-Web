@@ -132,6 +132,10 @@ const mobileReferenceSlots: ReferenceShowcaseSlot[] = [
   slot(195, 90, 148, 160, 47, "medium", { floatY: -6 }),
   slot(195, 320, 142, 154, 38, "medium", { opacity: 0.94, floatY: -5 }),
 
+  // Top Diagonal Mini Cards (in green mark gaps on mobile)
+  slot(-102, -295, 58, 58, 42, "mini", { opacity: 0.95, floatY: -5 }),
+  slot(102, -295, 58, 58, 42, "mini", { opacity: 0.95, floatY: -5 }),
+
   // Mini Badges (56x56)
   slot(-195, -55, 56, 56, 22, "mini", { opacity: 0.92 }),
   slot(195, -55, 56, 56, 22, "mini", { opacity: 0.92 }),
@@ -244,7 +248,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
       setHoveredSlug(slug);
       hoverHideTimerRef.current = window.setTimeout(() => {
         closePreview();
-      }, 2000);
+      }, 2200);
     },
     [cancelHoverEnter, cancelHoverHide, closePreview]
   );
@@ -539,9 +543,9 @@ export function ProductWorld({ products }: ProductWorldProps) {
       if (pointerRef.current.distance > dragThreshold) {
         return;
       }
-      router.push(`/products/${product.slug}`);
+      showProductPreviewImmediate(product.slug);
     },
-    [router]
+    [showProductPreviewImmediate]
   );
 
   useEffect(() => {
@@ -662,35 +666,43 @@ export function ProductWorld({ products }: ProductWorldProps) {
       </div>
 
       {/* ------------------------------------------------------------- */}
-      {/* Card Hover Center Preview Bar                                  */}
+      {/* Card Hover / Click Center Preview Pop-up                     */}
       {/* ------------------------------------------------------------- */}
       {hoveredProduct ? (
         <div className="world-center-preview">
           <Link
             href={`/products/${hoveredProduct.slug}`}
             className="world-center-preview-card"
+            style={{ "--preview-accent": hoveredProduct.accent || "#3385FF" } as CSSProperties}
             aria-label={`View details for ${hoveredProduct.title}`}
           >
-            <div
-              className="center-preview-media"
-              style={{ "--preview-accent": hoveredProduct.accent || "#3385FF" } as CSSProperties}
-            >
+            {/* Top Center: Product Title Pill Badge & Category */}
+            <div className="center-preview-top-hud">
+              <h3 className="center-preview-title">
+                <span className="center-preview-title-badge">{hoveredProduct.title}</span>
+              </h3>
+              <span className="center-preview-category">{tCategory(hoveredProduct.category)}</span>
+            </div>
+
+            {/* Main Product Artwork Area (Full Bleed) */}
+            <div className="center-preview-media">
               <ProductArtwork product={hoveredProduct} />
             </div>
 
-            <div className="center-preview-bar">
-              <div className="center-preview-price">
+            {/* Bottom HUD: Left Price + Right View Details Button with Arrow */}
+            <div className="center-preview-bottom-hud">
+              <div className="preview-price-pill">
                 <span className="price-value">{formatPrice(hoveredProduct.price)}</span>
+                {hoveredProduct.old_price && hoveredProduct.old_price > hoveredProduct.price ? (
+                  <span className="original-price">{formatPrice(hoveredProduct.old_price)}</span>
+                ) : null}
               </div>
 
-              <div className="center-preview-info">
-                <h3 className="center-preview-title">{hoveredProduct.title}</h3>
-                <span className="center-preview-category">{tCategory(hoveredProduct.category)}</span>
-              </div>
-
-              <div className="center-preview-action">
-                <span>{t("view_details")}</span>
-                <ArrowUpRight size={14} className="action-arrow" aria-hidden="true" />
+              <div className="preview-details-link" aria-hidden="true">
+                <span className="preview-details-text">{t("view_details")}</span>
+                <span className="preview-details-icon-btn">
+                  <ArrowUpRight size={13} />
+                </span>
               </div>
             </div>
           </Link>
@@ -920,7 +932,7 @@ function getShowcaseStageStyle(
 ): CSSProperties & Record<`--${string}`, string> {
   const verticalOffset =
     viewportSize.width < 700
-      ? "4px"
+      ? "-26px"
       : viewportSize.width >= 1500 && viewportSize.height < 960
       ? "-18px"
       : "-14px";

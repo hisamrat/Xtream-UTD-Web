@@ -17,7 +17,7 @@ export default async function ProductsPage({ searchParams }: ProductsPageProps) 
   const filters = parseFilters(params);
 
   return (
-    <main className="page-main products-page-main">
+    <main className="page-main products-page-main catalogue-page-main">
       <CatalogueClient products={getAllProducts()} initialFilters={filters} />
     </main>
   );

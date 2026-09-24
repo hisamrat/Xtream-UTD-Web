@@ -42,7 +42,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
   }
 
   return (
-    <main className="page-main">
+    <main className="page-main details-page-main">
       <ProductDetailsClient product={product} relatedProducts={getRelatedProducts(product)} allProducts={products} />
     </main>
   );

@@ -38,7 +38,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <head>
         <script
           dangerouslySetInnerHTML={{
-            __html: `(function(){try{if('scrollRestoration' in history){history.scrollRestoration='manual';}window.scrollTo(0,0);}catch(e){}})();`
+            __html: `(function(){try{var t=localStorage.getItem('xtream-theme');if(t==='light'){document.documentElement.dataset.theme='light';document.documentElement.classList.remove('dark');document.documentElement.classList.add('light');document.documentElement.style.colorScheme='light';}else{document.documentElement.dataset.theme='dark';document.documentElement.classList.remove('light');document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}if('scrollRestoration' in history){history.scrollRestoration='manual';}}catch(e){}})();`
           }}
         />
       </head>

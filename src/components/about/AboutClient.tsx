@@ -45,7 +45,7 @@ export function AboutClient() {
   ];
 
   return (
-    <main className="page-main contact-page-main">
+    <main className="page-main about-page-main about-page contact-page-main">
       <Breadcrumb items={[{ label: language === "bn" ? "আমাদের সম্পর্কে" : "About Us" }]} />
 
       {/* Hero Section */}

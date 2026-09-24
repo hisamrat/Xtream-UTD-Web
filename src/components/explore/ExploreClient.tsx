@@ -66,37 +66,37 @@ export function ExploreClient({ products }: ExploreClientProps) {
   }, [products]);
 
   const cardHeight = useMemo(() => {
-    const maxAvailableH = Math.max(220, viewportSize.height - 250);
+    const maxAvailableH = Math.max(240, viewportSize.height - 180);
     if (viewportSize.width < 700) {
-      return Math.min(maxAvailableH, Math.min(340, Math.max(240, Math.round(viewportSize.height * 0.42))));
+      return Math.min(maxAvailableH, Math.min(500, Math.max(340, Math.round(viewportSize.height * 0.58))));
     }
     if (viewportSize.width < 1024) {
-      return Math.min(maxAvailableH, Math.min(420, Math.max(300, Math.round(viewportSize.height * 0.48))));
+      return Math.min(maxAvailableH, Math.min(480, Math.max(340, Math.round(viewportSize.height * 0.55))));
     }
     if (viewportSize.width < 1440) {
-      return Math.min(maxAvailableH, Math.min(490, Math.max(360, Math.round(viewportSize.height * 0.54))));
+      return Math.min(maxAvailableH, Math.min(550, Math.max(390, Math.round(viewportSize.height * 0.61))));
     }
-    return Math.min(maxAvailableH, Math.min(554, Math.max(400, Math.round(viewportSize.height * 0.58))));
+    return Math.min(maxAvailableH, Math.min(620, Math.max(440, Math.round(viewportSize.height * 0.65))));
   }, [viewportSize.width, viewportSize.height]);
 
   const cardWidth = useMemo(() => {
-    const targetW = Math.round(cardHeight * 0.74);
+    const targetW = Math.round(cardHeight * 0.76);
     if (viewportSize.width < 700) {
-      return Math.min(250, Math.max(180, Math.round(viewportSize.width * 0.60)));
+      return Math.min(380, Math.max(260, Math.round(viewportSize.width * 0.82)));
     }
     if (viewportSize.width < 1024) {
-      return Math.min(310, Math.max(220, targetW));
+      return Math.min(365, Math.max(260, targetW));
     }
     if (viewportSize.width < 1440) {
-      return Math.min(365, Math.max(270, targetW));
+      return Math.min(418, Math.max(295, targetW));
     }
-    return Math.min(410, Math.max(300, targetW));
+    return Math.min(470, Math.max(330, targetW));
   }, [cardHeight, viewportSize.width]);
 
   const cardGapPx = useMemo(() => {
-    if (viewportSize.width < 700) return 8;
-    if (viewportSize.width < 1024) return 10;
-    return 11;
+    if (viewportSize.width < 700) return 10;
+    if (viewportSize.width < 1024) return 12;
+    return 14;
   }, [viewportSize.width]);
 
   useEffect(() => {
@@ -377,14 +377,6 @@ export function ExploreClient({ products }: ExploreClientProps) {
                 {/* Top Product Title (Outside / Above Card) */}
                 <div className="carousel-focus-top carousel-card-hud">
                   <span className="carousel-focus-title">{product.title}</span>
-                </div>
-
-                {/* 4 Optical Corner Viewfinder Brackets */}
-                <div className="carousel-viewfinder-frame carousel-card-hud" aria-hidden="true">
-                  <span className="viewfinder-bracket bracket-tl" />
-                  <span className="viewfinder-bracket bracket-tr" />
-                  <span className="viewfinder-bracket bracket-bl" />
-                  <span className="viewfinder-bracket bracket-br" />
                 </div>
 
                 {/* The Clean Media Artwork Card */}
