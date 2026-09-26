@@ -120,7 +120,7 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
             onClick={() => setActiveTab("products")}
           >
             <Package size={16} />
-            <span>Product Inventory (${productList.length})</span>
+            <span>Product Inventory ({productList.length})</span>
           </button>
         </div>
 

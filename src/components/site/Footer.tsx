@@ -67,8 +67,8 @@ export function Footer() {
     };
   }, []);
 
-  // The footer is rendered on every page EXCEPT the home page ("/")
-  if (pathname === "/") {
+  // The footer is rendered on every page EXCEPT the home page ("/") and admin portal ("/xadmin")
+  if (pathname === "/" || pathname?.startsWith("/xadmin")) {
     return null;
   }
 

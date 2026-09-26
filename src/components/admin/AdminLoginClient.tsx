@@ -27,7 +27,7 @@ export function AdminLoginClient() {
         setErrorMsg("Invalid administrative credentials. Access denied.");
         setLoading(false);
       }
-    }, 450);
+    }, 400);
   };
 
   const handleLogout = () => {
@@ -42,6 +42,9 @@ export function AdminLoginClient() {
 
   return (
     <div className="admin-portal-wrapper">
+      <div className="admin-bg-glow-top" aria-hidden="true" />
+      <div className="admin-bg-glow-bottom" aria-hidden="true" />
+
       <div className="admin-portal-card">
         {/* Card Header */}
         <div className="admin-card-header">
@@ -57,7 +60,7 @@ export function AdminLoginClient() {
         {/* Error Notification */}
         {errorMsg && (
           <div className="admin-error-box" role="alert">
-            <ShieldAlert size={16} className="flex-shrink-0" />
+            <ShieldAlert size={16} className="admin-error-icon" />
             <span>{errorMsg}</span>
           </div>
         )}
@@ -69,7 +72,7 @@ export function AdminLoginClient() {
               Admin Email
             </label>
             <div className="admin-input-wrap">
-              <Mail size={16} className="admin-input-icon" />
+              <Mail size={16} className="admin-input-icon" aria-hidden="true" />
               <input
                 id="admin-email"
                 type="email"
@@ -88,7 +91,7 @@ export function AdminLoginClient() {
               Security Key
             </label>
             <div className="admin-input-wrap">
-              <Lock size={16} className="admin-input-icon" />
+              <Lock size={16} className="admin-input-icon" aria-hidden="true" />
               <input
                 id="admin-password"
                 type={showPassword ? "text" : "password"}
@@ -96,7 +99,7 @@ export function AdminLoginClient() {
                 placeholder="••••••••••••"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="admin-text-input pr-10"
+                className="admin-text-input has-eye-btn"
                 autoComplete="current-password"
               />
               <button
@@ -112,14 +115,21 @@ export function AdminLoginClient() {
           </div>
 
           <button type="submit" disabled={loading} className="admin-submit-btn">
-            {loading ? "Authenticating..." : "Access Admin Portal"}
+            {loading ? (
+              <span className="admin-btn-loading">
+                <span className="admin-spinner" aria-hidden="true" />
+                <span>Authenticating...</span>
+              </span>
+            ) : (
+              <span>Access Admin Portal</span>
+            )}
           </button>
         </form>
 
         {/* Return to Store */}
         <div className="admin-footer-links">
           <Link href="/" className="admin-return-link">
-            <ArrowLeft size={14} />
+            <ArrowLeft size={14} aria-hidden="true" />
             <span>Return to Store</span>
           </Link>
         </div>

@@ -7,6 +7,7 @@ import { ProductArtwork } from "@/components/products/ProductArtwork";
 import { useLanguage } from "@/components/site/LanguageProvider";
 import { HomeFeaturesSection } from "@/components/home/HomeFeaturesSection";
 import { ExploreTopSellingSection } from "./ExploreTopSellingSection";
+import { ExploreMediaMasonrySection } from "./ExploreMediaMasonrySection";
 import { ExploreReviewsSection } from "./ExploreReviewsSection";
 import type { Product } from "@/lib/product-schema";
 
@@ -324,6 +325,7 @@ export function ExploreClient({ products }: ExploreClientProps) {
         <div className="explore-extra-sections">
           <HomeFeaturesSection />
           <ExploreTopSellingSection products={products} />
+          <ExploreMediaMasonrySection products={products} />
           <ExploreReviewsSection />
         </div>
       </main>
@@ -432,6 +434,7 @@ export function ExploreClient({ products }: ExploreClientProps) {
       <div className="explore-extra-sections">
         <HomeFeaturesSection />
         <ExploreTopSellingSection products={products} />
+        <ExploreMediaMasonrySection products={products} />
         <ExploreReviewsSection />
       </div>
     </main>

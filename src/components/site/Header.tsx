@@ -72,6 +72,10 @@ export function Header({ products }: HeaderProps) {
     ? { opacity: 1, pointerEvents: "auto" as const, transition: "opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1)" }
     : {};
 
+  if (pathname?.startsWith("/xadmin")) {
+    return null;
+  }
+
   return (
     <>
       <header

@@ -62,6 +62,10 @@ export function BottomSwitch() {
     }
   }, [onHome]);
 
+  if (pathname?.startsWith("/xadmin")) {
+    return null;
+  }
+
   return (
     <div
       className={`bottom-dock-container ${onHomeOrExplore ? "is-home-dock" : "is-subpage-dock"}`}
