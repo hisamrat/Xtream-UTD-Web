@@ -82,34 +82,35 @@ export function Header({ products }: HeaderProps) {
         className={`site-header ${isTransparentHeader ? "is-home-header is-transparent-nav" : "is-solid-header"}`}
         style={headerStyle}
       >
-        <div className="header-left">
-          <Link href="/" className="wordmark" onClick={handleHomeClick} aria-label="Xtream UTD home">
-            <span>{siteConfig.name}</span>
-          </Link>
-          <nav className="desktop-nav" aria-label="Main Navigation">
-            <Link
-              href="/"
-              onClick={handleHomeClick}
-              className={`desktop-nav-link ${pathname === "/" ? "is-active" : ""}`}
-            >
-              {t("nav_home")}
+        <div className="header-inner">
+          <div className="header-left">
+            <Link href="/" className="wordmark" onClick={handleHomeClick} aria-label="Xtream UTD home">
+              <span>{siteConfig.name}</span>
             </Link>
-            <Link
-              href="/products"
-              className={`desktop-nav-link ${pathname === "/products" || pathname.startsWith("/products/") ? "is-active" : ""}`}
-            >
-              {t("nav_products")}
-            </Link>
-            <Link
-              href="/contact"
-              className={`desktop-nav-link ${pathname === "/contact" ? "is-active" : ""}`}
-            >
-              {t("nav_contact")}
-            </Link>
-          </nav>
-        </div>
+            <nav className="desktop-nav" aria-label="Main Navigation">
+              <Link
+                href="/"
+                onClick={handleHomeClick}
+                className={`desktop-nav-link ${pathname === "/" ? "is-active" : ""}`}
+              >
+                {t("nav_home")}
+              </Link>
+              <Link
+                href="/products"
+                className={`desktop-nav-link ${pathname === "/products" || pathname.startsWith("/products/") ? "is-active" : ""}`}
+              >
+                {t("nav_products")}
+              </Link>
+              <Link
+                href="/contact"
+                className={`desktop-nav-link ${pathname === "/contact" ? "is-active" : ""}`}
+              >
+                {t("nav_contact")}
+              </Link>
+            </nav>
+          </div>
 
-        <div className="header-actions">
+          <div className="header-actions">
             <button className="icon-button search-action" type="button" onClick={() => setSearchOpen(true)} aria-label={t("search_products")}>
               <Search size={18} aria-hidden="true" />
             </button>
@@ -128,6 +129,7 @@ export function Header({ products }: HeaderProps) {
               <Menu size={19} aria-hidden="true" />
             </button>
           </div>
+        </div>
       </header>
 
       {menuOpen ? (

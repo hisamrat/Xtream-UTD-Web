@@ -1,182 +1,213 @@
 "use client";
 
-import { useState, useMemo, useCallback, useEffect } from "react";
+import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import Image from "next/image";
-import { Play, X, ExternalLink, ArrowUpRight, Sparkles, Film, Camera, Headphones, Layout } from "lucide-react";
+import { Play, Pause, ArrowUpRight, Move } from "lucide-react";
 import { useLanguage } from "@/components/site/LanguageProvider";
-import { formatPrice } from "@/lib/format";
 import type { Product } from "@/lib/product-schema";
 
-export type MediaItem = {
+export type ShowcaseItem = {
   id: string;
-  type: "video" | "image";
+  kind: "video" | "image";
   title: {
     en: string;
     bn: string;
   };
-  subtitle: {
-    en: string;
-    bn: string;
-  };
-  tag: string;
-  category: "camera" | "audio" | "studio" | "lighting";
-  aspectRatio: "portrait" | "tall" | "landscape" | "square";
+  category: "camera" | "audio" | "studio" | "lighting" | "gear";
+  ratio: number; // width / height, e.g. 4/5 = 0.8, 1/1 = 1, 3/2 = 1.5, 2/3 = 0.667
   imageUrl: string;
+  videoSrc?: string;
   youtubeId?: string;
   productSlug?: string;
   price?: number;
 };
 
-const MEDIA_SHOWCASE_ITEMS: MediaItem[] = [
+const SHOWCASE_ITEMS: ShowcaseItem[] = [
   {
-    id: "media-1",
-    type: "video",
+    id: "showcase-1",
+    kind: "video",
     title: {
-      en: "Sony A7 IV Hybrid Cinema Rig Setup",
-      bn: "সোনি এ৭ ৪ হাইব্রিড সিনেমা রিগ সেটআপ"
+      en: "Sony A7 IV Hybrid Cinema",
+      bn: "সোনি এ৭ ৪ হাইব্রিড সিনেমা"
     },
-    subtitle: {
-      en: "4K 60p 10-bit S-Cinetone hands-on camera test",
-      bn: "৪কে ৬০পি ১০-বিট এস-সিনেটোন ক্যামেরা টেস্ট"
-    },
-    tag: "4K CINEMATIC",
     category: "camera",
-    aspectRatio: "tall",
+    ratio: 4 / 5,
     imageUrl: "/products/sony-a7-iv/cover.jpg",
+    videoSrc: "https://framerusercontent.com/assets/OevNeIH8dSgSBVEi6nEZyi5pRJU.mp4",
     youtubeId: "aL5qS3E4Lq8",
     productSlug: "sony-a7-iv",
     price: 235000
   },
   {
-    id: "media-2",
-    type: "video",
+    id: "showcase-2",
+    kind: "image",
     title: {
-      en: "DJI RS 3 Pro Gimbal Balancing & Tracking",
-      bn: "ডিজেআই আরএস ৩ প্রো গিম্বল ব্যালেন্সিং"
+      en: "Sennheiser HD 660S",
+      bn: "সেনহাইজার এইচডি ৬৬০এস"
     },
-    subtitle: {
-      en: "Automated axis locks & LiDAR focusing in action",
-      bn: "অটোমেটেড এক্সিস লক ও লাইডার ফোকাসিং ডেমো"
-    },
-    tag: "PRO STABILIZER",
-    category: "studio",
-    aspectRatio: "portrait",
-    imageUrl: "/products/dji-rs-3-pro/cover.jpg",
-    youtubeId: "FzG4uDgje3M",
-    productSlug: "dji-rs-3-pro",
-    price: 89000
-  },
-  {
-    id: "media-3",
-    type: "image",
-    title: {
-      en: "Sennheiser HD 660S Acoustic Craft",
-      bn: "সেনহাইজার এইচডি ৬৬০এস অ্যাকোস্টিক ক্রাফট"
-    },
-    subtitle: {
-      en: "Open-back reference transducers with wooden stand",
-      bn: "উডেন স্ট্যান্ড সহ ওপেন-ব্যাক রেফারেন্স ট্রান্সডিউসার"
-    },
-    tag: "HI-RES AUDIO",
     category: "audio",
-    aspectRatio: "tall",
+    ratio: 1,
     imageUrl: "/products/sennheiser-hd-660s/cover.jpg",
     productSlug: "sennheiser-hd-660s",
     price: 46000
   },
   {
-    id: "media-4",
-    type: "video",
+    id: "showcase-3",
+    kind: "video",
     title: {
-      en: "Blackmagic Pocket 6K Pro Color Grading",
-      bn: "ব্ল্যাকম্যাজিক পকেট ৬কে প্রো কালার গ্রেডিং"
+      en: "DJI RS 3 Pro Stabilizer",
+      bn: "ডিজেআই আরএস ৩ প্রো"
     },
-    subtitle: {
-      en: "Super 35 sensor with internal ND filters",
-      bn: "ইন্টারনাল এনডি ফিল্টার সহ সুপার ৩৫ সেন্সর"
+    category: "studio",
+    ratio: 2 / 3,
+    imageUrl: "/products/dji-rs-3-pro/cover.jpg",
+    videoSrc: "https://framerusercontent.com/assets/dClAqDx2W8igpK6WWr06wAwO54.mp4",
+    youtubeId: "FzG4uDgje3M",
+    productSlug: "dji-rs-3-pro",
+    price: 89000
+  },
+  {
+    id: "showcase-4",
+    kind: "video",
+    title: {
+      en: "Blackmagic Cinema 6K Pro",
+      bn: "ব্ল্যাকম্যাজিক সিনেমা ৬কে প্রো"
     },
-    tag: "RAW CINEMA",
     category: "camera",
-    aspectRatio: "landscape",
+    ratio: 4 / 5,
     imageUrl: "/products/blackmagic-pocket-cinema-6k/cover.jpg",
+    videoSrc: "https://framerusercontent.com/assets/xAPtScp7qNyCLLiS5XDstx18.mp4",
     youtubeId: "xqyUdNXb4tU",
     productSlug: "blackmagic-pocket-cinema-6k",
     price: 320000
   },
   {
-    id: "media-5",
-    type: "image",
+    id: "showcase-5",
+    kind: "image",
     title: {
-      en: "Modern Creator Desk Setup & Ambient Glow",
-      bn: "মডার্ন ক্রিয়েটর ডেস্ক সেটআপ ও অ্যাম্বিয়েন্ট লাইটিং"
+      en: "Sony FE Prime & G-Master",
+      bn: "সোনি প্রাইম লেন্স কিট"
     },
-    subtitle: {
-      en: "Curated minimalist workspace with studio monitor sound",
-      bn: "মিনিমালিস্ট ওয়ার্কস্পেস ও স্টুডিও মনিটর সাউন্ড"
-    },
-    tag: "STUDIO DESK",
-    category: "studio",
-    aspectRatio: "square",
-    imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=900&q=80",
-    productSlug: "sony-a7-iv"
-  },
-  {
-    id: "media-6",
-    type: "video",
-    title: {
-      en: "Rode Wireless PRO 32-bit Float Audio Test",
-      bn: "রোড ওয়্যারলেস প্রো ৩২-বিট অডিও টেস্ট"
-    },
-    subtitle: {
-      en: "Zero-clipping dual-channel wireless recording",
-      bn: "জিরো-ক্লিপিং ডুয়েল চ্যানেল ওয়্যারলেস রেকর্ডিং"
-    },
-    tag: "STUDIO AUDIO",
-    category: "audio",
-    aspectRatio: "portrait",
-    imageUrl: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=900&q=80",
-    youtubeId: "YykjpeVGbiA",
-    productSlug: "sennheiser-hd-660s"
-  },
-  {
-    id: "media-7",
-    type: "image",
-    title: {
-      en: "Continuous Studio Lighting & Softbox Diffuser",
-      bn: "স্টুডিও কন্টিনিউয়াস লাইটিং ও সফটবক্স ডিফিউজার"
-    },
-    subtitle: {
-      en: "High CRI 96+ bi-color key light with silent fan cooling",
-      bn: "হাই সিআরআই ৯৬+ বাই-কালার কি-লাইট ও সাইলেন্ট কুলিং"
-    },
-    tag: "LIGHTING LAB",
-    category: "lighting",
-    aspectRatio: "landscape",
-    imageUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=900&q=80",
-    productSlug: "dji-rs-3-pro"
-  },
-  {
-    id: "media-8",
-    type: "video",
-    title: {
-      en: "Sigma 24-70mm f/2.8 DG DN Art Cinematic B-Roll",
-      bn: "সিগমা ২৪-৭০মিমি এফ/২.৮ আর্ট সিনেমাটিক বি-রোল"
-    },
-    subtitle: {
-      en: "Corner-to-corner sharpness in extreme low light",
-      bn: "লো-লাইটে তীক্ষ্ণ শার্পনেস ও স্মুথ বোকেহ ইফেক্ট"
-    },
-    tag: "PRO OPTICS",
     category: "camera",
-    aspectRatio: "tall",
+    ratio: 3 / 2,
+    imageUrl: "/products/sony-a7-iv/01.jpg",
+    productSlug: "sony-a7-iv",
+    price: 145000
+  },
+  {
+    id: "showcase-6",
+    kind: "image",
+    title: {
+      en: "Creator Studio Desk",
+      bn: "ক্রিয়েটর স্টুডিও ডেস্ক"
+    },
+    category: "studio",
+    ratio: 4 / 5,
+    imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=900&q=80",
+    productSlug: "sennheiser-hd-660s",
+    price: 85000
+  },
+  {
+    id: "showcase-7",
+    kind: "image",
+    title: {
+      en: "DJI Pro Transmission",
+      bn: "ডিজেআই প্রো ট্রান্সমিশন"
+    },
+    category: "gear",
+    ratio: 1,
+    imageUrl: "/products/dji-rs-3-pro/01.jpg",
+    productSlug: "dji-rs-3-pro",
+    price: 58000
+  },
+  {
+    id: "showcase-8",
+    kind: "image",
+    title: {
+      en: "Precision Transducer Core",
+      bn: "প্রিসিশন ট্রান্সডিউসার"
+    },
+    category: "audio",
+    ratio: 3 / 4,
+    imageUrl: "/products/sennheiser-hd-660s/01.jpg",
+    productSlug: "sennheiser-hd-660s",
+    price: 46000
+  },
+  {
+    id: "showcase-9",
+    kind: "image",
+    title: {
+      en: "Custom Anamorphic Rig",
+      bn: "কাস্টম অ্যানামরফিক রিগ"
+    },
+    category: "camera",
+    ratio: 3 / 2,
+    imageUrl: "/products/blackmagic-pocket-cinema-6k/01.jpg",
+    productSlug: "blackmagic-pocket-cinema-6k",
+    price: 320000
+  },
+  {
+    id: "showcase-10",
+    kind: "image",
+    title: {
+      en: "Continuous Key Light",
+      bn: "স্টুডিও কি-লাইট"
+    },
+    category: "lighting",
+    ratio: 1,
+    imageUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=900&q=80",
+    productSlug: "sony-a7-iv",
+    price: 42000
+  },
+  {
+    id: "showcase-11",
+    kind: "image",
+    title: {
+      en: "Broadcast Audio Hub",
+      bn: "ব্রডকাস্ট অডিও হাব"
+    },
+    category: "audio",
+    ratio: 4 / 5,
+    imageUrl: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=900&q=80",
+    productSlug: "sennheiser-hd-660s",
+    price: 72000
+  },
+  {
+    id: "showcase-12",
+    kind: "image",
+    title: {
+      en: "Location Field Bag",
+      bn: "ফিল্ড ক্যামেরা ব্যাগ"
+    },
+    category: "gear",
+    ratio: 1,
     imageUrl: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=900&q=80",
-    youtubeId: "kJQP7kiw5Fk",
-    productSlug: "sony-a7-iv"
+    productSlug: "dji-rs-3-pro",
+    price: 35000
   }
 ];
 
-type FilterCategory = "all" | "video" | "camera" | "audio" | "studio";
+type PositionedItem = ShowcaseItem & {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  colIndex: number;
+};
+
+type DragState = {
+  id: string;
+  startX: number;
+  startY: number;
+  origX: number;
+  origY: number;
+  currentX: number;
+  currentY: number;
+  pointerId: number;
+  tilt: number;
+  hasMoved: boolean;
+};
 
 type ExploreMediaMasonrySectionProps = {
   products?: Product[];
@@ -184,244 +215,398 @@ type ExploreMediaMasonrySectionProps = {
 
 export function ExploreMediaMasonrySection({ products: _products = [] }: ExploreMediaMasonrySectionProps) {
   const { language } = useLanguage();
-  const [activeFilter, setActiveFilter] = useState<FilterCategory>("all");
-  const [activeVideo, setActiveVideo] = useState<MediaItem | null>(null);
+  const containerRef = useRef<HTMLDivElement | null>(null);
+  const [containerWidth, setContainerWidth] = useState<number>(1312);
+  const [order, setOrder] = useState<string[]>(() => SHOWCASE_ITEMS.map((item) => item.id));
+  const [dragState, setDragState] = useState<DragState | null>(null);
+  
+  // Track active in-card video state: which card is unmuted/playing
+  const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
+  const [isPlayingMap, setIsPlayingMap] = useState<Record<string, boolean>>({});
+  const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
 
-  const filterTabs: { id: FilterCategory; label: { en: string; bn: string }; icon: typeof Film }[] = [
-    { id: "all", label: { en: "All Media", bn: "সব মিডিয়া" }, icon: Layout },
-    { id: "video", label: { en: "Hands-On Videos", bn: "ভিডিও রিভিউ" }, icon: Film },
-    { id: "camera", label: { en: "Cameras & Rigs", bn: "ক্যামেরা ও রিগস" }, icon: Camera },
-    { id: "audio", label: { en: "Studio Audio", bn: "অডিও গিয়ার" }, icon: Headphones },
-    { id: "studio", label: { en: "Desk & Setups", bn: "স্টুডিও ও ডেস্ক" }, icon: Sparkles }
-  ];
+  const lastSwapTimeRef = useRef<number>(0);
+  const itemMap = useMemo(() => new Map(SHOWCASE_ITEMS.map((item) => [item.id, item])), []);
 
-  const filteredItems = useMemo(() => {
-    if (activeFilter === "all") return MEDIA_SHOWCASE_ITEMS;
-    if (activeFilter === "video") return MEDIA_SHOWCASE_ITEMS.filter((item) => item.type === "video");
-    return MEDIA_SHOWCASE_ITEMS.filter((item) => item.category === activeFilter);
-  }, [activeFilter]);
-
-  const openVideoModal = useCallback((item: MediaItem) => {
-    if (item.type === "video" && item.youtubeId) {
-      setActiveVideo(item);
-      document.body.classList.add("modal-open");
-    }
-  }, []);
-
-  const closeVideoModal = useCallback(() => {
-    setActiveVideo(null);
-    document.body.classList.remove("modal-open");
-  }, []);
-
+  // Measure container width
   useEffect(() => {
-    const handleKeyDown = (e: KeyboardEvent) => {
-      if (e.key === "Escape" && activeVideo) {
-        closeVideoModal();
+    const el = containerRef.current;
+    if (!el) return;
+
+    const handleResize = () => {
+      const w = el.clientWidth || el.getBoundingClientRect().width;
+      if (w > 0) {
+        setContainerWidth(w);
       }
     };
-    window.addEventListener("keydown", handleKeyDown);
-    return () => window.removeEventListener("keydown", handleKeyDown);
-  }, [activeVideo, closeVideoModal]);
+
+    handleResize();
+
+    if (typeof ResizeObserver !== "undefined") {
+      const ro = new ResizeObserver(handleResize);
+      ro.observe(el);
+      return () => ro.disconnect();
+    }
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, []);
+
+  // Column count and layout geometry
+  const gap = 16;
+  const cols = useMemo(() => {
+    if (containerWidth < 640) return 2;
+    if (containerWidth < 1024) return 3;
+    return 4;
+  }, [containerWidth]);
+
+  // Compute masonry layout positions
+  const { layoutItems, totalHeight } = useMemo(() => {
+    if (containerWidth <= 0) {
+      return { layoutItems: [], totalHeight: 0 };
+    }
+
+    const colW = Math.max(120, (containerWidth - gap * (cols - 1)) / cols);
+    const colHeights = Array(cols).fill(0);
+    const positioned: PositionedItem[] = [];
+
+    for (const id of order) {
+      const item = itemMap.get(id);
+      if (!item) continue;
+
+      // Find shortest column
+      let minCol = 0;
+      for (let c = 1; c < cols; c++) {
+        if (colHeights[c] < colHeights[minCol] - 0.5) {
+          minCol = c;
+        }
+      }
+
+      const h = Math.round(colW / item.ratio);
+      const x = minCol * (colW + gap);
+      const y = colHeights[minCol];
+
+      positioned.push({
+        ...item,
+        x,
+        y,
+        width: colW,
+        height: h,
+        colIndex: minCol
+      });
+
+      colHeights[minCol] += h + gap;
+    }
+
+    const maxH = Math.max(...colHeights);
+    return {
+      layoutItems: positioned,
+      totalHeight: Math.max(0, maxH - gap)
+    };
+  }, [order, itemMap, containerWidth, cols, gap]);
+
+  // Toggle in-card video playback with audio
+  const toggleInCardVideo = useCallback((item: ShowcaseItem) => {
+    const videoEl = videoRefs.current.get(item.id);
+    if (!videoEl) return;
+
+    if (activeVideoId === item.id) {
+      if (videoEl.paused) {
+        videoEl.play().catch(() => {});
+        setIsPlayingMap((prev) => ({ ...prev, [item.id]: true }));
+      } else {
+        videoEl.pause();
+        setIsPlayingMap((prev) => ({ ...prev, [item.id]: false }));
+      }
+    } else {
+      if (activeVideoId) {
+        const prevVideo = videoRefs.current.get(activeVideoId);
+        if (prevVideo) {
+          prevVideo.muted = true;
+        }
+      }
+      setActiveVideoId(item.id);
+      videoEl.muted = false;
+      videoEl.play().catch(() => {
+        videoEl.muted = true;
+        videoEl.play().catch(() => {});
+      });
+      setIsPlayingMap((prev) => ({ ...prev, [item.id]: true }));
+    }
+  }, [activeVideoId]);
+
+  // Pointer Handlers for Dragging & Swapping
+  const handlePointerDown = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>, item: PositionedItem) => {
+      if (e.pointerType === "mouse" && e.button !== 0) return;
+      const target = e.currentTarget;
+
+      try {
+        target.setPointerCapture(e.pointerId);
+      } catch {
+        // ignore
+      }
+
+      setDragState({
+        id: item.id,
+        startX: e.clientX,
+        startY: e.clientY,
+        origX: item.x,
+        origY: item.y,
+        currentX: item.x,
+        currentY: item.y,
+        pointerId: e.pointerId,
+        tilt: 0,
+        hasMoved: false
+      });
+    },
+    []
+  );
+
+  const handlePointerMove = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>) => {
+      if (!dragState || dragState.pointerId !== e.pointerId) return;
+
+      const dx = e.clientX - dragState.startX;
+      const dy = e.clientY - dragState.startY;
+      const distSq = dx * dx + dy * dy;
+
+      const hasMoved = dragState.hasMoved || distSq > 25; // 5px threshold
+      const newX = dragState.origX + dx;
+      const newY = dragState.origY + dy;
+      const tilt = Math.max(-4, Math.min(4, dx * 0.08));
+
+      setDragState((prev) =>
+        prev
+          ? {
+              ...prev,
+              currentX: newX,
+              currentY: newY,
+              tilt,
+              hasMoved
+            }
+          : null
+      );
+
+      if (!hasMoved) return;
+
+      // Real-time Collision Detection & Slot Swapping
+      const now = typeof performance !== "undefined" ? performance.now() : Date.now();
+      if (now - lastSwapTimeRef.current < 110) return;
+
+      const currentHeld = layoutItems.find((p) => p.id === dragState.id);
+      if (!currentHeld) return;
+
+      const centerHeldX = newX + currentHeld.width / 2;
+      const centerHeldY = newY + currentHeld.height / 2;
+
+      let hitItem: PositionedItem | null = null;
+      for (const item of layoutItems) {
+        if (item.id === dragState.id) continue;
+        const padX = item.width * 0.15;
+        const padY = item.height * 0.15;
+        if (
+          centerHeldX >= item.x + padX &&
+          centerHeldX <= item.x + item.width - padX &&
+          centerHeldY >= item.y + padY &&
+          centerHeldY <= item.y + item.height - padY
+        ) {
+          hitItem = item;
+          break;
+        }
+      }
+
+      if (hitItem) {
+        lastSwapTimeRef.current = now;
+        setOrder((prevOrder) => {
+          const fromIdx = prevOrder.indexOf(dragState.id);
+          const toIdx = prevOrder.indexOf(hitItem.id);
+          if (fromIdx < 0 || toIdx < 0 || fromIdx === toIdx) return prevOrder;
+
+          const updated = [...prevOrder];
+          const [moved] = updated.splice(fromIdx, 1);
+          updated.splice(toIdx, 0, moved);
+          return updated;
+        });
+      }
+    },
+    [dragState, layoutItems]
+  );
+
+  const handlePointerUp = useCallback(
+    (e: React.PointerEvent<HTMLDivElement>, item: PositionedItem) => {
+      if (!dragState || dragState.pointerId !== e.pointerId) return;
+
+      try {
+        if (e.currentTarget.hasPointerCapture(e.pointerId)) {
+          e.currentTarget.releasePointerCapture(e.pointerId);
+        }
+      } catch {
+        // ignore
+      }
+
+      const moved = dragState.hasMoved;
+      setDragState(null);
+
+      // If clicked without dragging
+      if (!moved) {
+        if (item.kind === "video") {
+          toggleInCardVideo(item);
+        }
+      }
+    },
+    [dragState, toggleInCardVideo]
+  );
 
   return (
-    <section className="explore-section-block explore-media-masonry-section" aria-labelledby="media-masonry-heading">
+    <section className="explore-section-block explore-draggable-showcase-section" aria-labelledby="showcase-heading">
       {/* Section Header */}
-      <div className="explore-section-header media-masonry-header">
+      <div className="explore-section-header showcase-header">
         <div className="explore-section-header-left">
           <span className="explore-section-kicker">
-            {language === "bn" ? "ক্রিয়েটর গিয়ার ও মিডিয়া শোকেস" : "FEATURED GEAR & CREATOR SHOWCASE"}
+            {language === "bn" ? "ফিচার্ড শোকেস" : "FEATURED SHOWCASE"}
           </span>
-          <h2 id="media-masonry-heading" className="explore-section-title">
+          <h2 id="showcase-heading" className="explore-section-title">
             {language === "bn"
-              ? "বাস্তব অভিজ্ঞতা: সেরা গ্যাজেট, স্টুডিও সেটআপ ও হ্যান্ডস-অন ভিডিও"
-              : "Curated in Action: Rigs, Studio Setups & Hands-On Reviews"}
+              ? "এক্সপ্লোর প্রোডাক্টস ইমেজ ও ভিডিও গ্যালারি"
+              : "Explore Products Image and Video Gallery"}
           </h2>
-          <p className="explore-section-subtitle">
-            {language === "bn"
-              ? "সরাসরি ইউটিউব ভিডিও রিভিউ, স্টুডিও গিয়ার ডেমনস্ট্রেশন এবং ক্রিয়েটরদের পছন্দের টপ গ্যাজেট সমূহ।"
-              : "Explore hands-on YouTube video demonstrations, camera rig configurations, and studio tech curated for high-performance creators."}
-          </p>
+        </div>
+
+        {/* Drag to rearrange Section Header Text */}
+        <div className="showcase-drag-hint" aria-hidden="true">
+          <Move size={13} className="drag-hint-icon" />
+          <span>{language === "bn" ? "ড্র্যাগ করে সাজান" : "Drag to rearrange"}</span>
         </div>
       </div>
 
-      {/* Category Filter Pills */}
-      <div className="media-masonry-filters" role="tablist" aria-label="Filter media showcase">
-        {filterTabs.map((tab) => {
-          const Icon = tab.icon;
-          const isActive = activeFilter === tab.id;
-          return (
-            <button
-              key={tab.id}
-              type="button"
-              role="tab"
-              aria-selected={isActive}
-              className={`media-filter-pill ${isActive ? "is-active" : ""}`}
-              onClick={() => setActiveFilter(tab.id)}
-            >
-              <Icon size={14} aria-hidden="true" />
-              <span>{tab.label[language] ?? tab.label.en}</span>
-            </button>
-          );
-        })}
-      </div>
-
-      {/* Masonry Columns Grid */}
-      <div className="media-masonry-grid" aria-live="polite">
-        {filteredItems.map((item) => {
-          const isVideo = item.type === "video";
+      {/* Masonry Canvas Container */}
+      <div
+        ref={containerRef}
+        className="showcase-masonry-canvas"
+        style={{ height: totalHeight > 0 ? `${totalHeight}px` : "auto" }}
+        role="region"
+        aria-label="Interactive media masonry gallery"
+      >
+        {layoutItems.map((item) => {
+          const isHeld = dragState?.id === item.id;
+          const currentPosX = isHeld && dragState ? dragState.currentX : item.x;
+          const currentPosY = isHeld && dragState ? dragState.currentY : item.y;
+          const tilt = isHeld && dragState ? dragState.tilt : 0;
+          const isVideo = item.kind === "video";
+          const isCurrentActiveVideo = activeVideoId === item.id;
+          const isPlaying = isPlayingMap[item.id] ?? true;
           const title = item.title[language] ?? item.title.en;
-          const subtitle = item.subtitle[language] ?? item.subtitle.en;
 
           return (
-            <article
+            <div
               key={item.id}
-              className={`media-masonry-card aspect-${item.aspectRatio} ${isVideo ? "is-video-card" : "is-image-card"}`}
+              className={`showcase-card ${isHeld ? "is-held" : ""} ${isVideo ? "is-video" : "is-image"} ${isCurrentActiveVideo ? "is-active-video" : ""}`}
+              style={{
+                width: `${item.width}px`,
+                height: `${item.height}px`,
+                transform: `translate3d(${currentPosX}px, ${currentPosY}px, 0px) scale(${isHeld ? 1.05 : 1}) rotate(${tilt}deg)`,
+                zIndex: isHeld ? 50 : 1,
+                transition: isHeld
+                  ? "box-shadow 150ms ease, opacity 150ms ease"
+                  : "transform 380ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease, width 200ms ease, height 200ms ease"
+              }}
+              onPointerDown={(e) => handlePointerDown(e, item)}
+              onPointerMove={handlePointerMove}
+              onPointerUp={(e) => handlePointerUp(e, item)}
+              onPointerCancel={(e) => handlePointerUp(e, item)}
+              role="button"
+              tabIndex={0}
+              aria-label={`${title} (${isVideo ? "Video" : "Image"}) - Click to play or view details`}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" || e.key === " ") {
+                  e.preventDefault();
+                  if (isVideo) {
+                    toggleInCardVideo(item);
+                  }
+                }
+              }}
             >
-              <div className="media-card-inner">
-                {/* Media Image / Video Poster */}
-                <div className="media-card-visual">
+              {/* Media Visual Layer */}
+              <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
+                {isVideo && item.videoSrc ? (
+                  <video
+                    ref={(el) => {
+                      if (el) videoRefs.current.set(item.id, el);
+                      else videoRefs.current.delete(item.id);
+                    }}
+                    src={item.videoSrc}
+                    poster={item.imageUrl}
+                    autoPlay
+                    loop
+                    muted={!isCurrentActiveVideo}
+                    playsInline
+                    preload="metadata"
+                    className="showcase-media-content showcase-video-element"
+                  />
+                ) : (
                   <Image
                     src={item.imageUrl}
                     alt={title}
                     fill
                     unoptimized
-                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, (max-width: 1280px) 33vw, 25vw"
-                    className="media-card-img"
+                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+                    className="showcase-media-content showcase-image-element"
                     loading="lazy"
+                    draggable={false}
                   />
-                  <div className="media-card-scrim" aria-hidden="true" />
-                </div>
+                )}
+                <div className="showcase-card-scrim" aria-hidden="true" />
+              </div>
 
-                {/* Top Badge: Tag or Video Badge */}
-                <div className="media-card-top-badges">
-                  <span className="media-chip-tag">{item.tag}</span>
-                  {isVideo ? (
-                    <span className="media-chip-video">
-                      <Play size={10} fill="currentColor" aria-hidden="true" />
-                      <span>YouTube</span>
-                    </span>
-                  ) : null}
-                </div>
+              {/* TOP HEADER: ONLY Title in Top Center of Card */}
+              <div className="showcase-card-top-bar">
+                <span className="showcase-card-top-title" title={title}>
+                  {title}
+                </span>
+              </div>
 
-                {/* Center Play Button Overlay for Videos */}
+              {/* BOTTOM RIGHT ONLY: Round Circular Action Icon for Details or Video Play/Pause */}
+              <div className="showcase-card-bottom-bar">
+                <div className="showcase-bottom-spacer" />
+
                 {isVideo ? (
                   <button
                     type="button"
-                    className="media-play-button-overlay"
-                    onClick={() => openVideoModal(item)}
-                    aria-label={`Watch video: ${title}`}
+                    className="showcase-action-icon-btn video-trigger-btn"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleInCardVideo(item);
+                    }}
+                    aria-label={isCurrentActiveVideo && isPlaying ? "Pause video" : "Play video"}
+                    title={isCurrentActiveVideo && isPlaying ? "Pause" : "Play"}
                   >
-                    <div className="play-icon-circle">
-                      <Play size={22} fill="currentColor" className="play-triangle" aria-hidden="true" />
-                    </div>
-                  </button>
-                ) : null}
-
-                {/* Bottom Overlay with Title, Subtitle, Price & Action Link */}
-                <div className="media-card-overlay">
-                  <div className="media-card-info">
-                    <h3 className="media-card-title">{title}</h3>
-                    <p className="media-card-subtitle">{subtitle}</p>
-                  </div>
-
-                  <div className="media-card-action-row">
-                    {item.price ? (
-                      <span className="media-card-price">
-                        {formatPrice(item.price)}
-                      </span>
+                    {isCurrentActiveVideo && isPlaying ? (
+                      <Pause size={15} fill="currentColor" />
                     ) : (
-                      <span className="media-card-category-badge">{item.category.toUpperCase()}</span>
+                      <Play size={15} fill="currentColor" />
                     )}
-
-                    {isVideo ? (
-                      <button
-                        type="button"
-                        className="media-card-action-btn"
-                        onClick={() => openVideoModal(item)}
-                      >
-                        <Play size={13} fill="currentColor" aria-hidden="true" />
-                        <span>{language === "bn" ? "ভিডিও দেখুন" : "Watch Video"}</span>
-                      </button>
-                    ) : item.productSlug ? (
-                      <Link
-                        href={`/products/${item.productSlug}`}
-                        className="media-card-action-btn"
-                      >
-                        <span>{language === "bn" ? "প্রোডাক্ট দেখুন" : "View Gear"}</span>
-                        <ArrowUpRight size={14} aria-hidden="true" />
-                      </Link>
-                    ) : null}
-                  </div>
-                </div>
+                  </button>
+                ) : item.productSlug ? (
+                  <Link
+                    href={`/products/${item.productSlug}`}
+                    className="showcase-action-icon-btn details-link-btn"
+                    aria-label={`View details for ${title}`}
+                    title="View Product Details"
+                    onClick={(e) => {
+                      if (dragState?.hasMoved) {
+                        e.preventDefault();
+                      }
+                    }}
+                  >
+                    <ArrowUpRight size={16} />
+                  </Link>
+                ) : null}
               </div>
-            </article>
+            </div>
           );
         })}
       </div>
-
-      {/* Interactive YouTube Video Modal */}
-      {activeVideo && activeVideo.youtubeId ? (
-        <div
-          className="media-video-modal-backdrop"
-          role="dialog"
-          aria-modal="true"
-          aria-labelledby="video-modal-title"
-          onClick={closeVideoModal}
-        >
-          <div
-            className="media-video-modal-content"
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* Modal Header */}
-            <div className="media-video-modal-header">
-              <div className="modal-header-text">
-                <span className="modal-kicker-tag">{activeVideo.tag}</span>
-                <h3 id="video-modal-title" className="modal-video-title">
-                  {activeVideo.title[language] ?? activeVideo.title.en}
-                </h3>
-              </div>
-              <button
-                type="button"
-                className="modal-close-btn"
-                onClick={closeVideoModal}
-                aria-label="Close video player"
-              >
-                <X size={20} aria-hidden="true" />
-              </button>
-            </div>
-
-            {/* Embedded Responsive YouTube Player */}
-            <div className="media-video-frame-container">
-              <iframe
-                src={`https://www.youtube-nocookie.com/embed/${activeVideo.youtubeId}?autoplay=1&rel=0&modestbranding=1`}
-                title={activeVideo.title[language] ?? activeVideo.title.en}
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                allowFullScreen
-                className="media-video-iframe"
-              />
-            </div>
-
-            {/* Modal Footer / Direct Product Link */}
-            <div className="media-video-modal-footer">
-              <p className="modal-desc">
-                {activeVideo.subtitle[language] ?? activeVideo.subtitle.en}
-              </p>
-              {activeVideo.productSlug ? (
-                <div className="modal-footer-actions">
-                  <Link
-                    href={`/products/${activeVideo.productSlug}`}
-                    className="modal-product-btn"
-                    onClick={closeVideoModal}
-                  >
-                    <span>{language === "bn" ? "প্রোডাক্টের বিবরণ ও অর্ডার" : "View Product & Order"}</span>
-                    <ExternalLink size={15} aria-hidden="true" />
-                  </Link>
-                </div>
-              ) : null}
-            </div>
-          </div>
-        </div>
-      ) : null}
     </section>
   );
 }

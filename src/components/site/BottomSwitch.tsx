@@ -125,6 +125,11 @@ export function BottomSwitch() {
             <Home size={16} aria-hidden="true" />
             <span>{t("nav_home")}</span>
           </Link>
+        ) : onContact ? (
+          <Link href="/contact" aria-current="page">
+            <MessageCircle size={16} aria-hidden="true" />
+            <span>{t("nav_contact")}</span>
+          </Link>
         ) : (
           <Link href="/products" aria-current={onProducts ? "page" : undefined}>
             <LayoutGrid size={16} aria-hidden="true" />
@@ -149,6 +154,11 @@ export function BottomSwitch() {
             <RotateCw size={15} className={reloading ? "is-spinning" : ""} aria-hidden="true" />
             <span>{t("nav_reload")}</span>
           </button>
+        ) : onContact ? (
+          <Link href="/products">
+            <LayoutGrid size={16} aria-hidden="true" />
+            <span>{t("nav_products")}</span>
+          </Link>
         ) : (
           <Link href="/contact" aria-current={onContact ? "page" : undefined}>
             <MessageCircle size={16} aria-hidden="true" />
