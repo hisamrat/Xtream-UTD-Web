@@ -2,11 +2,11 @@
   {
     "id": "prd-sony-a7-iv",
     "slug": "sony-a7-iv",
-    "title": "Sony A7 IV",
+    "title": "Refillable Perfume Bottle 8ml",
     "category": "Cameras & Optics",
     "subcategory": "Mirrorless Camera",
-    "price": 235000,
-    "old_price": 250000,
+    "price": 199,
+    "old_price": 250,
     "stock": "In stock",
     "badge": "Flagship",
     "accent": "#00E5FF",
@@ -16,10 +16,10 @@
     "currency": "BDT",
     "discount_percentage": 6,
     "quantity_available": 12,
-    "cover_image": "/products/sony-a7-iv/cover.webp",
-    "main_image": "/products/sony-a7-iv/main.webp",
+    "cover_image": "https://drive.google.com/file/d/1molKCmrmkbMbY_Y3KiWoxqRG9pu7wfIZ/view?usp=sharing",
+    "main_image": "https://drive.google.com/file/d/1_x-E6jZ_cKmdTbyrpAeI0FDQaqJ5KuI8/view?usp=sharing",
     "gallery_images": [
-      "/products/sony-a7-iv/01.webp"
+      "https://lh3.googleusercontent.com/d/18EEcjEDhv2nHzKWqGfJROawzsqUbQMQU"
     ],
     "video": null,
     "features": [
