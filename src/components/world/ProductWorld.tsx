@@ -164,6 +164,16 @@ export function ProductWorld({ products }: ProductWorldProps) {
     dragging: false
   });
   const [productSetIndex, setProductSetIndex] = useState(0);
+  const [indicatorPhase, setIndicatorPhase] = useState<"pages" | "scroll">("pages");
+
+  // Continuous 3-second alternating cycle between Pages Indicator and Animated Scroll Icon
+  useEffect(() => {
+    if (!mounted) return;
+    const interval = window.setInterval(() => {
+      setIndicatorPhase((prev) => (prev === "pages" ? "scroll" : "pages"));
+    }, 3000);
+    return () => window.clearInterval(interval);
+  }, [mounted]);
 
   const isNavigatingRef = useRef(false);
   const [isNavigatingToExplore, setIsNavigatingToExplore] = useState(false);
@@ -710,17 +720,50 @@ export function ProductWorld({ products }: ProductWorldProps) {
       ) : null}
 
       {/* ------------------------------------------------------------- */}
-      {/* Product Sets Counter                                           */}
+      {/* Continuous 3-Second Alternating Indicator (Pages <-> Scroll)  */}
       {/* ------------------------------------------------------------- */}
-      {productSetCount > 1 ? (
-        <div className="world-set-controls" aria-label="Home page product sets">
-          <span className="world-set-count">
+      <div className="world-set-controls" aria-label="Product showcase navigation indicator">
+        <button
+          type="button"
+          className="world-set-count world-alternating-indicator"
+          onClick={navigateToExplore}
+          aria-label={
+            indicatorPhase === "pages"
+              ? `${safeProductSetIndex + 1} of ${productSetCount} pages, ${products.length} products`
+              : "Scroll down to explore product gallery"
+          }
+          title={t("scroll_to_explore")}
+        >
+          {/* Layer A: Pages Indicator */}
+          <span
+            className={`indicator-slide-content is-pages ${indicatorPhase === "pages" ? "is-active" : "is-inactive"}`}
+            aria-hidden={indicatorPhase !== "pages"}
+          >
             {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} /{" "}
             {formatNumber(String(productSetCount).padStart(2, "0"))} {t("pages")} •{" "}
             {formatNumber(products.length)} {t("products")}
           </span>
-        </div>
-      ) : null}
+
+          {/* Layer B: Animated Scroll Icon & Chevron (Reference micro-animation) */}
+          <span
+            className={`indicator-slide-content is-scroll ${indicatorPhase === "scroll" ? "is-active" : "is-inactive"}`}
+            aria-hidden={indicatorPhase !== "scroll"}
+          >
+            <span className="scroll-mouse-wrap" aria-hidden="true">
+              <svg className="scroll-mouse-svg" width="12" height="17" viewBox="0 0 14 20" fill="none">
+                <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" strokeWidth="1.6" />
+                <line className="scroll-wheel-line" x1="7" y1="5" x2="7" y2="8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+              </svg>
+            </span>
+            <span className="scroll-label-text">{t("scroll_to_explore")}</span>
+            <span className="scroll-chevron-wrap" aria-hidden="true">
+              <svg className="scroll-chevron-svg" width="9" height="5" viewBox="0 0 10 6" fill="none">
+                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+              </svg>
+            </span>
+          </span>
+        </button>
+      </div>
 
       <div className="sr-only">
         {worldProducts.map((product) => (
