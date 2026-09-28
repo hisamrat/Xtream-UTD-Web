@@ -13,6 +13,7 @@
   "dependencies": {
     "@react-three/drei": "latest",
     "@react-three/fiber": "latest",
+    "googleapis": "^182.0.0",
     "lucide-react": "latest",
     "next": "latest",
     "react": "latest",

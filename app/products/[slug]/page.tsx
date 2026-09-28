@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { notFound } from "next/navigation";
 import { ProductDetailsClient } from "@/components/details/ProductDetailsClient";
-import { getAllProducts, getProductBySlug, getRelatedProducts } from "@/lib/products";
+import { getAllProducts, getRelatedProducts } from "@/lib/products";
+import { fetchAllProducts } from "@/lib/products-server";
+
+export const revalidate = 60;
 
 type ProductPageProps = {
   params: Promise<{ slug: string }>;
@@ -13,7 +16,8 @@ export function generateStaticParams() {
 
 export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const product = getProductBySlug(slug);
+  const products = await fetchAllProducts();
+  const product = products.find((p) => p.slug === slug);
 
   if (!product) {
     return {
@@ -34,8 +38,8 @@ export async function generateMetadata({ params }: ProductPageProps): Promise<Me
 
 export default async function ProductPage({ params }: ProductPageProps) {
   const { slug } = await params;
-  const products = getAllProducts();
-  const product = getProductBySlug(slug);
+  const products = await fetchAllProducts();
+  const product = products.find((p) => p.slug === slug);
 
   if (!product) {
     notFound();

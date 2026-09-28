@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import { CatalogueClient } from "@/components/catalogue/CatalogueClient";
-import { getAllProducts, type CatalogueFilters, type SortKey, stockStatuses } from "@/lib/products";
+import { type CatalogueFilters, type SortKey, stockStatuses } from "@/lib/products";
+import { fetchAllProducts } from "@/lib/products-server";
 import type { StockStatus } from "@/lib/product-schema";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Products",
@@ -15,10 +18,11 @@ type ProductsPageProps = {
 export default async function ProductsPage({ searchParams }: ProductsPageProps) {
   const params = await searchParams;
   const filters = parseFilters(params);
+  const products = await fetchAllProducts();
 
   return (
     <main className="page-main products-page-main catalogue-page-main">
-      <CatalogueClient products={getAllProducts()} initialFilters={filters} />
+      <CatalogueClient products={products} initialFilters={filters} />
     </main>
   );
 }

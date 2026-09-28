@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { siteConfig } from "@/config/site";
-import { getAllProducts } from "@/lib/products";
+import { fetchAllProducts } from "@/lib/products-server";
 import { Header } from "@/components/site/Header";
 import { Footer } from "@/components/site/Footer";
 import { ThemeProvider } from "@/components/site/ThemeProvider";
@@ -30,8 +30,8 @@ export const metadata: Metadata = {
   }
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
-  const products = getAllProducts();
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const products = await fetchAllProducts();
 
   return (
     <html lang="en" className={inter.variable} data-theme="dark" suppressHydrationWarning>

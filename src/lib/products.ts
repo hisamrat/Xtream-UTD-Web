@@ -99,7 +99,6 @@ export function productMatchesSearch(product: Product, query: string): boolean {
   const searchText = [
     product.title,
     product.category,
-    product.subcategory,
     product.short,
     ...product.features,
     ...product.tags,

@@ -1,14 +1,16 @@
 import type { Metadata } from "next";
 import { ExploreClient } from "@/components/explore/ExploreClient";
 import { siteConfig } from "@/config/site";
-import { getAllProducts } from "@/lib/products";
+import { fetchAllProducts } from "@/lib/products-server";
+
+export const revalidate = 60;
 
 export const metadata: Metadata = {
   title: "Explore Products",
   description: siteConfig.description
 };
 
-export default function ExplorePage() {
-  return <ExploreClient products={getAllProducts()} />;
+export default async function ExplorePage() {
+  const products = await fetchAllProducts();
+  return <ExploreClient products={products} />;
 }
-

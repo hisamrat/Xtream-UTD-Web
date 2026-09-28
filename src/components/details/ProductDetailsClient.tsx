@@ -57,15 +57,13 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
     [language]
   );
 
-  const thumbnailItems = useMemo(() => {
-    const cover = product.cover_image || product.main_image;
-    const gallery = product.gallery_images && product.gallery_images.length > 0 ? product.gallery_images : [];
-    const list: string[] = [cover, ...gallery];
-    while (list.length < 4) {
-      list.push(cover);
-    }
-    return list.slice(0, 4);
-  }, [product]);
+  const galleryItems = useMemo(() => {
+    const main = product.main_image || product.cover_image || "/images/default-product.svg";
+    const gallery = Array.isArray(product.gallery_images)
+      ? product.gallery_images.filter((img) => Boolean(img) && img !== main)
+      : [];
+    return [main, ...gallery];
+  }, [product.main_image, product.cover_image, product.gallery_images]);
 
   const handleSelectThumbnail = (index: number) => {
     setSelectedGalleryIndex(index);
@@ -136,31 +134,51 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
         <div className="details-layout">
           {/* Left Column: Product Showcase Gallery */}
           <div className="details-gallery">
-            <div className="gallery-main">
+            <div
+              className="gallery-main"
+              style={{
+                width: "100%",
+                aspectRatio: "1 / 1",
+                minHeight: "unset",
+                height: "auto",
+                display: "flex",
+                alignItems: "center",
+                justifyContent: "center",
+                overflow: "hidden"
+              }}
+            >
               <div
                 className="gallery-rotator"
                 role="img"
                 aria-label={`${product.title} product preview`}
+                style={{
+                  width: "100%",
+                  height: "100%",
+                  aspectRatio: "1 / 1",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center"
+                }}
               >
                 <ProductArtwork
                   product={product}
                   viewIndex={selectedGalleryIndex}
-                  imageRole={selectedGalleryIndex === 0 ? "cover" : "gallery"}
-                  imageSrc={thumbnailItems[selectedGalleryIndex]}
+                  imageRole={selectedGalleryIndex === 0 ? "main" : "gallery"}
+                  imageSrc={galleryItems[selectedGalleryIndex]}
                 />
               </div>
 
               <div className="gallery-caption">
-                <strong>{selectedGalleryIndex + 1} / 4</strong>
+                <strong>{selectedGalleryIndex + 1} / {galleryItems.length}</strong>
               </div>
             </div>
 
             {/* Thumbnail Navigation Row */}
             <div className="thumbnail-row" aria-label="Product gallery previews">
-              {thumbnailItems.map((thumbnailSrc, index) => (
+              {galleryItems.map((thumbnailSrc, index) => (
                 <button
                   key={`${thumbnailSrc}-${index}`}
-                  className="thumbnail-button"
+                  className={`thumbnail-button ${selectedGalleryIndex === index ? "is-selected" : ""}`}
                   type="button"
                   aria-pressed={selectedGalleryIndex === index}
                   onClick={() => handleSelectThumbnail(index)}
@@ -170,7 +188,7 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
                     product={product}
                     viewIndex={index}
                     isThumbnail
-                    imageRole={index === 0 ? "cover" : "thumbnail"}
+                    imageRole={index === 0 ? "main" : "thumbnail"}
                     imageSrc={thumbnailSrc}
                   />
                   <span className="thumbnail-index">{index + 1}</span>

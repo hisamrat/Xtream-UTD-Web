@@ -6,7 +6,7 @@ import { useState } from "react";
 import type { Product } from "@/lib/product-schema";
 import { useLanguage } from "@/components/site/LanguageProvider";
 import { useCart } from "@/components/cart/CartProvider";
-import { formatPrice, hasValidOldPrice } from "@/lib/format";
+import { calculateDiscountPercentage, formatPrice, hasValidOldPrice } from "@/lib/format";
 import { ProductArtwork } from "./ProductArtwork";
 
 function getQuickHighlight(product: Product, language?: string): string {
@@ -16,8 +16,9 @@ function getQuickHighlight(product: Product, language?: string): string {
   if (product.new_arrival) {
     return language === "bn" ? "নতুন কালেকশন" : "NEW ARRIVAL";
   }
-  if (product.discount_percentage && product.discount_percentage > 0) {
-    return language === "bn" ? `${product.discount_percentage}% ছাড়` : `${product.discount_percentage}% OFF`;
+  const discount = calculateDiscountPercentage(product);
+  if (discount > 0) {
+    return language === "bn" ? `${discount}% ছাড়` : `${discount}% OFF`;
   }
   if (product.badge && product.badge.trim().length > 0) {
     return product.badge.trim().toUpperCase();
@@ -87,7 +88,7 @@ export function ProductCard({ product, compact = false, selected = false, onClic
 
         {/* Full-bleed centered vector artwork */}
         <div className="product-artwork-container">
-          <ProductArtwork product={product} compact={compact} />
+          <ProductArtwork product={product} compact={compact} imageRole="cover" />
         </div>
 
         {/* Hover Action Overlay: Bottom-Left "+ Add to Cart", Bottom-Right "View Details" icon */}

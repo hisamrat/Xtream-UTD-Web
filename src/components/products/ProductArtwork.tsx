@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/lib/product-schema";
 import type { CSSProperties } from "react";
+import { getGoogleDriveImageCandidates } from "@/lib/image-utils";
 
 type ProductArtworkProps = {
   product: Product;
@@ -18,10 +19,21 @@ function resolveCandidateList(product: Product, imageRole: string, viewIndex: nu
 
   const addPath = (p?: string | null) => {
     if (!p) return;
-    if (p.startsWith("/products/")) {
-      list.push(p.replace(/\.webp$/, ".jpg"));
+    const trimmed = p.trim();
+    if (!trimmed || trimmed.includes("/folders/")) return;
+
+    // Check if it's a Google Drive candidate or URL
+    const gdCandidates = getGoogleDriveImageCandidates(trimmed);
+    if (gdCandidates.length > 1 || (gdCandidates.length === 1 && gdCandidates[0] !== trimmed)) {
+      list.push(...gdCandidates);
+      return;
+    }
+
+    if (trimmed.startsWith("/products/")) {
+      list.push(trimmed.replace(/\.webp$/, ".jpg"));
+      list.push(trimmed.replace(/\.jpg$/, ".webp"));
     } else {
-      list.push(p);
+      list.push(trimmed);
     }
   };
 
@@ -36,11 +48,26 @@ function resolveCandidateList(product: Product, imageRole: string, viewIndex: nu
     if (product.gallery_images && product.gallery_images[viewIndex]) {
       addPath(product.gallery_images[viewIndex]);
     }
-    addPath(product.cover_image);
     addPath(product.main_image);
+    addPath(product.cover_image);
   } else {
     addPath(product.main_image);
+    addPath(product.cover_image);
   }
+
+  // Always add local file fallback paths
+  if (product.slug) {
+    if (imageRole === "cover") {
+      list.push(`/products/${product.slug}/cover.jpg`);
+      list.push(`/products/${product.slug}/main.jpg`);
+    } else {
+      list.push(`/products/${product.slug}/main.jpg`);
+      list.push(`/products/${product.slug}/cover.jpg`);
+    }
+  }
+
+  // Fallback default product placeholder
+  list.push("/images/default-product.svg");
 
   return Array.from(new Set(list));
 }
@@ -57,21 +84,18 @@ export function ProductArtwork({
   const [currentSrcIndex, setCurrentSrcIndex] = useState(0);
   const [imageError, setImageError] = useState(false);
 
-  if (compact && !isThumbnail) {
-    return (
-      <div
-        aria-hidden="true"
-        className="product-art product-art-compact"
-        style={{ "--art-accent": accent } as CSSProperties}
-        data-compact="true"
-      >
-        <CompactHardwareIcon kind={product.kind} accent={accent} />
-      </div>
-    );
-  }
+  const candidateSources = useMemo(
+    () => resolveCandidateList(product, imageRole, viewIndex, imageSrc),
+    [product, imageRole, viewIndex, imageSrc]
+  );
 
-  const candidateSources = resolveCandidateList(product, imageRole, viewIndex, imageSrc);
-  const activeSrc = candidateSources[currentSrcIndex] || `/products/${product.slug}/main.jpg`;
+  // Sync state when props or candidate sources change
+  useEffect(() => {
+    setCurrentSrcIndex(0);
+    setImageError(false);
+  }, [product.slug, imageRole, viewIndex, imageSrc]);
+
+  const activeSrc = candidateSources[currentSrcIndex] || "/images/default-product.svg";
 
   const handleImageError = () => {
     if (currentSrcIndex < candidateSources.length - 1) {
@@ -81,25 +105,39 @@ export function ProductArtwork({
     }
   };
 
+  const hasRealImage = !imageError && candidateSources.length > 0;
+
   return (
     <div
       aria-hidden="true"
-      className={`product-art product-art-full art-${product.kind} ${isThumbnail ? "product-art-thumb" : ""}`}
+      className={`product-art ${compact ? "product-art-compact" : "product-art-full"} art-${product.kind} ${
+        isThumbnail ? "product-art-thumb" : ""
+      }`}
       style={{ "--art-accent": accent } as CSSProperties}
-      data-compact="false"
+      data-compact={compact ? "true" : "false"}
       data-view-index={viewIndex}
     >
-      {!imageError ? (
-        <div className="product-real-image-wrap">
+      {hasRealImage ? (
+        <div className={`product-real-image-wrap ${compact ? "is-compact" : ""} role-${imageRole}`}>
           <img
             key={activeSrc}
             src={activeSrc}
             alt={product.title}
-            className="product-real-image"
-            onError={handleImageError}
+            className={`product-real-image ${imageRole === "main" || imageRole === "gallery" ? "is-contain" : ""}`}
+            style={{
+              objectFit: imageRole === "main" || imageRole === "gallery" ? "contain" : (isThumbnail ? "cover" : "contain"),
+              width: "100%",
+              height: "100%",
+              display: "block"
+            }}
+            referrerPolicy="no-referrer"
             loading={isThumbnail ? "eager" : "lazy"}
+            decoding="async"
+            onError={handleImageError}
           />
         </div>
+      ) : compact ? (
+        <CompactHardwareIcon kind={product.kind} accent={accent} />
       ) : (
         <div style={{ width: "100%", height: "100%", display: "flex", alignItems: "center", justifyContent: "center" }}>
           <HardwareVectorArtwork kind={product.kind} accent={accent} title={product.title} />
