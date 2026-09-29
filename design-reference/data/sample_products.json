@@ -3,38 +3,31 @@
     "id": "prd-sony-a7-iv",
     "slug": "sony-a7-iv",
     "title": "Refillable Perfume Bottle 8ml",
-    "category": "Cameras & Optics",
-    "subcategory": "Mirrorless Camera",
+    "category": "Beauty & Personal Care",
     "price": 199,
     "old_price": 250,
     "stock": "In stock",
     "badge": "Flagship",
     "accent": "#00E5FF",
     "kind": "camera",
-    "short": "33MP full-frame mirrorless hybrid camera with 4K 60p 10-bit recording.",
+    "short": "33MP full-frame mirrorless hybrid camera with 4K 60p recording.",
     "featured": true,
-    "currency": "BDT",
-    "discount_percentage": 6,
-    "quantity_available": 12,
     "cover_image": "https://drive.google.com/file/d/1molKCmrmkbMbY_Y3KiWoxqRG9pu7wfIZ/view?usp=sharing",
-    "main_image": "https://drive.google.com/file/d/1_x-E6jZ_cKmdTbyrpAeI0FDQaqJ5KuI8/view?usp=sharing",
+    "main_image": "https://drive.google.com/file/d/1molKCmrmkbMbY_Y3KiWoxqRG9pu7wfIZ/view?usp=sharing",
     "gallery_images": [
-      "https://lh3.googleusercontent.com/d/18EEcjEDhv2nHzKWqGfJROawzsqUbQMQU"
+      "https://drive.google.com/file/d/1HYeTYWnHD0GAe1csLLTQ27ZJMMu5RJOF/view?usp=sharing"
     ],
-    "video": null,
     "features": [
-      "33MP Full-Frame Exmor R CMOS Sensor",
-      "4K 60p 10-Bit 4:2:2 Video",
-      "759-Point Fast Hybrid AF with Real-time Eye AF"
+      "33MP Full-Frame Sensor",
+      "4K 60p 10-Bit Video",
+      "759-Point Fast Hybrid AF"
     ],
     "specifications": {
       "Sensor": "33MP Full-Frame",
       "Mount": "Sony E-mount",
-      "Video": "4K 60p 10-bit"
+      "Video": "4K 60p"
     },
-    "colours": [
-      "Black"
-    ],
+    "colours": [],
     "sizes_or_variants": [
       "Body Only",
       "Kit Lens"
@@ -52,62 +45,181 @@
       "canon-eos-r5",
       "sigma-24-70mm-f2-8",
       "dji-rs-3-pro"
-    ],
-    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
-    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+    ]
   },
   {
     "id": "prd-dji-rs-3-pro",
     "slug": "dji-rs-3-pro",
-    "title": "DJI RS 3 Pro",
+    "title": "DJI RS 3 Pro Gimbal",
     "category": "Gimbals & Stabilizers",
-    "subcategory": "Gimbal Stabilizer",
-    "price": 89000,
-    "old_price": 95000,
+    "price": 95000,
+    "old_price": 105000,
     "stock": "In stock",
-    "badge": "Pro gear",
-    "accent": "#38BDF8",
+    "badge": "Pro Grade",
+    "accent": "#00E5FF",
     "kind": "gimbal",
-    "short": "Pro 3-axis carbon fiber gimbal stabilizer with 4.5kg payload capacity.",
+    "short": "Automated axis locks with 4.5kg payload capacity for cinema rigs.",
     "featured": true,
-    "currency": "BDT",
-    "discount_percentage": 6,
-    "quantity_available": 18,
-    "cover_image": "/products/dji-rs-3-pro/cover.webp",
-    "main_image": "/products/dji-rs-3-pro/main.webp",
-    "gallery_images": [
-      "/products/dji-rs-3-pro/01.webp"
-    ],
-    "video": null,
+    "cover_image": "",
+    "main_image": "",
+    "gallery_images": [],
     "features": [
+      "4.5kg Tested Payload",
       "Automated Axis Locks",
-      "Extended Carbon Fiber Axis Arms",
-      "4.5kg Tested Payload"
+      "LiDAR Focusing Support"
     ],
     "specifications": {
       "Payload": "4.5 kg",
-      "Battery Life": "12 Hours"
+      "Battery Life": "12 Hours",
+      "Weight": "1.5 kg"
     },
-    "colours": [
-      "Matte Black"
-    ],
+    "colours": [],
     "sizes_or_variants": [
-      "Standard Combo",
-      "Pro Combo"
+      "Standard",
+      "Combo Pack"
     ],
-    "new_arrival": false,
-    "best_seller": true,
+    "new_arrival": true,
+    "best_seller": false,
     "tags": [
       "dji",
       "gimbal",
-      "stabilizer"
+      "stabilizer",
+      "camera"
     ],
     "related_products": [
       "sony-a7-iv",
       "canon-eos-r5"
+    ]
+  },
+  {
+    "id": "prd-shure-sm7b",
+    "slug": "shure-sm7b",
+    "title": "Shure SM7B Vocal Dynamic Mic",
+    "category": "Audio & Microphones",
+    "price": 45000,
+    "old_price": 48000,
+    "stock": "In stock",
+    "badge": "Studio Classic",
+    "accent": "#FF9100",
+    "kind": "mic",
+    "short": "Legendary studio microphone for podcasting, broadcasting, and vocals.",
+    "featured": true,
+    "cover_image": "",
+    "main_image": "",
+    "gallery_images": [],
+    "features": [
+      "Flat Wide-Range Frequency Response",
+      "Cardioid Polar Pattern",
+      "Bass Roll-off Control"
     ],
-    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
-    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
+    "specifications": {
+      "Polar Pattern": "Cardioid",
+      "Frequency Response": "50Hz - 20kHz",
+      "Connector": "XLR"
+    },
+    "colours": [],
+    "sizes_or_variants": [
+      "Mic Only",
+      "With Cloudlifter"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "shure",
+      "microphone",
+      "sm7b",
+      "audio",
+      "podcast"
+    ],
+    "related_products": [
+      "sennheiser-hd-660s"
+    ]
+  },
+  {
+    "id": "prd-godox-sl-60w",
+    "slug": "godox-sl-60w",
+    "title": "Godox SL-60W Video Light",
+    "category": "Lighting & Studio",
+    "price": 14500,
+    "old_price": 16000,
+    "stock": "In stock",
+    "badge": "Best Value",
+    "accent": "#FFD600",
+    "kind": "light",
+    "short": "60W 5600K daylight-balanced LED studio video light with Bowens mount.",
+    "featured": false,
+    "cover_image": "",
+    "main_image": "",
+    "gallery_images": [],
+    "features": [
+      "5600K Daylight Color Temperature",
+      "CRI 96+ TLCI 97+",
+      "Standard Bowens S-Mount"
+    ],
+    "specifications": {
+      "Power": "60W",
+      "Color Temp": "5600K",
+      "CRI": "96+"
+    },
+    "colours": [],
+    "sizes_or_variants": [
+      "Light Only",
+      "With Softbox"
+    ],
+    "new_arrival": false,
+    "best_seller": true,
+    "tags": [
+      "godox",
+      "lighting",
+      "studio",
+      "video light",
+      "led"
+    ],
+    "related_products": [
+      "sony-a7-iv"
+    ]
+  },
+  {
+    "id": "prd-keychron-q1-pro",
+    "slug": "keychron-q1-pro",
+    "title": "Keychron Q1 Pro Wireless",
+    "category": "Desk Accessories",
+    "price": 22500,
+    "old_price": 24500,
+    "stock": "Low stock",
+    "badge": "New",
+    "accent": "#7C4DFF",
+    "kind": "keyboard",
+    "short": "75% layout custom mechanical keyboard with CNC aluminum body and QMK/VIA.",
+    "featured": true,
+    "cover_image": "",
+    "main_image": "",
+    "gallery_images": [],
+    "features": [
+      "Full CNC Aluminum Body",
+      "QMK/VIA Programmable",
+      "Bluetooth 5.1 & Type-C"
+    ],
+    "specifications": {
+      "Layout": "75%",
+      "Body": "Full Aluminum",
+      "Switches": "Hot-swappable"
+    },
+    "colours": [],
+    "sizes_or_variants": [
+      "Red Switch",
+      "Brown Switch",
+      "Banana Switch"
+    ],
+    "new_arrival": true,
+    "best_seller": true,
+    "tags": [
+      "keychron",
+      "mechanical keyboard",
+      "wireless",
+      "custom keyboard"
+    ],
+    "related_products": []
   },
   {
     "id": "prd-sennheiser-hd-660s",
@@ -265,58 +377,6 @@
     "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
   },
   {
-    "id": "prd-godox-sl60w",
-    "slug": "godox-sl60w",
-    "title": "Godox SL90W",
-    "category": "Studio Lighting",
-    "subcategory": "LED Video Light",
-    "price": 16500,
-    "old_price": 18500,
-    "stock": "In stock",
-    "badge": "High CRI",
-    "accent": "#D946EF",
-    "kind": "light",
-    "short": "Daylight LED continuous video light with Bowens mount and quiet cooling fan.",
-    "featured": true,
-    "currency": "BDT",
-    "discount_percentage": 11,
-    "quantity_available": 30,
-    "cover_image": "/products/godox-sl60w/cover.webp",
-    "main_image": "/products/godox-sl60w/main.webp",
-    "gallery_images": [
-      "/products/godox-sl60w/01.webp"
-    ],
-    "video": null,
-    "features": [
-      "5600K Daylight Balanced",
-      "CRI 96 / TLCI 97",
-      "Wireless remote control"
-    ],
-    "specifications": {
-      "Power": "90W",
-      "Color Temp": "5600K"
-    },
-    "colours": [
-      "Black"
-    ],
-    "sizes_or_variants": [
-      "Standard Kit"
-    ],
-    "new_arrival": false,
-    "best_seller": true,
-    "tags": [
-      "godox",
-      "lighting",
-      "led"
-    ],
-    "related_products": [
-      "aputure-120d-ii",
-      "manfrotto-tripod-mt055"
-    ],
-    "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
-    "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
-  },
-  {
     "id": "prd-manfrotto-monitor-rig",
     "slug": "manfrotto-monitor-mount",
     "title": "Manftoge Trigurd",
@@ -414,7 +474,7 @@
       "led"
     ],
     "related_products": [
-      "godox-sl60w",
+      "godox-sl-60w",
       "manfrotto-tripod-mt055"
     ],
     "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
@@ -624,7 +684,7 @@
     ],
     "related_products": [
       "aputure-120d-ii",
-      "godox-sl60w"
+      "godox-sl-60w"
     ],
     "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
     "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"
@@ -675,7 +735,7 @@
     ],
     "related_products": [
       "sony-a7-iv",
-      "godox-sl60w"
+      "godox-sl-60w"
     ],
     "order_link": "EDITABLE_MESSENGER_OR_ORDER_URL",
     "facebook_post_link": "EDITABLE_FACEBOOK_POST_URL"

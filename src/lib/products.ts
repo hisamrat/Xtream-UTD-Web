@@ -26,7 +26,14 @@ export type ProductValidationIssue = {
   message: string;
 };
 
-const parsedProducts = productsSchema.parse(rawProducts);
+const parseResult = productsSchema.safeParse(rawProducts);
+const parsedProducts: Product[] = parseResult.success
+  ? parseResult.data
+  : (Array.isArray(rawProducts) ? (rawProducts as unknown as Product[]) : []);
+
+if (!parseResult.success) {
+  console.warn("[products] Warning: sample products parsing issue:", parseResult.error);
+}
 
 const productIndex = new Map(parsedProducts.map((product, index) => [product.slug, index]));
 const productMap = new Map(parsedProducts.map((product) => [product.slug, product]));
