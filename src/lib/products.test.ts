@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+﻿import { describe, expect, it } from "vitest";
 import {
   filterProducts,
   getAllProducts,
@@ -76,4 +76,3 @@ describe("order inquiry", () => {
     expect(message).toContain("Quantity: 2");
   });
 });
-

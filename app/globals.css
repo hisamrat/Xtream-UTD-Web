@@ -1089,14 +1089,17 @@ body:has(.home-main) .world-alternating-indicator {
   transform: scale(1.05);
 }
 
-.product-art.product-art-full {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  padding: 24px 20px;
+.product-art.product-art-full,
+.product-art.product-art-compact,
+.product-art {
+  width: 100% !important;
+  height: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  position: relative !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .full-art-svg {
@@ -1459,12 +1462,17 @@ body:has(.home-main) .world-alternating-indicator {
 }
 
 .product-art {
---art-accent: var(--accent);
-position: relative;
-width: min(68%, 180px);
-aspect-ratio: 1;
-display: grid;
-place-items: center;
+  --art-accent: var(--accent);
+  position: relative;
+  width: 100% !important;
+  height: 100% !important;
+  max-width: none !important;
+  max-height: none !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  margin: 0 !important;
 }
 
 .product-art span {
@@ -3103,14 +3111,14 @@ color: var(--text-muted);
   width: 88px;
   height: 88px;
   aspect-ratio: 1;
-  border: none !important;
+  border: 1px solid rgba(255, 255, 255, 0.14) !important;
   border-radius: 0 !important;
   display: flex;
   align-items: center;
   justify-content: center;
   background: var(--surface-900);
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06), 0 1px 4px rgba(0, 0, 0, 0.04);
-  transition: box-shadow 160ms ease, background 160ms ease, transform 160ms ease;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  transition: border-color 160ms ease, box-shadow 160ms ease, transform 160ms ease;
   cursor: pointer;
   overflow: hidden;
   padding: 0;
@@ -3997,22 +4005,27 @@ aspect-ratio: var(--world-card-media-ratio, 1.02);
 .world-card .product-art {
 --text-primary: #fffaf1;
 --text-soft: rgb(255 250 241 / 88%);
-width: var(--world-card-art-width, min(74%, 170px));
+width: 100% !important;
+  height: 100% !important;
+  padding: 0 !important;
 filter:
 drop-shadow(0 20px 24px rgb(0 0 0 / 54%))
 drop-shadow(0 0 14px color-mix(in srgb, var(--world-card-accent, var(--accent)) 18%, transparent));
 }
 
 .world-card.size-small .product-art {
-width: var(--world-card-art-width, 70%);
+width: 100% !important;
+  height: 100% !important;
 }
 
 .world-card.size-large .product-art {
-width: var(--world-card-art-width, min(78%, 210px));
+width: 100% !important;
+  height: 100% !important;
 }
 
 .world-card.size-hero .product-art {
-width: var(--world-card-art-width, min(76%, 250px));
+width: 100% !important;
+  height: 100% !important;
 filter:
 drop-shadow(0 26px 30px rgb(0 0 0 / 58%))
 drop-shadow(0 0 22px color-mix(in srgb, var(--world-card-accent, var(--accent)) 25%, transparent));
