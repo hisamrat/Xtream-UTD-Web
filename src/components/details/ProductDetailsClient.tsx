@@ -57,13 +57,19 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
     [language]
   );
 
+  // Gallery items strictly from Gallery_Images in exact serial order
   const galleryItems = useMemo(() => {
-    const main = product.main_image || product.cover_image || "/images/default-product.svg";
-    const gallery = Array.isArray(product.gallery_images)
-      ? product.gallery_images.filter((img) => Boolean(img) && img !== main)
-      : [];
-    return [main, ...gallery];
-  }, [product.main_image, product.cover_image, product.gallery_images]);
+    if (Array.isArray(product.gallery_images) && product.gallery_images.length > 0) {
+      const valid = product.gallery_images.filter(Boolean);
+      if (valid.length > 0) return valid;
+    }
+    if (product.cover_image) {
+      return [product.cover_image];
+    }
+    return [""];
+  }, [product.gallery_images, product.cover_image]);
+
+  const hasMultipleImages = galleryItems.length > 1;
 
   const handleSelectThumbnail = (index: number) => {
     setSelectedGalleryIndex(index);
@@ -167,34 +173,31 @@ export function ProductDetailsClient({ product, relatedProducts, allProducts }: 
                   imageSrc={galleryItems[selectedGalleryIndex]}
                 />
               </div>
+            </div>
 
-              <div className="gallery-caption">
-                <strong>{selectedGalleryIndex + 1} / {galleryItems.length}</strong>
+            {/* Thumbnail Navigation Strip */}
+            {hasMultipleImages ? (
+              <div className="thumbnail-strip" aria-label="Product gallery previews">
+                {galleryItems.map((thumbnailSrc, index) => (
+                  <button
+                    key={`${thumbnailSrc}-${index}`}
+                    className={`thumbnail-button ${selectedGalleryIndex === index ? "is-selected" : ""}`}
+                    type="button"
+                    aria-pressed={selectedGalleryIndex === index}
+                    onClick={() => handleSelectThumbnail(index)}
+                    aria-label={`${product.title} ${thumbnailLabels[index] || `gallery image ${index + 1}`}`}
+                  >
+                    <ProductArtwork
+                      product={product}
+                      viewIndex={index}
+                      isThumbnail
+                      imageRole={index === 0 ? "main" : "thumbnail"}
+                      imageSrc={thumbnailSrc}
+                    />
+                  </button>
+                ))}
               </div>
-            </div>
-
-            {/* Thumbnail Navigation Row */}
-            <div className="thumbnail-row" aria-label="Product gallery previews">
-              {galleryItems.map((thumbnailSrc, index) => (
-                <button
-                  key={`${thumbnailSrc}-${index}`}
-                  className={`thumbnail-button ${selectedGalleryIndex === index ? "is-selected" : ""}`}
-                  type="button"
-                  aria-pressed={selectedGalleryIndex === index}
-                  onClick={() => handleSelectThumbnail(index)}
-                  aria-label={`${product.title} ${thumbnailLabels[index] || `gallery image ${index + 1}`}`}
-                >
-                  <ProductArtwork
-                    product={product}
-                    viewIndex={index}
-                    isThumbnail
-                    imageRole={index === 0 ? "main" : "thumbnail"}
-                    imageSrc={thumbnailSrc}
-                  />
-                  <span className="thumbnail-index">{index + 1}</span>
-                </button>
-              ))}
-            </div>
+            ) : null}
           </div>
 
           {/* Right Column: High-Converting Buy Box */}

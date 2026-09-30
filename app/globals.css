@@ -12233,3 +12233,47 @@ html[data-theme="light"] .catalogue-results-count {
     height: 34px;
   }
 }
+
+/* ==========================================================================
+   Clean Dark Theme Product Image Placeholder
+   ========================================================================== */
+.product-placeholder-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: radial-gradient(circle at center, #151923 0%, #07090d 100%);
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  overflow: hidden;
+}
+
+.product-placeholder-content {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgba(255, 255, 255, 0.22);
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.product-card:hover .product-placeholder-content,
+.world-card:hover .product-placeholder-content {
+  color: rgba(255, 255, 255, 0.45);
+  transform: scale(1.08);
+}
+
+.product-placeholder-icon {
+  display: block;
+}
+
+/* Ensure bottom dock does not overlap page content */
+.details-page {
+  padding-bottom: clamp(120px, 16vh, 180px) !important;
+}
+
+.products-page-main {
+  padding-bottom: clamp(100px, 12vh, 160px) !important;
+}
+
