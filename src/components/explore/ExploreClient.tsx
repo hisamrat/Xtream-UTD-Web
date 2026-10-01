@@ -10,9 +10,11 @@ import { ExploreTopSellingSection } from "./ExploreTopSellingSection";
 import { ExploreMediaMasonrySection } from "./ExploreMediaMasonrySection";
 import { ExploreReviewsSection } from "./ExploreReviewsSection";
 import type { Product } from "@/lib/product-schema";
+import type { GalleryShowcaseItem } from "@/lib/gallery-schema";
 
-type ExploreClientProps = {
+export type ExploreClientProps = {
   products: Product[];
+  showcaseItems?: GalleryShowcaseItem[];
 };
 
 type ViewportSize = {
@@ -34,7 +36,7 @@ const VISIBLE_RANGE = 7.5;
 const CAROUSEL_EASE = 0.14;
 const dragThreshold = 7;
 
-export function ExploreClient({ products }: ExploreClientProps) {
+export function ExploreClient({ products, showcaseItems = [] }: ExploreClientProps) {
   const router = useRouter();
   const { t, tCategory } = useLanguage();
   const [mounted, setMounted] = useState(false);
@@ -325,7 +327,7 @@ export function ExploreClient({ products }: ExploreClientProps) {
         <div className="explore-extra-sections">
           <HomeFeaturesSection />
           <ExploreTopSellingSection products={products} />
-          <ExploreMediaMasonrySection products={products} />
+          <ExploreMediaMasonrySection showcaseItems={showcaseItems} />
           <ExploreReviewsSection />
         </div>
       </main>
@@ -434,9 +436,10 @@ export function ExploreClient({ products }: ExploreClientProps) {
       <div className="explore-extra-sections">
         <HomeFeaturesSection />
         <ExploreTopSellingSection products={products} />
-        <ExploreMediaMasonrySection products={products} />
+        <ExploreMediaMasonrySection showcaseItems={showcaseItems} />
         <ExploreReviewsSection />
       </div>
     </main>
   );
 }
+

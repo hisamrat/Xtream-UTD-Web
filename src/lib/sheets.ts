@@ -1,8 +1,8 @@
 /**
- * Google Sheets data-source for products.
+ * Google Sheets data-source for products and showcase gallery.
  *
  * Authenticates with Sheets API v4 via an API key or service account,
- * dynamically detects the products sheet tab and header row,
+ * dynamically detects sheet tabs and header rows,
  * parses pipe-delimited columns, converts Google Drive image URLs to embeddable format,
  * and caches the result.
  */
@@ -12,6 +12,7 @@ import path from "node:path";
 import { google } from "googleapis";
 import { formatGoogleDriveImageUrl } from "./image-utils";
 import type { Product, StockStatus } from "./product-schema";
+import type { GalleryShowcaseItem, GalleryMediaType } from "./gallery-schema";
 
 // ---------------------------------------------------------------------------
 // Cache Configuration
@@ -19,12 +20,18 @@ import type { Product, StockStatus } from "./product-schema";
 
 const DEFAULT_CACHE_TTL_MS = 60_000; // 60 seconds
 
-interface CacheEntry {
+interface ProductCacheEntry {
   data: Product[];
   fetchedAt: number;
 }
 
-let memoryCache: CacheEntry | null = null;
+interface GalleryCacheEntry {
+  data: GalleryShowcaseItem[];
+  fetchedAt: number;
+}
+
+let productMemoryCache: ProductCacheEntry | null = null;
+let galleryMemoryCache: GalleryCacheEntry | null = null;
 
 function getCacheTtl(): number {
   const env = process.env.SHEETS_CACHE_TTL_MS;
@@ -35,16 +42,20 @@ function getCacheTtl(): number {
   return DEFAULT_CACHE_TTL_MS;
 }
 
-function getDiskCachePath(): string {
+function getProductDiskCachePath(): string {
   return path.join(process.cwd(), ".cache", "sheets-products.json");
 }
 
-function readDiskCache(ttl: number): Product[] | null {
+function getGalleryDiskCachePath(): string {
+  return path.join(process.cwd(), ".cache", "sheets-gallery.json");
+}
+
+function readProductDiskCache(ttl: number): Product[] | null {
   try {
-    const cacheFile = getDiskCachePath();
+    const cacheFile = getProductDiskCachePath();
     if (fs.existsSync(cacheFile)) {
       const content = fs.readFileSync(cacheFile, "utf8");
-      const parsed = JSON.parse(content) as CacheEntry;
+      const parsed = JSON.parse(content) as ProductCacheEntry;
       if (Date.now() - parsed.fetchedAt < ttl && Array.isArray(parsed.data) && parsed.data.length > 0) {
         return parsed.data;
       }
@@ -55,9 +66,38 @@ function readDiskCache(ttl: number): Product[] | null {
   return null;
 }
 
-function writeDiskCache(data: Product[]): void {
+function writeProductDiskCache(data: Product[]): void {
   try {
-    const cacheFile = getDiskCachePath();
+    const cacheFile = getProductDiskCachePath();
+    const dir = path.dirname(cacheFile);
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir, { recursive: true });
+    }
+    fs.writeFileSync(cacheFile, JSON.stringify({ data, fetchedAt: Date.now() }), "utf8");
+  } catch {
+    // Ignore cache write errors
+  }
+}
+
+function readGalleryDiskCache(ttl: number): GalleryShowcaseItem[] | null {
+  try {
+    const cacheFile = getGalleryDiskCachePath();
+    if (fs.existsSync(cacheFile)) {
+      const content = fs.readFileSync(cacheFile, "utf8");
+      const parsed = JSON.parse(content) as GalleryCacheEntry;
+      if (Date.now() - parsed.fetchedAt < ttl && Array.isArray(parsed.data)) {
+        return parsed.data;
+      }
+    }
+  } catch {
+    // Ignore cache read errors
+  }
+  return null;
+}
+
+function writeGalleryDiskCache(data: GalleryShowcaseItem[]): void {
+  try {
+    const cacheFile = getGalleryDiskCachePath();
     const dir = path.dirname(cacheFile);
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir, { recursive: true });
@@ -150,10 +190,47 @@ function parseBool(value: string | undefined): boolean {
   return (value ?? "").trim().toUpperCase() === "TRUE";
 }
 
+function parseBoolDefaultTrue(value: string | undefined): boolean {
+  const trimmed = (value ?? "").trim().toUpperCase();
+  if (trimmed === "FALSE") return false;
+  return true;
+}
+
 function parseNumber(value: string | undefined, fallback: number): number {
   if (!value || !value.trim()) return fallback;
   const n = Number(value.replace(/[^0-9.-]+/g, ""));
   return Number.isNaN(n) ? fallback : n;
+}
+
+function parseAspectRatio(value: string | undefined): number {
+  if (!value || !value.trim()) return 0.8;
+  const trimmed = value.trim().replace(/\s+/g, "");
+
+  if (trimmed.includes(":") || trimmed.includes("/")) {
+    const parts = trimmed.split(/[:/]/);
+    if (parts.length === 2) {
+      const w = Number(parts[0]);
+      const h = Number(parts[1]);
+      if (!Number.isNaN(w) && !Number.isNaN(h) && w > 0 && h > 0) {
+        return w / h;
+      }
+    }
+  }
+
+  const num = Number(trimmed);
+  if (!Number.isNaN(num) && num > 0) {
+    return num;
+  }
+
+  return 0.8;
+}
+
+function parseMediaType(value: string | undefined): GalleryMediaType {
+  const trimmed = (value ?? "").trim().toLowerCase();
+  if (trimmed === "video" || trimmed.includes("video") || trimmed.includes("mp4")) {
+    return "video";
+  }
+  return "image";
 }
 
 // ---------------------------------------------------------------------------
@@ -167,14 +244,14 @@ export async function fetchProductsFromSheet(): Promise<Product[]> {
   const ttl = getCacheTtl();
 
   // 1. Check in-memory cache
-  if (memoryCache && Date.now() - memoryCache.fetchedAt < ttl) {
-    return memoryCache.data;
+  if (productMemoryCache && Date.now() - productMemoryCache.fetchedAt < ttl) {
+    return productMemoryCache.data;
   }
 
   // 2. Check disk cache (for multi-worker Next.js SSG builds)
-  const diskCached = readDiskCache(ttl);
+  const diskCached = readProductDiskCache(ttl);
   if (diskCached) {
-    memoryCache = { data: diskCached, fetchedAt: Date.now() };
+    productMemoryCache = { data: diskCached, fetchedAt: Date.now() };
     return diskCached;
   }
 
@@ -186,10 +263,11 @@ export async function fetchProductsFromSheet(): Promise<Product[]> {
   const meta = await sheets.spreadsheets.get({ spreadsheetId });
   const sheetList = meta.data.sheets ?? [];
   const targetSheet =
-    sheetList.find((s) => s.properties?.title?.toLowerCase().includes("product")) ??
+    sheetList.find((s) => s.properties?.title?.toLowerCase().includes("product") && !s.properties?.title?.toLowerCase().includes("gallery") && !s.properties?.title?.toLowerCase().includes("image")) ??
+    sheetList.find((s) => s.properties?.sheetId === 0) ??
     sheetList[0];
 
-  const sheetTitle = targetSheet?.properties?.title ?? "Products Information";
+  const sheetTitle = targetSheet?.properties?.title ?? "Product Information Management";
 
   const response = await sheets.spreadsheets.values.get({
     spreadsheetId,
@@ -251,19 +329,42 @@ export async function fetchProductsFromSheet(): Promise<Product[]> {
     const newArrival = parseBool(getCol(row, "new_arrival"));
     const bestSeller = parseBool(getCol(row, "best_seller"));
 
-    const coverRaw = getCol(row, "cover_image", "cover");
-    const mainRaw = getCol(row, "main_image", "main");
-    const galleryRaw = pipeSplit(getCol(row, "gallery_images", "gallery"));
+    const posterRaw = getCol(
+      row,
+      "poster_image_url",
+      "poster_image",
+      "poster_url",
+      "poster",
+      "cover_image_url",
+      "cover_image",
+      "cover_url",
+      "cover",
+      "image_url",
+      "image"
+    );
+    const mainRaw = getCol(row, "main_image_url", "main_image", "main_url", "main");
+    const galleryRaw = pipeSplit(
+      getCol(
+        row,
+        "gallery_images_url",
+        "gallery_images",
+        "gallery_image_url",
+        "gallery_image",
+        "gallery_urls",
+        "gallery_url",
+        "gallery"
+      )
+    );
 
-    const coverImage = coverRaw ? formatGoogleDriveImageUrl(coverRaw) : "";
+    const posterImageUrl = posterRaw ? formatGoogleDriveImageUrl(posterRaw) : "";
+    const galleryImagesUrl = galleryRaw.map(formatGoogleDriveImageUrl).filter(Boolean);
     const mainImage = mainRaw
       ? formatGoogleDriveImageUrl(mainRaw)
-      : (coverImage || (galleryRaw.length > 0 ? formatGoogleDriveImageUrl(galleryRaw[0]) : ""));
-    const galleryImages = galleryRaw.map(formatGoogleDriveImageUrl);
+      : (posterImageUrl || (galleryImagesUrl.length > 0 ? galleryImagesUrl[0] : ""));
 
-    const features = pipeSplit(getCol(row, "features"));
+    const features = pipeSplit(getCol(row, "features", "key_features"));
     const specifications = parseSpecifications(getCol(row, "specifications", "ppecifications", "specs"));
-    const variantsRaw = pipeSplit(getCol(row, "colours_or_sizes_or_variants", "sizes_or_variants", "variants", "colours"));
+    const variantsRaw = pipeSplit(getCol(row, "colours_or_sizes_or_variants", "sizes_or_variants", "variants"));
     const tags = pipeSplit(getCol(row, "tags"));
     const relatedProducts = pipeSplit(getCol(row, "related_products", "related"));
 
@@ -282,9 +383,11 @@ export async function fetchProductsFromSheet(): Promise<Product[]> {
       featured,
       new_arrival: newArrival,
       best_seller: bestSeller,
-      cover_image: coverImage || undefined,
-      main_image: mainImage || "",
-      gallery_images: galleryImages,
+      poster_image_url: posterImageUrl || undefined,
+      gallery_images_url: galleryImagesUrl,
+      cover_image: posterImageUrl || undefined,
+      main_image: mainImage,
+      gallery_images: galleryImagesUrl,
       features,
       specifications,
       colours: [],
@@ -299,8 +402,134 @@ export async function fetchProductsFromSheet(): Promise<Product[]> {
   }
 
   // Update caches
-  memoryCache = { data: products, fetchedAt: Date.now() };
-  writeDiskCache(products);
+  productMemoryCache = { data: products, fetchedAt: Date.now() };
+  writeProductDiskCache(products);
 
   return products;
 }
+
+/**
+ * Fetch showcase gallery items from Google Sheets tab ("Product Image and Video Gallery").
+ * If no data exists, returns empty array.
+ */
+export async function fetchGalleryItemsFromSheet(): Promise<GalleryShowcaseItem[]> {
+  const ttl = getCacheTtl();
+
+  // 1. Check in-memory cache
+  if (galleryMemoryCache && Date.now() - galleryMemoryCache.fetchedAt < ttl) {
+    return galleryMemoryCache.data;
+  }
+
+  // 2. Check disk cache
+  const diskCached = readGalleryDiskCache(ttl);
+  if (diskCached) {
+    galleryMemoryCache = { data: diskCached, fetchedAt: Date.now() };
+    return diskCached;
+  }
+
+  console.log("[sheets] Fetching gallery showcase from Google Sheets...");
+
+  const { sheets, spreadsheetId } = getSheetsClient();
+
+  const meta = await sheets.spreadsheets.get({ spreadsheetId });
+  const sheetList = meta.data.sheets ?? [];
+  const targetSheet =
+    sheetList.find((s) => /gallery|showcase|media/i.test(s.properties?.title ?? "")) ??
+    sheetList.find((s) => s.properties?.sheetId === 662705131);
+
+  if (!targetSheet) {
+    console.log("[sheets] No gallery showcase sheet found.");
+    return [];
+  }
+
+  const sheetTitle = targetSheet.properties?.title ?? "Product Image and Video Gallery";
+
+  const response = await sheets.spreadsheets.values.get({
+    spreadsheetId,
+    range: `'${sheetTitle}'!A1:Z`,
+  });
+
+  const rawRows = (response.data.values ?? []) as string[][];
+  if (rawRows.length === 0) {
+    return [];
+  }
+
+  // Locate header row
+  let headerRowIndex = -1;
+  const headerMap = new Map<string, number>();
+
+  for (let i = 0; i < Math.min(rawRows.length, 10); i++) {
+    const row = rawRows[i];
+    const normalized = row.map(normalizeHeader);
+    if (
+      normalized.includes("media_type") ||
+      normalized.includes("media_url") ||
+      (normalized.includes("slug") && normalized.includes("title"))
+    ) {
+      headerRowIndex = i;
+      normalized.forEach((h, colIdx) => {
+        if (h) headerMap.set(h, colIdx);
+      });
+      break;
+    }
+  }
+
+  if (headerRowIndex === -1) {
+    console.warn(`[sheets] Could not find header row in gallery sheet "${sheetTitle}".`);
+    return [];
+  }
+
+  const getCol = (row: string[], ...keys: string[]): string => {
+    for (const k of keys) {
+      const idx = headerMap.get(k);
+      if (idx !== undefined && row[idx] !== undefined) {
+        return (row[idx] ?? "").trim();
+      }
+    }
+    return "";
+  };
+
+  const dataRows = rawRows.slice(headerRowIndex + 1);
+  const items: GalleryShowcaseItem[] = [];
+
+  for (let i = 0; i < dataRows.length; i++) {
+    const row = dataRows[i];
+    const slug = getCol(row, "slug", "product_slug");
+    const title = getCol(row, "title", "name", "media_title", "product_title");
+    const mediaTypeRaw = getCol(row, "media_type", "media", "type", "kind");
+    const mediaUrlRaw = getCol(row, "media_url", "media_link", "url", "video_url", "image_url");
+    const posterUrlRaw = getCol(row, "poster_url", "poster", "thumbnail_url", "thumbnail", "cover_url");
+    const aspectRatioRaw = getCol(row, "aspect_ratio", "aspect", "ratio", "dimensions");
+    const activeRaw = getCol(row, "active", "enabled", "published", "status");
+
+    // Skip empty placeholder/template rows
+    if (!slug && !title && !mediaUrlRaw && !posterUrlRaw) {
+      continue;
+    }
+
+    const active = parseBoolDefaultTrue(activeRaw);
+    if (!active) continue;
+
+    const mediaType = parseMediaType(mediaTypeRaw);
+    const mediaUrl = mediaUrlRaw ? formatGoogleDriveImageUrl(mediaUrlRaw) : "";
+    const posterUrl = posterUrlRaw ? formatGoogleDriveImageUrl(posterUrlRaw) : "";
+    const aspectRatio = parseAspectRatio(aspectRatioRaw);
+
+    items.push({
+      id: `gallery-${slug || i + 1}`,
+      slug,
+      title: title || slug || "Showcase Item",
+      mediaType,
+      mediaUrl,
+      posterUrl,
+      aspectRatio,
+      active,
+    });
+  }
+
+  galleryMemoryCache = { data: items, fetchedAt: Date.now() };
+  writeGalleryDiskCache(items);
+
+  return items;
+}
+

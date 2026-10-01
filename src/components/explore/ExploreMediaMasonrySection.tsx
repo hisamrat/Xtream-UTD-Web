@@ -2,193 +2,13 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import Image from "next/image";
-import { Play, Pause, ArrowUpRight, Move } from "lucide-react";
+import { Play, Pause, ArrowUpRight, Move, Package } from "lucide-react";
 import { useLanguage } from "@/components/site/LanguageProvider";
+import { getGoogleDriveImageCandidates } from "@/lib/image-utils";
+import type { GalleryShowcaseItem } from "@/lib/gallery-schema";
 import type { Product } from "@/lib/product-schema";
 
-export type ShowcaseItem = {
-  id: string;
-  kind: "video" | "image";
-  title: {
-    en: string;
-    bn: string;
-  };
-  category: "camera" | "audio" | "studio" | "lighting" | "gear";
-  ratio: number; // width / height, e.g. 4/5 = 0.8, 1/1 = 1, 3/2 = 1.5, 2/3 = 0.667
-  imageUrl: string;
-  videoSrc?: string;
-  youtubeId?: string;
-  productSlug?: string;
-  price?: number;
-};
-
-const SHOWCASE_ITEMS: ShowcaseItem[] = [
-  {
-    id: "showcase-1",
-    kind: "video",
-    title: {
-      en: "Sony A7 IV Hybrid Cinema",
-      bn: "সোনি এ৭ ৪ হাইব্রিড সিনেমা"
-    },
-    category: "camera",
-    ratio: 4 / 5,
-    imageUrl: "/products/sony-a7-iv/cover.jpg",
-    videoSrc: "https://framerusercontent.com/assets/OevNeIH8dSgSBVEi6nEZyi5pRJU.mp4",
-    youtubeId: "aL5qS3E4Lq8",
-    productSlug: "sony-a7-iv",
-    price: 235000
-  },
-  {
-    id: "showcase-2",
-    kind: "image",
-    title: {
-      en: "Sennheiser HD 660S",
-      bn: "সেনহাইজার এইচডি ৬৬০এস"
-    },
-    category: "audio",
-    ratio: 1,
-    imageUrl: "/products/sennheiser-hd-660s/cover.jpg",
-    productSlug: "sennheiser-hd-660s",
-    price: 46000
-  },
-  {
-    id: "showcase-3",
-    kind: "video",
-    title: {
-      en: "DJI RS 3 Pro Stabilizer",
-      bn: "ডিজেআই আরএস ৩ প্রো"
-    },
-    category: "studio",
-    ratio: 2 / 3,
-    imageUrl: "/products/dji-rs-3-pro/cover.jpg",
-    videoSrc: "https://framerusercontent.com/assets/dClAqDx2W8igpK6WWr06wAwO54.mp4",
-    youtubeId: "FzG4uDgje3M",
-    productSlug: "dji-rs-3-pro",
-    price: 89000
-  },
-  {
-    id: "showcase-4",
-    kind: "video",
-    title: {
-      en: "Blackmagic Cinema 6K Pro",
-      bn: "ব্ল্যাকম্যাজিক সিনেমা ৬কে প্রো"
-    },
-    category: "camera",
-    ratio: 4 / 5,
-    imageUrl: "/products/blackmagic-pocket-cinema-6k/cover.jpg",
-    videoSrc: "https://framerusercontent.com/assets/xAPtScp7qNyCLLiS5XDstx18.mp4",
-    youtubeId: "xqyUdNXb4tU",
-    productSlug: "blackmagic-pocket-cinema-6k",
-    price: 320000
-  },
-  {
-    id: "showcase-5",
-    kind: "image",
-    title: {
-      en: "Sony FE Prime & G-Master",
-      bn: "সোনি প্রাইম লেন্স কিট"
-    },
-    category: "camera",
-    ratio: 3 / 2,
-    imageUrl: "/products/sony-a7-iv/01.jpg",
-    productSlug: "sony-a7-iv",
-    price: 145000
-  },
-  {
-    id: "showcase-6",
-    kind: "image",
-    title: {
-      en: "Creator Studio Desk",
-      bn: "ক্রিয়েটর স্টুডিও ডেস্ক"
-    },
-    category: "studio",
-    ratio: 4 / 5,
-    imageUrl: "https://images.unsplash.com/photo-1527443224154-c4a3942d3acf?auto=format&fit=crop&w=900&q=80",
-    productSlug: "sennheiser-hd-660s",
-    price: 85000
-  },
-  {
-    id: "showcase-7",
-    kind: "image",
-    title: {
-      en: "DJI Pro Transmission",
-      bn: "ডিজেআই প্রো ট্রান্সমিশন"
-    },
-    category: "gear",
-    ratio: 1,
-    imageUrl: "/products/dji-rs-3-pro/01.jpg",
-    productSlug: "dji-rs-3-pro",
-    price: 58000
-  },
-  {
-    id: "showcase-8",
-    kind: "image",
-    title: {
-      en: "Precision Transducer Core",
-      bn: "প্রিসিশন ট্রান্সডিউসার"
-    },
-    category: "audio",
-    ratio: 3 / 4,
-    imageUrl: "/products/sennheiser-hd-660s/01.jpg",
-    productSlug: "sennheiser-hd-660s",
-    price: 46000
-  },
-  {
-    id: "showcase-9",
-    kind: "image",
-    title: {
-      en: "Custom Anamorphic Rig",
-      bn: "কাস্টম অ্যানামরফিক রিগ"
-    },
-    category: "camera",
-    ratio: 3 / 2,
-    imageUrl: "/products/blackmagic-pocket-cinema-6k/01.jpg",
-    productSlug: "blackmagic-pocket-cinema-6k",
-    price: 320000
-  },
-  {
-    id: "showcase-10",
-    kind: "image",
-    title: {
-      en: "Continuous Key Light",
-      bn: "স্টুডিও কি-লাইট"
-    },
-    category: "lighting",
-    ratio: 1,
-    imageUrl: "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?auto=format&fit=crop&w=900&q=80",
-    productSlug: "sony-a7-iv",
-    price: 42000
-  },
-  {
-    id: "showcase-11",
-    kind: "image",
-    title: {
-      en: "Broadcast Audio Hub",
-      bn: "ব্রডকাস্ট অডিও হাব"
-    },
-    category: "audio",
-    ratio: 4 / 5,
-    imageUrl: "https://images.unsplash.com/photo-1590602847861-f357a9332bbc?auto=format&fit=crop&w=900&q=80",
-    productSlug: "sennheiser-hd-660s",
-    price: 72000
-  },
-  {
-    id: "showcase-12",
-    kind: "image",
-    title: {
-      en: "Location Field Bag",
-      bn: "ফিল্ড ক্যামেরা ব্যাগ"
-    },
-    category: "gear",
-    ratio: 1,
-    imageUrl: "https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=900&q=80",
-    productSlug: "dji-rs-3-pro",
-    price: 35000
-  }
-];
-
-type PositionedItem = ShowcaseItem & {
+type PositionedItem = GalleryShowcaseItem & {
   x: number;
   y: number;
   width: number;
@@ -209,24 +29,141 @@ type DragState = {
   hasMoved: boolean;
 };
 
-type ExploreMediaMasonrySectionProps = {
-  products?: Product[];
+type ShowcaseCardMediaProps = {
+  item: GalleryShowcaseItem;
+  title: string;
+  isVideo: boolean;
+  isCurrentActiveVideo: boolean;
+  videoRefCallback: (el: HTMLVideoElement | null) => void;
 };
 
-export function ExploreMediaMasonrySection({ products: _products = [] }: ExploreMediaMasonrySectionProps) {
+function ShowcaseCardMedia({
+  item,
+  title,
+  isVideo,
+  isCurrentActiveVideo,
+  videoRefCallback,
+}: ShowcaseCardMediaProps) {
+  const [hasError, setHasError] = useState(false);
+  const [candidateIndex, setCandidateIndex] = useState(0);
+
+  const candidates = useMemo(() => {
+    const list: string[] = [];
+    const add = (url?: string) => {
+      if (!url) return;
+      const trimmed = url.trim();
+      if (!trimmed || trimmed.includes("/folders/")) return;
+      const c = getGoogleDriveImageCandidates(trimmed);
+      if (c.length > 0) list.push(...c);
+      else list.push(trimmed);
+    };
+
+    if (isVideo) {
+      if (item.posterUrl) add(item.posterUrl);
+    } else {
+      if (item.mediaUrl) add(item.mediaUrl);
+      if (item.posterUrl) add(item.posterUrl);
+    }
+    return Array.from(new Set(list));
+  }, [item, isVideo]);
+
+  useEffect(() => {
+    setCandidateIndex(0);
+    setHasError(false);
+  }, [candidates]);
+
+  const activeSrc = candidates[candidateIndex] || "";
+
+  const handleImageError = () => {
+    if (candidateIndex < candidates.length - 1) {
+      setCandidateIndex((prev) => prev + 1);
+    } else {
+      setHasError(true);
+    }
+  };
+
+  if (isVideo && item.mediaUrl && !hasError) {
+    return (
+      <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
+        <video
+          ref={videoRefCallback}
+          src={item.mediaUrl}
+          poster={activeSrc || undefined}
+          autoPlay
+          loop
+          muted={!isCurrentActiveVideo}
+          playsInline
+          preload="metadata"
+          className="showcase-media-content showcase-video-element"
+          onError={() => setHasError(true)}
+        />
+        <div className="showcase-card-scrim" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  if (hasError || !activeSrc) {
+    return (
+      <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
+        <div className="product-placeholder-wrap" aria-hidden="true">
+          <div className="product-placeholder-content">
+            <Package size={36} className="product-placeholder-icon" strokeWidth={1.5} />
+          </div>
+        </div>
+        <div className="showcase-card-scrim" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  return (
+    <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
+      <img
+        src={activeSrc}
+        alt={title}
+        className="showcase-media-content showcase-image-element"
+        style={{
+          width: "100%",
+          height: "100%",
+          objectFit: "cover",
+          objectPosition: "center",
+          display: "block",
+        }}
+        referrerPolicy="no-referrer"
+        loading="lazy"
+        draggable={false}
+        onError={handleImageError}
+      />
+      <div className="showcase-card-scrim" aria-hidden="true" />
+    </div>
+  );
+}
+
+type ExploreMediaMasonrySectionProps = {
+  products?: Product[];
+  showcaseItems?: GalleryShowcaseItem[];
+};
+
+export function ExploreMediaMasonrySection({
+  showcaseItems = [],
+}: ExploreMediaMasonrySectionProps) {
   const { language } = useLanguage();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState<number>(1312);
-  const [order, setOrder] = useState<string[]>(() => SHOWCASE_ITEMS.map((item) => item.id));
+  const [order, setOrder] = useState<string[]>(() => showcaseItems.map((item) => item.id));
   const [dragState, setDragState] = useState<DragState | null>(null);
-  
+
+  // Sync order when showcaseItems change
+  useEffect(() => {
+    setOrder(showcaseItems.map((item) => item.id));
+  }, [showcaseItems]);
+
   // Track active in-card video state: which card is unmuted/playing
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
   const [isPlayingMap, setIsPlayingMap] = useState<Record<string, boolean>>({});
   const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
 
   const lastSwapTimeRef = useRef<number>(0);
-  const itemMap = useMemo(() => new Map(SHOWCASE_ITEMS.map((item) => [item.id, item])), []);
+  const itemMap = useMemo(() => new Map(showcaseItems.map((item) => [item.id, item])), [showcaseItems]);
 
   // Measure container width
   useEffect(() => {
@@ -262,7 +199,7 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
 
   // Compute masonry layout positions
   const { layoutItems, totalHeight } = useMemo(() => {
-    if (containerWidth <= 0) {
+    if (containerWidth <= 0 || showcaseItems.length === 0) {
       return { layoutItems: [], totalHeight: 0 };
     }
 
@@ -282,7 +219,8 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
         }
       }
 
-      const h = Math.round(colW / item.ratio);
+      const ratio = item.aspectRatio > 0 ? item.aspectRatio : 0.8;
+      const h = Math.round(colW / ratio);
       const x = minCol * (colW + gap);
       const y = colHeights[minCol];
 
@@ -292,7 +230,7 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
         y,
         width: colW,
         height: h,
-        colIndex: minCol
+        colIndex: minCol,
       });
 
       colHeights[minCol] += h + gap;
@@ -301,12 +239,12 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
     const maxH = Math.max(...colHeights);
     return {
       layoutItems: positioned,
-      totalHeight: Math.max(0, maxH - gap)
+      totalHeight: Math.max(0, maxH - gap),
     };
-  }, [order, itemMap, containerWidth, cols, gap]);
+  }, [order, itemMap, containerWidth, cols, gap, showcaseItems.length]);
 
   // Toggle in-card video playback with audio
-  const toggleInCardVideo = useCallback((item: ShowcaseItem) => {
+  const toggleInCardVideo = useCallback((item: GalleryShowcaseItem) => {
     const videoEl = videoRefs.current.get(item.id);
     if (!videoEl) return;
 
@@ -357,7 +295,7 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
         currentY: item.y,
         pointerId: e.pointerId,
         tilt: 0,
-        hasMoved: false
+        hasMoved: false,
       });
     },
     []
@@ -371,7 +309,7 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
       const dy = e.clientY - dragState.startY;
       const distSq = dx * dx + dy * dy;
 
-      const hasMoved = dragState.hasMoved || distSq > 25; // 5px threshold
+      const hasMoved = dragState.hasMoved || distSq > 25;
       const newX = dragState.origX + dx;
       const newY = dragState.origY + dy;
       const tilt = Math.max(-4, Math.min(4, dx * 0.08));
@@ -383,7 +321,7 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
               currentX: newX,
               currentY: newY,
               tilt,
-              hasMoved
+              hasMoved,
             }
           : null
       );
@@ -450,13 +388,18 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
 
       // If clicked without dragging
       if (!moved) {
-        if (item.kind === "video") {
+        if (item.mediaType === "video") {
           toggleInCardVideo(item);
         }
       }
     },
     [dragState, toggleInCardVideo]
   );
+
+  // If no showcase items exist in sheet, do not render this section at all
+  if (showcaseItems.length === 0) {
+    return null;
+  }
 
   return (
     <section className="explore-section-block explore-draggable-showcase-section" aria-labelledby="showcase-heading">
@@ -493,10 +436,10 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
           const currentPosX = isHeld && dragState ? dragState.currentX : item.x;
           const currentPosY = isHeld && dragState ? dragState.currentY : item.y;
           const tilt = isHeld && dragState ? dragState.tilt : 0;
-          const isVideo = item.kind === "video";
+          const isVideo = item.mediaType === "video";
           const isCurrentActiveVideo = activeVideoId === item.id;
           const isPlaying = isPlayingMap[item.id] ?? true;
-          const title = item.title[language] ?? item.title.en;
+          const title = item.title;
 
           return (
             <div
@@ -509,7 +452,7 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
                 zIndex: isHeld ? 50 : 1,
                 transition: isHeld
                   ? "box-shadow 150ms ease, opacity 150ms ease"
-                  : "transform 380ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease, width 200ms ease, height 200ms ease"
+                  : "transform 380ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease, width 200ms ease, height 200ms ease",
               }}
               onPointerDown={(e) => handlePointerDown(e, item)}
               onPointerMove={handlePointerMove}
@@ -528,43 +471,25 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
               }}
             >
               {/* Media Visual Layer */}
-              <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
-                {isVideo && item.videoSrc ? (
-                  <video
-                    ref={(el) => {
-                      if (el) videoRefs.current.set(item.id, el);
-                      else videoRefs.current.delete(item.id);
-                    }}
-                    src={item.videoSrc}
-                    poster={item.imageUrl}
-                    autoPlay
-                    loop
-                    muted={!isCurrentActiveVideo}
-                    playsInline
-                    preload="metadata"
-                    className="showcase-media-content showcase-video-element"
-                  />
-                ) : (
-                  <Image
-                    src={item.imageUrl}
-                    alt={title}
-                    fill
-                    unoptimized
-                    sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-                    className="showcase-media-content showcase-image-element"
-                    loading="lazy"
-                    draggable={false}
-                  />
-                )}
-                <div className="showcase-card-scrim" aria-hidden="true" />
-              </div>
+              <ShowcaseCardMedia
+                item={item}
+                title={title}
+                isVideo={isVideo}
+                isCurrentActiveVideo={isCurrentActiveVideo}
+                videoRefCallback={(el) => {
+                  if (el) videoRefs.current.set(item.id, el);
+                  else videoRefs.current.delete(item.id);
+                }}
+              />
 
-              {/* TOP HEADER: ONLY Title in Top Center of Card */}
-              <div className="showcase-card-top-bar">
-                <span className="showcase-card-top-title" title={title}>
-                  {title}
-                </span>
-              </div>
+              {/* TOP HEADER: Title in Top Center of Card */}
+              {title ? (
+                <div className="showcase-card-top-bar">
+                  <span className="showcase-card-top-title" title={title}>
+                    {title}
+                  </span>
+                </div>
+              ) : null}
 
               {/* BOTTOM RIGHT ONLY: Round Circular Action Icon for Details or Video Play/Pause */}
               <div className="showcase-card-bottom-bar">
@@ -587,9 +512,9 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
                       <Play size={15} fill="currentColor" />
                     )}
                   </button>
-                ) : item.productSlug ? (
+                ) : item.slug ? (
                   <Link
-                    href={`/products/${item.productSlug}`}
+                    href={`/products/${item.slug}`}
                     className="showcase-action-icon-btn details-link-btn"
                     aria-label={`View details for ${title}`}
                     title="View Product Details"
@@ -610,3 +535,4 @@ export function ExploreMediaMasonrySection({ products: _products = [] }: Explore
     </section>
   );
 }
+

@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import { useEffect, useMemo, useState } from "react";
 import type { Product } from "@/lib/product-schema";
@@ -49,19 +49,17 @@ export function ProductArtwork({
     if (imageSrc) {
       addUrl(imageSrc);
     } else if (imageRole === "gallery" || imageRole === "thumbnail") {
-      if (product.gallery_images && product.gallery_images[viewIndex]) {
-        addUrl(product.gallery_images[viewIndex]);
-      } else if (product.cover_image) {
-        addUrl(product.cover_image);
-      } else if (product.main_image) {
-        addUrl(product.main_image);
+      if (product.gallery_images_url && product.gallery_images_url[viewIndex]) {
+        addUrl(product.gallery_images_url[viewIndex]);
+      } else if (product.poster_image_url) {
+        addUrl(product.poster_image_url);
       }
     } else {
-      // Default / cover: prioritize cover_image, fallback to main_image
-      if (product.cover_image) {
-        addUrl(product.cover_image);
-      } else if (product.main_image) {
-        addUrl(product.main_image);
+      // Default / cover: prioritize poster_image_url, fallback to first gallery image
+      if (product.poster_image_url) {
+        addUrl(product.poster_image_url);
+      } else if (product.gallery_images_url && product.gallery_images_url.length > 0) {
+        addUrl(product.gallery_images_url[0]);
       }
     }
 
@@ -137,3 +135,4 @@ export function ProductArtwork({
     </div>
   );
 }
+

@@ -15,6 +15,8 @@ export const productSchema = z.object({
   kind: z.string().default("camera"),
   short: z.string().default(""),
   featured: z.boolean().default(false),
+  poster_image_url: z.string().optional(),
+  gallery_images_url: z.array(z.string()).default([]),
   cover_image: z.string().optional(),
   main_image: z.string().default(""),
   gallery_images: z.array(z.string()).default([]),
@@ -32,3 +34,4 @@ export const productsSchema = z.array(productSchema);
 
 export type StockStatus = z.infer<typeof stockStatusSchema>;
 export type Product = z.infer<typeof productSchema>;
+
