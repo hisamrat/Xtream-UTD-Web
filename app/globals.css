@@ -1,4 +1,4 @@
-﻿:root {
+:root {
   color-scheme: dark;
   --canvas-950: #090a0d;
   --canvas-900: #0e0f12;
@@ -3906,11 +3906,8 @@ grid-template-rows: minmax(0, 1fr) auto;
 align-items: stretch;
 gap: 8px;
 overflow: hidden;
-background:
-radial-gradient(circle at 50% 10%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 16%, transparent), transparent 46%),
-radial-gradient(circle at 50% 74%, rgb(255 255 255 / 7%), transparent 44%),
-linear-gradient(150deg, rgb(29 35 44 / 99%), rgb(12 16 22 / 100%));
-color: #f7f1e8;
+background: linear-gradient(150deg, rgb(22 28 38 / 98%), rgb(9 12 18 / 100%));
+  color: #f7f1e8;
 box-shadow:
 0 30px 86px rgb(0 0 0 / 58%),
 inset 0 1px 0 rgb(255 255 255 / 8%);
@@ -3929,9 +3926,7 @@ min-height: var(--world-card-height, 82px);
 grid-template-rows: 1fr;
 gap: 0;
 border-radius: 0;
-background:
-radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 20%, transparent), transparent 52%),
-linear-gradient(150deg, rgb(28 34 43 / 98%), rgb(13 16 21 / 100%));
+background: linear-gradient(150deg, rgb(20 25 35 / 98%), rgb(9 12 18 / 100%));
 }
 
 .world-card.size-large {
@@ -3947,10 +3942,7 @@ min-height: var(--world-card-height, 284px);
 border: none;
 border-radius: 0;
 gap: 12px;
-background:
-radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 24%, transparent), transparent 46%),
-radial-gradient(circle at 50% 78%, rgb(255 255 255 / 8%), transparent 45%),
-linear-gradient(155deg, rgb(34 42 54 / 100%), rgb(11 16 24 / 100%));
+background: linear-gradient(155deg, rgb(24 31 43 / 98%), rgb(9 13 20 / 100%));
 box-shadow:
 0 38px 120px rgb(0 0 0 / 72%),
 0 0 70px color-mix(in srgb, var(--world-card-accent, var(--accent)) 22%, transparent),
@@ -3978,16 +3970,14 @@ transform: translateZ(32px) scale(1.06);
 }
 
 .world-card .world-product-media {
-width: 100%;
-min-height: 0;
-aspect-ratio: var(--world-card-media-ratio, 1.14);
-display: grid;
-place-items: center;
-border-radius: 0;
-background:
-radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 12%, transparent), transparent 58%),
-radial-gradient(circle at 50% 54%, rgb(255 255 255 / 8%), transparent 56%);
-box-shadow: none;
+  width: 100%;
+  min-height: 0;
+  aspect-ratio: var(--world-card-media-ratio, 1.14);
+  display: grid;
+  place-items: center;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
 }
 
 .world-card.size-small .world-product-media {
@@ -4132,7 +4122,6 @@ display: none;
   min-height: 380px;
   background:
     linear-gradient(180deg, rgba(8, 10, 16, 0.78) 0%, rgba(8, 10, 16, 0.2) 28%, rgba(8, 10, 16, 0.2) 72%, rgba(8, 10, 16, 0.88) 100%),
-    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--preview-accent, var(--accent)) 20%, transparent), transparent 70%),
     linear-gradient(165deg, rgba(22, 28, 42, 0.98) 0%, rgba(10, 13, 20, 1) 100%);
   border-radius: 0 !important;
   border: 1px solid rgba(255, 255, 255, 0.15);
@@ -4149,7 +4138,6 @@ display: none;
 [data-theme="light"] .world-center-preview-card {
   background:
     linear-gradient(180deg, rgba(255, 255, 255, 0.85) 0%, rgba(255, 255, 255, 0.3) 28%, rgba(255, 255, 255, 0.3) 72%, rgba(255, 255, 255, 0.9) 100%),
-    radial-gradient(circle at 50% 25%, color-mix(in srgb, var(--preview-accent, var(--accent)) 10%, transparent), transparent 70%),
     #ffffff;
   border: 1px solid rgba(0, 0, 0, 0.1);
   box-shadow:
@@ -6373,10 +6361,7 @@ pointer-events: none;
   border-radius: 0;
   backface-visibility: hidden;
   will-change: transform, opacity;
-  background:
-    radial-gradient(circle at 50% 16%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 18%, transparent), transparent 46%),
-    radial-gradient(circle at 50% 82%, rgb(255 255 255 / 7%), transparent 44%),
-    linear-gradient(155deg, rgb(31 38 49 / 96%), rgb(12 16 22 / 98%));
+  background: linear-gradient(150deg, rgb(22 28 38 / 98%), rgb(9 12 18 / 100%));
   box-shadow:
     rgba(17, 17, 26, 0.1) 0px 4px 16px,
     rgba(17, 17, 26, 0.05) 0px 8px 24px,
@@ -6429,9 +6414,7 @@ pointer-events: none;
   border: none !important;
   outline: none !important;
   border-radius: 0;
-  background:
-    radial-gradient(circle at 50% 48%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 24%, transparent), transparent 54%),
-    linear-gradient(150deg, rgb(29 36 45 / 94%), rgb(13 17 23 / 98%));
+  background: linear-gradient(150deg, rgb(20 25 35 / 98%), rgb(9 12 18 / 100%));
   contain: strict;
   display: flex;
   align-items: center;
@@ -6460,10 +6443,7 @@ pointer-events: none;
 .reference-world-card.kind-hero {
   border: none !important;
   border-radius: 0;
-  background:
-    radial-gradient(circle at 50% 20%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 28%, transparent), transparent 48%),
-    radial-gradient(circle at 50% 86%, rgb(255 255 255 / 8%), transparent 45%),
-    linear-gradient(155deg, rgb(36 45 58 / 99%), rgb(10 16 25 / 100%));
+  background: linear-gradient(155deg, rgb(24 31 43 / 98%), rgb(9 13 20 / 100%));
   box-shadow:
     0 40px 120px rgb(0 0 0 / 78%),
     0 0 82px color-mix(in srgb, var(--world-card-accent, var(--accent)) 28%, transparent),
@@ -6510,9 +6490,7 @@ pointer-events: none;
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  background:
-    radial-gradient(circle at 50% 40%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 14%, transparent), transparent 58%),
-    radial-gradient(circle at 50% 54%, rgb(255 255 255 / 7%), transparent 57%);
+  background: transparent;
 }
 
 .reference-world-card.kind-mini .world-product-media {
@@ -6870,10 +6848,7 @@ animation: none;
 grid-template-rows: minmax(0, 1fr) auto;
 gap: 9px;
 border-color: rgb(255 255 255 / 8%);
-background:
-radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 15%, transparent), transparent 47%),
-radial-gradient(circle at 50% 92%, rgb(255 255 255 / 7%), transparent 48%),
-linear-gradient(150deg, rgb(29 36 47 / 96%), rgb(12 17 23 / 99%));
+background: linear-gradient(150deg, rgb(22 28 38 / 98%), rgb(9 12 18 / 100%));
 box-shadow:
 0 34px 96px rgb(0 0 0 / 70%),
 0 0 34px color-mix(in srgb, var(--world-card-accent, var(--accent)) 11%, transparent),
@@ -6889,7 +6864,7 @@ border-radius: inherit;
 pointer-events: none;
 background:
 linear-gradient(180deg, rgb(255 255 255 / 7%), transparent 30%),
-radial-gradient(circle at 50% 35%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 18%, transparent), transparent 44%);
+transparent;
 opacity: 0.88;
 }
 
@@ -6916,9 +6891,7 @@ opacity: 0.88;
   position: relative;
   z-index: 1;
   align-self: stretch;
-  background:
-    radial-gradient(circle at 50% 44%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 18%, transparent), transparent 47%),
-    radial-gradient(circle at 50% 56%, rgb(255 255 255 / 6%), transparent 56%);
+  background: transparent;
 }
 
 .reference-world-card .world-product-media::after {
@@ -7080,9 +7053,7 @@ transition-duration: 40ms;
   border-radius: 0;
   backface-visibility: hidden;
   will-change: transform, opacity;
-  background:
-    radial-gradient(circle at 50% 28%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 18%, transparent), transparent 47%),
-    linear-gradient(150deg, rgb(20 25 35 / 96%), rgb(9 13 20 / 99%));
+  background: linear-gradient(150deg, rgb(20 25 35 / 98%), rgb(9 12 18 / 100%));
   transform:
     translate3d(-50%, -50%, var(--world-card-depth, 0px))
     rotate(var(--world-card-rotation, 0deg))
@@ -7096,9 +7067,7 @@ transition-duration: 40ms;
   border: none !important;
   outline: none !important;
   border-radius: 0;
-  background:
-    radial-gradient(circle at 50% 36%, color-mix(in srgb, var(--world-card-accent, #3385ff) 20%, transparent), transparent 45%),
-    linear-gradient(150deg, rgb(24 31 43 / 96%), rgb(8 14 23 / 99%));
+  background: linear-gradient(150deg, rgb(24 31 43 / 98%), rgb(8 14 23 / 100%));
   box-shadow:
     0 34px 96px rgb(0 0 0 / 75%),
     inset 0 1px 0 rgb(255 255 255 / 10%),
@@ -7113,9 +7082,7 @@ transition-duration: 40ms;
   box-shadow:
     0 4px 14px rgb(0 0 0 / 45%),
     inset 0 1px 0 rgb(255 255 255 / 8%);
-  background:
-    radial-gradient(circle at 50% 47%, color-mix(in srgb, var(--world-card-accent, var(--accent)) 28%, transparent), transparent 52%),
-    linear-gradient(145deg, rgb(20 25 35 / 96%), rgb(8 12 18 / 99%));
+  background: linear-gradient(145deg, rgb(20 25 35 / 98%), rgb(8 12 18 / 100%));
   contain: strict !important;
   box-shadow: 0 4px 12px rgb(0 0 0 / 45%) !important;
   background: linear-gradient(145deg, rgb(20 25 35 / 96%), rgb(8 12 18 / 99%)) !important;
@@ -10531,9 +10498,7 @@ scale(var(--world-card-scale, 1));
   pointer-events: auto;
 
   /* Dark theme 3D scale card */
-  background:
-    radial-gradient(circle at 50% 30%, color-mix(in srgb, var(--card-accent, #3385ff) 22%, transparent), transparent 70%),
-    linear-gradient(165deg, rgba(24, 30, 44, 0.98) 0%, rgba(11, 15, 24, 1) 100%);
+  background: linear-gradient(165deg, rgba(22, 28, 40, 0.98) 0%, rgba(10, 14, 22, 1) 100%);
   box-shadow:
     0 24px 60px -10px rgba(0, 0, 0, 0.75),
     0 0 35px color-mix(in srgb, var(--card-accent, #3385ff) 16%, transparent);
@@ -10636,9 +10601,11 @@ scale(var(--world-card-scale, 1));
 /* Top Title (Outside / Above Card) */
 .carousel-focus-top {
   position: absolute;
-  bottom: calc(100% + 20px);
-  left: -80px;
-  right: -80px;
+  bottom: calc(100% + 14px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: min(90vw, 420px);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10770,19 +10737,22 @@ scale(var(--world-card-scale, 1));
   }
 
   .carousel-focus-top {
-    bottom: calc(100% + 14px);
+    bottom: calc(100% + 10px);
+    max-width: min(85vw, 320px);
   }
 
   .carousel-focus-title {
-    font-size: 14px;
+    font-size: 13px;
+    font-weight: 700;
   }
 
   .carousel-focus-bottom {
-    top: calc(100% + 14px);
+    top: calc(100% + 10px);
   }
 
   .carousel-focus-category {
-    font-size: 10.5px;
+    font-size: 10px;
+    letter-spacing: 0.12em;
   }
 }
 
@@ -12341,53 +12311,43 @@ html[data-theme="light"] .catalogue-results-count {
   }
 }
 
-/* Floating Mobile Scroll Down Shortcut Button */
-.explore-scroll-down-btn {
-  display: none;
+/* Scroll Indicator Controls for Explore Page (Matches Home Page Micro-Animation & Theme) */
+.explore-scroll-controls {
+  position: fixed;
+  z-index: 46;
+  left: 50%;
+  bottom: max(84px, calc(env(safe-area-inset-bottom) + 84px));
+  transform: translateX(-50%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-@media (max-width: 699px) {
-  .explore-scroll-down-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    position: absolute;
-    bottom: 14px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 35;
-    padding: 7px 16px;
-    border-radius: 999px;
-    border: 1px solid rgba(255, 255, 255, 0.24);
-    background: rgba(10, 14, 24, 0.82);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
-    color: #f5f1e8;
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    cursor: pointer;
-    pointer-events: auto;
-    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
-    transition: transform 180ms ease, background 180ms ease;
-    touch-action: manipulation;
-  }
-
-  .explore-scroll-down-btn:active {
-    transform: translateX(-50%) scale(0.95);
-  }
-
-  .scroll-down-arrow-anim {
-    animation: scrollBounce 1.5s ease-in-out infinite;
-  }
-
-  @keyframes scrollBounce {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(3px); }
-  }
+.explore-scroll-controls.is-scrolled-hidden {
+  opacity: 0 !important;
+  transform: translateX(-50%) translateY(16px) !important;
+  pointer-events: none !important;
 }
 
+.explore-scroll-controls .explore-scroll-btn {
+  pointer-events: auto;
+  cursor: pointer;
+}
 
+body:has(.explore-main) .world-set-count,
+body:has(.explore-main) .world-alternating-indicator {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(16, 20, 27, 0.85);
+  color: rgba(247, 241, 232, 0.9);
+}
 
+[data-theme="light"] body:has(.explore-main) .world-set-count,
+[data-theme="light"] body:has(.explore-main) .world-alternating-indicator {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #1a1d24;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}
