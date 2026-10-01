@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight } from "lucide-react";
+import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
 import { ProductArtwork } from "@/components/products/ProductArtwork";
 import { useLanguage } from "@/components/site/LanguageProvider";
 import { HomeFeaturesSection } from "@/components/home/HomeFeaturesSection";
@@ -30,7 +30,7 @@ const dragThreshold = 7;
 
 export function ExploreClient({ products, showcaseItems = [] }: ExploreClientProps) {
   const router = useRouter();
-  const { t, tCategory } = useLanguage();
+  const { language, t, tCategory } = useLanguage();
   const [mounted, setMounted] = useState(false);
   const [viewportSize, setViewportSize] = useState<ViewportSize>({ width: 1440, height: 900 });
   const [isPaused, setIsPaused] = useState(false);
@@ -129,6 +129,15 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
     lastUserInteractionTimeRef.current = Date.now();
     lastInputTimeRef.current = Date.now();
     cameraSlotTargetRef.current += 1.0;
+  }, []);
+
+  const scrollToNextSection = useCallback(() => {
+    const el = document.querySelector(".explore-extra-sections");
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollBy({ top: window.innerHeight * 0.75, behavior: "smooth" });
+    }
   }, []);
 
   // Listen to navigation events from BottomSwitch dock
@@ -262,6 +271,9 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
   // ──────────────────────────────────────────────
   const onMouseDown = useCallback((e: React.MouseEvent<HTMLElement>) => {
     if (e.button !== 0) return;
+    if (typeof window !== "undefined" && window.matchMedia("(pointer: coarse)").matches) {
+      return; // On mobile touch devices, allow free native vertical scrolling
+    }
     lastUserInteractionTimeRef.current = Date.now();
     mouseDragRef.current = {
       active: true,
@@ -311,7 +323,7 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
   if (!mounted) {
     return (
       <main className="explore-main" aria-label="Loading explore showcase">
-        <section className="explore-carousel-section world-shell reference-showcase is-in-carousel is-loading" aria-label="3D Product Explore Carousel">
+        <section className="explore-carousel-section is-in-carousel is-loading" aria-label="3D Product Explore Carousel">
           <div className="scale-carousel-viewport" style={{ perspective: `${CAROUSEL_PERSPECTIVE}px`, perspectiveOrigin: "50% 50%" }}>
             <div className="scale-carousel-bg" aria-hidden="true">
               <div className="bg-blob-a" />
@@ -335,7 +347,7 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
       {/* 1. 3D Scale Carousel Section (Explore)                        */}
       {/* ------------------------------------------------------------- */}
       <section
-        className={`explore-carousel-section world-shell reference-showcase is-in-carousel ${isReady ? "is-ready" : "is-loading"}`}
+        className={`explore-carousel-section is-in-carousel ${isReady ? "is-ready" : "is-loading"}`}
         aria-label="3D Product Explore Carousel"
         onMouseDown={onMouseDown}
         onMouseMove={onMouseMove}
@@ -419,18 +431,35 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
         <button
           type="button"
           className="carousel-arrow-btn carousel-arrow-prev"
-          onClick={handlePrev}
+          onClick={(e) => {
+            e.stopPropagation();
+            handlePrev();
+          }}
           aria-label="Previous product"
         >
-          <ChevronLeft size={22} strokeWidth={2.5} />
+          <ChevronLeft size={24} strokeWidth={2.5} />
         </button>
         <button
           type="button"
           className="carousel-arrow-btn carousel-arrow-next"
-          onClick={handleNext}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleNext();
+          }}
           aria-label="Next product"
         >
-          <ChevronRight size={22} strokeWidth={2.5} />
+          <ChevronRight size={24} strokeWidth={2.5} />
+        </button>
+
+        {/* Floating Mobile Scroll Down Shortcut Button */}
+        <button
+          type="button"
+          className="explore-scroll-down-btn"
+          onClick={scrollToNextSection}
+          aria-label="Scroll down to explore all sections"
+        >
+          <span>{language === "bn" ? "নিচে দেখুন" : "SCROLL DOWN"}</span>
+          <ChevronDown size={14} className="scroll-down-arrow-anim" />
         </button>
 
         {/* Instructions HUD (desktop only) */}
@@ -453,3 +482,6 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
     </main>
   );
 }
+
+
+

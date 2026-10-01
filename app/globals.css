@@ -1,4 +1,4 @@
-:root {
+﻿:root {
   color-scheme: dark;
   --canvas-950: #090a0d;
   --canvas-900: #0e0f12;
@@ -6782,7 +6782,7 @@ inset 0 1px 0 rgb(255 255 255 / 7%);
    during fly-in (ui-hidden), then fade in smoothly at the end (ui-ready).
    ============================================================ */
 
-/* Hidden during fly-in — world-instructions and set-controls are children of world-shell */
+/* Hidden during fly-in â€” world-instructions and set-controls are children of world-shell */
 body:has(.home-main) .world-shell.ui-hidden .world-instructions,
 body:has(.home-main) .world-shell.ui-hidden .world-set-controls {
   opacity: 0;
@@ -10463,7 +10463,9 @@ scale(var(--world-card-scale, 1));
 .scale-carousel-viewport {
   position: absolute;
   inset: 0;
-  overflow: hidden;
+  overflow-x: clip;
+  overflow-y: visible;
+  touch-action: pan-y !important;
   perspective: 1200px;
   perspective-origin: 50% 50%;
   pointer-events: none;
@@ -10822,8 +10824,9 @@ scale(var(--world-card-scale, 1));
   width: 100%;
   height: 100vh;
   min-height: 100vh;
-  overflow: hidden;
-  touch-action: pan-y;
+  overflow-x: clip;
+  overflow-y: visible;
+  touch-action: pan-y !important;
   user-select: none;
   opacity: 0;
   transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -12291,28 +12294,43 @@ html[data-theme="light"] .catalogue-results-count {
 }
 
 
-/* ─────────────────────────────────────────────────
+/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
    Carousel Arrow Buttons (Explore Page)
-   ───────────────────────────────────────────────── */
+   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
 .carousel-arrow-btn {
   position: absolute;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 30;
+  z-index: 9999 !important;
+  pointer-events: auto !important;
+  touch-action: manipulation !important;
   display: flex;
   align-items: center;
   justify-content: center;
-  width: 44px;
-  height: 44px;
+  width: 48px;
+  height: 48px;
   border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.18);
-  background: rgba(10, 12, 20, 0.62);
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  border: 1.5px solid rgba(255,255,255,0.28);
+  background: rgba(10, 12, 20, 0.82);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   color: #fff;
   cursor: pointer;
   transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
   outline: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+}
+
+/* Ensure mobile scroll works unimpeded across the entire explore carousel */
+.explore-carousel-section,
+.explore-carousel-section *,
+.scale-carousel-viewport,
+.scale-carousel-plates-container,
+.scale-carousel-card-slot,
+.scale-carousel-card,
+.scale-carousel-media,
+.scale-carousel-art-wrap {
+  touch-action: pan-y !important;
 }
 
 .carousel-arrow-btn:hover,
@@ -12343,3 +12361,78 @@ html[data-theme="light"] .catalogue-results-count {
   .carousel-arrow-prev { left: 36px; }
   .carousel-arrow-next { right: 36px; }
 }
+
+
+/* Explore Carousel Mobile Refinements */
+.explore-carousel-section.is-in-carousel .world-instructions {
+  opacity: 1 !important;
+  pointer-events: none;
+}
+
+@media (max-width: 699px) {
+  .explore-carousel-section {
+    height: 78vh !important;
+    min-height: 480px !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    touch-action: pan-y !important;
+  }
+  .scale-carousel-viewport {
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    touch-action: pan-y !important;
+  }
+  .world-instructions {
+    display: none !important;
+  }
+}
+
+/* Floating Mobile Scroll Down Shortcut Button */
+.explore-scroll-down-btn {
+  display: none;
+}
+
+@media (max-width: 699px) {
+  .explore-scroll-down-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    position: absolute;
+    bottom: 14px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 35;
+    padding: 7px 16px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(10, 14, 24, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    color: #f5f1e8;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    cursor: pointer;
+    pointer-events: auto;
+    box-shadow: 0 4px 18px rgba(0, 0, 0, 0.6);
+    transition: transform 180ms ease, background 180ms ease;
+    touch-action: manipulation;
+  }
+
+  .explore-scroll-down-btn:active {
+    transform: translateX(-50%) scale(0.95);
+  }
+
+  .scroll-down-arrow-anim {
+    animation: scrollBounce 1.5s ease-in-out infinite;
+  }
+
+  @keyframes scrollBounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(3px); }
+  }
+}
+
+

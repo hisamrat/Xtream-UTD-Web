@@ -28,7 +28,6 @@ export function ProductArtwork({
   const accent = product.accent || "#3385FF";
   const [candidateIndex, setCandidateIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   // Resolve list of possible image URLs for Google Drive or direct links
   const candidateUrls = useMemo(() => {
@@ -82,7 +81,6 @@ export function ProductArtwork({
   useEffect(() => {
     setCandidateIndex(0);
     setHasError(false);
-    setIsLoaded(false);
   }, [candidateUrls]);
 
   const activeSrc = candidateUrls[candidateIndex];
@@ -95,11 +93,26 @@ export function ProductArtwork({
     }
   };
 
-  const handleImageLoad = () => {
-    setIsLoaded(true);
-  };
+  const showPlaceholder = hasError || !activeSrc;
 
-  const showPlaceholderOnly = hasError || !activeSrc;
+  // If there's no valid image or all candidate URLs failed, show the clean Package placeholder
+  if (showPlaceholder) {
+    return (
+      <div
+        className={`product-placeholder-wrap ${compact ? "is-compact" : ""} ${className}`}
+        style={{ "--art-accent": accent } as CSSProperties}
+        aria-hidden="true"
+      >
+        <div className="product-placeholder-content">
+          <Package
+            size={compact ? 22 : isThumbnail ? 24 : 40}
+            className="product-placeholder-icon"
+            strokeWidth={1.5}
+          />
+        </div>
+      </div>
+    );
+  }
 
   // Cards and thumbnails use "cover" for edge-to-edge full bleed.
   // Main gallery viewer in details page uses "contain" to prevent cropping detailed product shots.
@@ -111,54 +124,27 @@ export function ProductArtwork({
       className={`product-art ${compact ? "product-art-compact" : "product-art-full"} ${
         isThumbnail ? "product-art-thumb" : ""
       } ${className}`}
-      style={{ "--art-accent": accent, position: "relative", width: "100%", height: "100%" } as CSSProperties}
+      style={{ "--art-accent": accent, width: "100%", height: "100%" } as CSSProperties}
     >
-      {/* 
-        Common placeholder:
-        Visible while the image is loading/downloading (or if image fails/is missing).
-        Once image is loaded, it covers this completely.
-      */}
-      {(!isLoaded || showPlaceholderOnly) ? (
-        <div
-          className={`product-placeholder-wrap ${compact ? "is-compact" : ""}`}
-          style={{ "--art-accent": accent, position: "absolute", inset: 0, zIndex: 1 } as CSSProperties}
-          aria-hidden="true"
-        >
-          <div className="product-placeholder-content">
-            <Package
-              size={compact ? 22 : isThumbnail ? 24 : 40}
-              className="product-placeholder-icon"
-              strokeWidth={1.5}
-            />
-          </div>
-        </div>
-      ) : null}
-
-      {/* Real product image */}
-      {!showPlaceholderOnly ? (
-        <div
-          className={`product-real-image-wrap ${compact ? "is-compact" : ""} role-${imageRole}`}
-          style={{ position: "absolute", inset: 0, zIndex: 2 }}
-        >
-          <img
-            key={activeSrc}
-            src={activeSrc}
-            alt={product.title}
-            className={`product-real-image ${isThumbnail ? "is-thumb" : ""}`}
-            style={{
-              objectFit: fitMode,
-              objectPosition: "center",
-              width: "100%",
-              height: "100%",
-              display: "block",
-            }}
-            referrerPolicy="no-referrer"
-            loading="eager"
-            onLoad={handleImageLoad}
-            onError={handleImageError}
-          />
-        </div>
-      ) : null}
+      <div className={`product-real-image-wrap ${compact ? "is-compact" : ""} role-${imageRole}`}>
+        <img
+          key={activeSrc}
+          src={activeSrc}
+          alt={product.title}
+          className={`product-real-image ${isThumbnail ? "is-thumb" : ""}`}
+          style={{
+            objectFit: fitMode,
+            objectPosition: "center",
+            width: "100%",
+            height: "100%",
+            display: "block",
+          }}
+          referrerPolicy="no-referrer"
+          loading="eager"
+          decoding="async"
+          onError={handleImageError}
+        />
+      </div>
     </div>
   );
 }
