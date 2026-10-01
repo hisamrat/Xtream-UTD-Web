@@ -12294,31 +12294,15 @@ html[data-theme="light"] .catalogue-results-count {
 }
 
 
-/* â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-   Carousel Arrow Buttons (Explore Page)
-   â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€ */
-.carousel-arrow-btn {
-  position: absolute;
+/* Ensure explore instructions stay anchored strictly inside top carousel section (scrolls off with top section) */
+.explore-carousel-section .world-instructions,
+.explore-instructions {
+  position: absolute !important;
   top: 50%;
   transform: translateY(-50%);
-  z-index: 9999 !important;
-  pointer-events: auto !important;
-  touch-action: manipulation !important;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
-  border: 1.5px solid rgba(255,255,255,0.28);
-  background: rgba(10, 12, 20, 0.82);
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  color: #fff;
-  cursor: pointer;
-  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
-  outline: none;
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.6);
+  right: var(--page-x);
+  z-index: 15;
+  pointer-events: none;
 }
 
 /* Ensure mobile scroll works unimpeded across the entire explore carousel */
@@ -12332,36 +12316,6 @@ html[data-theme="light"] .catalogue-results-count {
 .scale-carousel-art-wrap {
   touch-action: pan-y !important;
 }
-
-.carousel-arrow-btn:hover,
-.carousel-arrow-btn:focus-visible {
-  background: rgba(30, 36, 60, 0.85);
-  border-color: rgba(255,255,255,0.42);
-  transform: translateY(-50%) scale(1.08);
-}
-
-.carousel-arrow-btn:active {
-  transform: translateY(-50%) scale(0.95);
-}
-
-.carousel-arrow-prev {
-  left: 14px;
-}
-
-.carousel-arrow-next {
-  right: 14px;
-}
-
-@media (min-width: 640px) {
-  .carousel-arrow-prev { left: 24px; }
-  .carousel-arrow-next { right: 24px; }
-}
-
-@media (min-width: 1024px) {
-  .carousel-arrow-prev { left: 36px; }
-  .carousel-arrow-next { right: 36px; }
-}
-
 
 /* Explore Carousel Mobile Refinements */
 .explore-carousel-section.is-in-carousel .world-instructions {
@@ -12434,5 +12388,6 @@ html[data-theme="light"] .catalogue-results-count {
     50% { transform: translateY(3px); }
   }
 }
+
 
 

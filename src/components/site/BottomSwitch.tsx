@@ -1,24 +1,37 @@
-"use client";
+﻿"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ChevronLeft, ChevronRight, Compass, Home, LayoutGrid, MessageCircle, RotateCw } from "lucide-react";
+import {
+  ChevronLeft,
+  ChevronRight,
+  Compass,
+  FileText,
+  Home,
+  Info,
+  LayoutGrid,
+  MessageCircle,
+  RotateCw,
+} from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import { useLanguage } from "./LanguageProvider";
 
 export function BottomSwitch() {
   const pathname = usePathname();
-  const { t } = useLanguage();
+  const { language, t } = useLanguage();
+  const [reloading, setReloading] = useState(false);
+  const [homeUIReady, setHomeUIReady] = useState(false);
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+
   const onHome = pathname === "/";
   const onExplore = pathname === "/explore";
   const onHomeOrExplore = onHome || onExplore;
   const onProducts = pathname.startsWith("/products");
   const onContact = pathname.startsWith("/contact");
-  const [reloading, setReloading] = useState(false);
-  const [homeUIReady, setHomeUIReady] = useState(false);
-  const [isScrolledDown, setIsScrolledDown] = useState(false);
+  const onAbout = pathname.startsWith("/about");
+  const onTerms = pathname.startsWith("/terms");
 
-  // Hide bottom dock when scrolling down into content
+  // Hide bottom dock when scrolling down into content on explore/home
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY || document.documentElement.scrollTop;
@@ -66,6 +79,127 @@ export function BottomSwitch() {
     return null;
   }
 
+  // -------------------------------------------------------------
+  // Slot 1 (Left) Configuration
+  // -------------------------------------------------------------
+  // Home: Products (LayoutGrid)
+  // All other pages (Explore, Products, Contact, About, Terms): Home (Home)
+  const renderSlot1 = () => {
+    if (onHome) {
+      return (
+        <Link href="/products">
+          <LayoutGrid size={16} aria-hidden="true" />
+          <span>{t("nav_products")}</span>
+        </Link>
+      );
+    }
+    return (
+      <Link href="/" onClick={handleHomeClick}>
+        <Home size={16} aria-hidden="true" />
+        <span>{t("nav_home")}</span>
+      </Link>
+    );
+  };
+
+  // -------------------------------------------------------------
+  // Slot 2 (Center - Active Pill) Configuration
+  // -------------------------------------------------------------
+  const renderSlot2 = () => {
+    if (onHome) {
+      return (
+        <Link href="/" onClick={handleHomeClick} aria-current="page">
+          <Home size={16} aria-hidden="true" />
+          <span>{t("nav_home")}</span>
+        </Link>
+      );
+    }
+    if (onExplore) {
+      return (
+        <Link href="/explore" aria-current="page">
+          <Compass size={16} aria-hidden="true" />
+          <span>{t("nav_explore")}</span>
+        </Link>
+      );
+    }
+    if (onProducts) {
+      return (
+        <Link href="/products" aria-current="page">
+          <LayoutGrid size={16} aria-hidden="true" />
+          <span>{t("nav_products")}</span>
+        </Link>
+      );
+    }
+    if (onContact) {
+      return (
+        <Link href="/contact" aria-current="page">
+          <MessageCircle size={16} aria-hidden="true" />
+          <span>{t("nav_contact")}</span>
+        </Link>
+      );
+    }
+    if (onAbout) {
+      return (
+        <Link href="/about" aria-current="page">
+          <Info size={16} aria-hidden="true" />
+          <span>{t("nav_about")}</span>
+        </Link>
+      );
+    }
+    if (onTerms) {
+      return (
+        <Link href="/terms" aria-current="page">
+          <FileText size={16} aria-hidden="true" />
+          <span>{language === "bn" ? "শর্তাবলী" : "Terms"}</span>
+        </Link>
+      );
+    }
+    // Default fallback
+    return (
+      <Link href="/products" aria-current="page">
+        <LayoutGrid size={16} aria-hidden="true" />
+        <span>{t("nav_products")}</span>
+      </Link>
+    );
+  };
+
+  // -------------------------------------------------------------
+  // Slot 3 (Right) Configuration
+  // -------------------------------------------------------------
+  // Home: Reload button (RotateCw with spin)
+  // Products: Contact link (MessageCircle)
+  // All other pages (Explore, Contact, About, Terms): Products (LayoutGrid)
+  const renderSlot3 = () => {
+    if (onHome) {
+      return (
+        <button
+          type="button"
+          className="bottom-switch-reload"
+          onClick={handleReload}
+          aria-label="Reload products to see next set"
+          title={t("nav_reload")}
+        >
+          <RotateCw size={15} className={reloading ? "is-spinning" : ""} aria-hidden="true" />
+          <span>{t("nav_reload")}</span>
+        </button>
+      );
+    }
+    if (onProducts) {
+      return (
+        <Link href="/contact">
+          <MessageCircle size={16} aria-hidden="true" />
+          <span>{t("nav_contact")}</span>
+        </Link>
+      );
+    }
+    // Explore, Contact, About, Terms -> Products
+    return (
+      <Link href="/products">
+        <LayoutGrid size={16} aria-hidden="true" />
+        <span>{t("nav_products")}</span>
+      </Link>
+    );
+  };
+
   return (
     <div
       className={`bottom-dock-container ${onHomeOrExplore ? "is-home-dock" : "is-subpage-dock"}`}
@@ -74,7 +208,7 @@ export function BottomSwitch() {
           ? {
               opacity: homeUIReady ? 1 : 0,
               pointerEvents: homeUIReady ? "auto" : "none",
-              transition: homeUIReady ? "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)" : "none"
+              transition: homeUIReady ? "opacity 0.4s cubic-bezier(0.16, 1, 0.3, 1)" : "none",
             }
           : undefined
       }
@@ -96,75 +230,9 @@ export function BottomSwitch() {
         className={`bottom-switch ${onHomeOrExplore ? "is-home" : "is-subpage"}`}
         aria-label="Navigation"
       >
-        {/* Slot 1 (Left) */}
-        {onExplore ? (
-          <Link href="/products" aria-current={onProducts ? "page" : undefined}>
-            <LayoutGrid size={16} aria-hidden="true" />
-            <span>{t("nav_products")}</span>
-          </Link>
-        ) : onHome ? (
-          <Link href="/products" aria-current={onProducts ? "page" : undefined}>
-            <LayoutGrid size={16} aria-hidden="true" />
-            <span>{t("nav_products")}</span>
-          </Link>
-        ) : (
-          <Link href="/" onClick={handleHomeClick} aria-current={onHome ? "page" : undefined}>
-            <Home size={16} aria-hidden="true" />
-            <span>{t("nav_home")}</span>
-          </Link>
-        )}
-
-        {/* Slot 2 (Center) */}
-        {onExplore ? (
-          <Link href="/explore" aria-current="page">
-            <Compass size={16} aria-hidden="true" />
-            <span>{t("nav_explore")}</span>
-          </Link>
-        ) : onHome ? (
-          <Link href="/" onClick={handleHomeClick} aria-current="page">
-            <Home size={16} aria-hidden="true" />
-            <span>{t("nav_home")}</span>
-          </Link>
-        ) : onContact ? (
-          <Link href="/contact" aria-current="page">
-            <MessageCircle size={16} aria-hidden="true" />
-            <span>{t("nav_contact")}</span>
-          </Link>
-        ) : (
-          <Link href="/products" aria-current={onProducts ? "page" : undefined}>
-            <LayoutGrid size={16} aria-hidden="true" />
-            <span>{t("nav_products")}</span>
-          </Link>
-        )}
-
-        {/* Slot 3 (Right) */}
-        {onExplore ? (
-          <Link href="/" onClick={handleHomeClick}>
-            <Home size={16} aria-hidden="true" />
-            <span>{t("nav_home")}</span>
-          </Link>
-        ) : onHome ? (
-          <button
-            type="button"
-            className="bottom-switch-reload"
-            onClick={handleReload}
-            aria-label="Reload products to see next set"
-            title={t("nav_reload")}
-          >
-            <RotateCw size={15} className={reloading ? "is-spinning" : ""} aria-hidden="true" />
-            <span>{t("nav_reload")}</span>
-          </button>
-        ) : onContact ? (
-          <Link href="/products">
-            <LayoutGrid size={16} aria-hidden="true" />
-            <span>{t("nav_products")}</span>
-          </Link>
-        ) : (
-          <Link href="/contact" aria-current={onContact ? "page" : undefined}>
-            <MessageCircle size={16} aria-hidden="true" />
-            <span>{t("nav_contact")}</span>
-          </Link>
-        )}
+        {renderSlot1()}
+        {renderSlot2()}
+        {renderSlot3()}
       </nav>
 
       {/* Right Navigation Arrow on Explore Page (Hides on Scroll) */}

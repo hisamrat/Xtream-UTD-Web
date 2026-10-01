@@ -3,7 +3,7 @@
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
-import { ChevronLeft, ChevronRight, ChevronDown } from "lucide-react";
+import { ChevronDown } from "lucide-react";
 import { ProductArtwork } from "@/components/products/ProductArtwork";
 import { useLanguage } from "@/components/site/LanguageProvider";
 import { HomeFeaturesSection } from "@/components/home/HomeFeaturesSection";
@@ -427,30 +427,6 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
           </div>
         </div>
 
-        {/* Left / Right Arrow Nav (always visible, primary nav for all screen sizes) */}
-        <button
-          type="button"
-          className="carousel-arrow-btn carousel-arrow-prev"
-          onClick={(e) => {
-            e.stopPropagation();
-            handlePrev();
-          }}
-          aria-label="Previous product"
-        >
-          <ChevronLeft size={24} strokeWidth={2.5} />
-        </button>
-        <button
-          type="button"
-          className="carousel-arrow-btn carousel-arrow-next"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleNext();
-          }}
-          aria-label="Next product"
-        >
-          <ChevronRight size={24} strokeWidth={2.5} />
-        </button>
-
         {/* Floating Mobile Scroll Down Shortcut Button */}
         <button
           type="button"
@@ -462,8 +438,8 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
           <ChevronDown size={14} className="scroll-down-arrow-anim" />
         </button>
 
-        {/* Instructions HUD (desktop only) */}
-        <div className="world-instructions" aria-hidden="true">
+        {/* Instructions HUD (desktop only - anchored inside top carousel section) */}
+        <div className="world-instructions explore-instructions" aria-hidden="true">
           {t("click_to_view_detail")}
           <br />
           {t("reload_to_reset")}
@@ -482,6 +458,7 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
     </main>
   );
 }
+
 
 
 
