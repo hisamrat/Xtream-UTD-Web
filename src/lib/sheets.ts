@@ -1,4 +1,4 @@
-/**
+﻿/**
  * Google Sheets data-source for products and showcase gallery.
  *
  * Authenticates with Sheets API v4 via an API key or service account,
@@ -497,8 +497,19 @@ export async function fetchGalleryItemsFromSheet(): Promise<GalleryShowcaseItem[
     const slug = getCol(row, "slug", "product_slug");
     const title = getCol(row, "title", "name", "media_title", "product_title");
     const mediaTypeRaw = getCol(row, "media_type", "media", "type", "kind");
-    const mediaUrlRaw = getCol(row, "media_url", "media_link", "url", "video_url", "image_url");
-    const posterUrlRaw = getCol(row, "poster_url", "poster", "thumbnail_url", "thumbnail", "cover_url");
+    const mediaUrlRaw = getCol(
+      row,
+      "media_url", "media_urls", "media_link",
+      "url", "video_url", "youtube_url",
+      "image_url", "video", "media"
+    );
+    const posterUrlRaw = getCol(
+      row,
+      "poster_image_url", "poster_images_url",
+      "poster_url", "poster",
+      "thumbnail_url", "thumbnail",
+      "cover_url", "cover_image_url", "cover_image"
+    );
     const aspectRatioRaw = getCol(row, "aspect_ratio", "aspect", "ratio", "dimensions");
     const activeRaw = getCol(row, "active", "enabled", "published", "status");
 
@@ -510,8 +521,15 @@ export async function fetchGalleryItemsFromSheet(): Promise<GalleryShowcaseItem[
     const active = parseBoolDefaultTrue(activeRaw);
     if (!active) continue;
 
-    const mediaType = parseMediaType(mediaTypeRaw);
-    const mediaUrl = mediaUrlRaw ? formatGoogleDriveImageUrl(mediaUrlRaw) : "";
+    let mediaType = parseMediaType(mediaTypeRaw);
+    // Auto-detect video if URL looks like YouTube or a video file
+    if (mediaType === "image" && mediaUrlRaw && /(?:youtube\.com|youtu\.be|\.mp4|\.webm|\.mov)/i.test(mediaUrlRaw)) {
+      mediaType = "video";
+    }
+    // For YouTube URLs, preserve the original URL (not reformatted as Drive)
+    const mediaUrl = mediaUrlRaw
+      ? (/(?:youtube\.com|youtu\.be)/i.test(mediaUrlRaw) ? mediaUrlRaw.trim() : formatGoogleDriveImageUrl(mediaUrlRaw))
+      : "";
     const posterUrl = posterUrlRaw ? formatGoogleDriveImageUrl(posterUrlRaw) : "";
     const aspectRatio = parseAspectRatio(aspectRatioRaw);
 
@@ -532,4 +550,5 @@ export async function fetchGalleryItemsFromSheet(): Promise<GalleryShowcaseItem[
 
   return items;
 }
+
 

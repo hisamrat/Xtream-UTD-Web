@@ -1,10 +1,15 @@
-"use client";
+﻿"use client";
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
 import { Play, Pause, ArrowUpRight, Move, Package } from "lucide-react";
 import { useLanguage } from "@/components/site/LanguageProvider";
-import { getGoogleDriveImageCandidates } from "@/lib/image-utils";
+import {
+  getGoogleDriveImageCandidates,
+  extractYouTubeVideoId,
+  isYouTubeUrl,
+  getYouTubeEmbedUrl,
+} from "@/lib/image-utils";
 import type { GalleryShowcaseItem } from "@/lib/gallery-schema";
 import type { Product } from "@/lib/product-schema";
 
@@ -33,6 +38,7 @@ type ShowcaseCardMediaProps = {
   item: GalleryShowcaseItem;
   title: string;
   isVideo: boolean;
+  isHeld: boolean;
   isCurrentActiveVideo: boolean;
   videoRefCallback: (el: HTMLVideoElement | null) => void;
 };
@@ -41,11 +47,19 @@ function ShowcaseCardMedia({
   item,
   title,
   isVideo,
+  isHeld,
   isCurrentActiveVideo,
   videoRefCallback,
 }: ShowcaseCardMediaProps) {
-  const [hasError, setHasError] = useState(false);
+  const [imgError, setImgError] = useState(false);
+  const [videoError, setVideoError] = useState(false);
   const [candidateIndex, setCandidateIndex] = useState(0);
+
+  const youtubeId = useMemo(() => {
+    return extractYouTubeVideoId(item.mediaUrl) || extractYouTubeVideoId(item.posterUrl);
+  }, [item.mediaUrl, item.posterUrl]);
+
+  const isYouTube = Boolean(youtubeId);
 
   const candidates = useMemo(() => {
     const list: string[] = [];
@@ -58,19 +72,26 @@ function ShowcaseCardMedia({
       else list.push(trimmed);
     };
 
-    if (isVideo) {
-      if (item.posterUrl) add(item.posterUrl);
-    } else {
-      if (item.mediaUrl) add(item.mediaUrl);
-      if (item.posterUrl) add(item.posterUrl);
+    if (item.posterUrl) add(item.posterUrl);
+
+    if (isYouTube && youtubeId) {
+      list.push(`https://img.youtube.com/vi/${youtubeId}/maxresdefault.jpg`);
+      list.push(`https://img.youtube.com/vi/${youtubeId}/hqdefault.jpg`);
+      list.push(`https://img.youtube.com/vi/${youtubeId}/mqdefault.jpg`);
     }
+
+    if (!isVideo && item.mediaUrl) {
+      add(item.mediaUrl);
+    }
+
     return Array.from(new Set(list));
-  }, [item, isVideo]);
+  }, [item, isVideo, isYouTube, youtubeId]);
 
   useEffect(() => {
     setCandidateIndex(0);
-    setHasError(false);
-  }, [candidates]);
+    setImgError(false);
+    setVideoError(false);
+  }, [candidates, item.mediaUrl]);
 
   const activeSrc = candidates[candidateIndex] || "";
 
@@ -78,61 +99,125 @@ function ShowcaseCardMedia({
     if (candidateIndex < candidates.length - 1) {
       setCandidateIndex((prev) => prev + 1);
     } else {
-      setHasError(true);
+      setImgError(true);
     }
   };
 
-  if (isVideo && item.mediaUrl && !hasError) {
+  // 1. YouTube Video Showcase - paused by default, plays only when user activates
+  if (isVideo && isYouTube && youtubeId) {
+    // Only load the iframe when the user has explicitly clicked play
+    const embedUrl = isCurrentActiveVideo
+      ? getYouTubeEmbedUrl(youtubeId, {
+          autoplay: true,
+          mute: false,
+          loop: true,
+          controls: true,
+        })
+      : "";
+
+    return (
+      <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
+        {/* Poster image - always shown when paused, hidden behind iframe when playing */}
+        {activeSrc && !imgError ? (
+          <img
+            src={activeSrc}
+            alt={title}
+            className="showcase-media-content showcase-poster-underlay"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center",
+              display: "block",
+              opacity: isCurrentActiveVideo ? 0 : 1,
+              transition: "opacity 300ms ease",
+            }}
+            referrerPolicy="no-referrer"
+            loading="lazy"
+            draggable={false}
+            onError={handleImageError}
+          />
+        ) : null}
+
+        {/* YouTube iframe - only mounted when playing */}
+        {isCurrentActiveVideo && embedUrl ? (
+          <iframe
+            src={embedUrl}
+            title={title}
+            className="showcase-media-content showcase-youtube-iframe"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              border: 0,
+              pointerEvents: isHeld ? "none" : "auto",
+            }}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        ) : null}
+
+        <div className="showcase-card-scrim" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  // 2. Direct MP4/Video File Showcase - paused by default
+  if (isVideo && item.mediaUrl && !videoError) {
     return (
       <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
         <video
           ref={videoRefCallback}
           src={item.mediaUrl}
           poster={activeSrc || undefined}
-          autoPlay
           loop
-          muted={!isCurrentActiveVideo}
+          muted
           playsInline
           preload="metadata"
           className="showcase-media-content showcase-video-element"
-          onError={() => setHasError(true)}
+          onError={() => setVideoError(true)}
         />
         <div className="showcase-card-scrim" aria-hidden="true" />
       </div>
     );
   }
 
-  if (hasError || !activeSrc) {
+  // 3. Image or poster fallback
+  if (activeSrc && !imgError) {
     return (
       <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
-        <div className="product-placeholder-wrap" aria-hidden="true">
-          <div className="product-placeholder-content">
-            <Package size={36} className="product-placeholder-icon" strokeWidth={1.5} />
-          </div>
-        </div>
+        <img
+          src={activeSrc}
+          alt={title}
+          className="showcase-media-content showcase-image-element"
+          style={{
+            width: "100%",
+            height: "100%",
+            objectFit: "cover",
+            objectPosition: "center",
+            display: "block",
+          }}
+          referrerPolicy="no-referrer"
+          loading="lazy"
+          draggable={false}
+          onError={handleImageError}
+        />
         <div className="showcase-card-scrim" aria-hidden="true" />
       </div>
     );
   }
 
+  // 4. Placeholder fallback
   return (
     <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
-      <img
-        src={activeSrc}
-        alt={title}
-        className="showcase-media-content showcase-image-element"
-        style={{
-          width: "100%",
-          height: "100%",
-          objectFit: "cover",
-          objectPosition: "center",
-          display: "block",
-        }}
-        referrerPolicy="no-referrer"
-        loading="lazy"
-        draggable={false}
-        onError={handleImageError}
-      />
+      <div className="product-placeholder-wrap" aria-hidden="true">
+        <div className="product-placeholder-content">
+          <Package size={36} className="product-placeholder-icon" strokeWidth={1.5} />
+        </div>
+      </div>
       <div className="showcase-card-scrim" aria-hidden="true" />
     </div>
   );
@@ -152,12 +237,10 @@ export function ExploreMediaMasonrySection({
   const [order, setOrder] = useState<string[]>(() => showcaseItems.map((item) => item.id));
   const [dragState, setDragState] = useState<DragState | null>(null);
 
-  // Sync order when showcaseItems change
   useEffect(() => {
     setOrder(showcaseItems.map((item) => item.id));
   }, [showcaseItems]);
 
-  // Track active in-card video state: which card is unmuted/playing
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
   const [isPlayingMap, setIsPlayingMap] = useState<Record<string, boolean>>({});
   const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
@@ -165,16 +248,13 @@ export function ExploreMediaMasonrySection({
   const lastSwapTimeRef = useRef<number>(0);
   const itemMap = useMemo(() => new Map(showcaseItems.map((item) => [item.id, item])), [showcaseItems]);
 
-  // Measure container width
   useEffect(() => {
     const el = containerRef.current;
     if (!el) return;
 
     const handleResize = () => {
       const w = el.clientWidth || el.getBoundingClientRect().width;
-      if (w > 0) {
-        setContainerWidth(w);
-      }
+      if (w > 0) setContainerWidth(w);
     };
 
     handleResize();
@@ -189,7 +269,6 @@ export function ExploreMediaMasonrySection({
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
-  // Column count and layout geometry
   const gap = 16;
   const cols = useMemo(() => {
     if (containerWidth < 640) return 2;
@@ -197,7 +276,6 @@ export function ExploreMediaMasonrySection({
     return 4;
   }, [containerWidth]);
 
-  // Compute masonry layout positions
   const { layoutItems, totalHeight } = useMemo(() => {
     if (containerWidth <= 0 || showcaseItems.length === 0) {
       return { layoutItems: [], totalHeight: 0 };
@@ -211,12 +289,9 @@ export function ExploreMediaMasonrySection({
       const item = itemMap.get(id);
       if (!item) continue;
 
-      // Find shortest column
       let minCol = 0;
       for (let c = 1; c < cols; c++) {
-        if (colHeights[c] < colHeights[minCol] - 0.5) {
-          minCol = c;
-        }
+        if (colHeights[c] < colHeights[minCol] - 0.5) minCol = c;
       }
 
       const ratio = item.aspectRatio > 0 ? item.aspectRatio : 0.8;
@@ -224,32 +299,45 @@ export function ExploreMediaMasonrySection({
       const x = minCol * (colW + gap);
       const y = colHeights[minCol];
 
-      positioned.push({
-        ...item,
-        x,
-        y,
-        width: colW,
-        height: h,
-        colIndex: minCol,
-      });
-
+      positioned.push({ ...item, x, y, width: colW, height: h, colIndex: minCol });
       colHeights[minCol] += h + gap;
     }
 
     const maxH = Math.max(...colHeights);
-    return {
-      layoutItems: positioned,
-      totalHeight: Math.max(0, maxH - gap),
-    };
+    return { layoutItems: positioned, totalHeight: Math.max(0, maxH - gap) };
   }, [order, itemMap, containerWidth, cols, gap, showcaseItems.length]);
 
-  // Toggle in-card video playback with audio
   const toggleInCardVideo = useCallback((item: GalleryShowcaseItem) => {
+    const isYt = isYouTubeUrl(item.mediaUrl) || isYouTubeUrl(item.posterUrl);
+
+    if (isYt) {
+      if (activeVideoId === item.id) {
+        setActiveVideoId(null);
+        setIsPlayingMap((prev) => ({ ...prev, [item.id]: false }));
+      } else {
+        setActiveVideoId(item.id);
+        setIsPlayingMap((prev) => ({ ...prev, [item.id]: true }));
+      }
+      return;
+    }
+
     const videoEl = videoRefs.current.get(item.id);
     if (!videoEl) return;
 
+    // Pause any previously active video
+    if (activeVideoId && activeVideoId !== item.id) {
+      const prevVideo = videoRefs.current.get(activeVideoId);
+      if (prevVideo) {
+        prevVideo.pause();
+        prevVideo.muted = true;
+      }
+      setIsPlayingMap((prev) => ({ ...prev, [activeVideoId]: false }));
+    }
+
     if (activeVideoId === item.id) {
+      // Already active: toggle play/pause
       if (videoEl.paused) {
+        videoEl.muted = false;
         videoEl.play().catch(() => {});
         setIsPlayingMap((prev) => ({ ...prev, [item.id]: true }));
       } else {
@@ -257,12 +345,7 @@ export function ExploreMediaMasonrySection({
         setIsPlayingMap((prev) => ({ ...prev, [item.id]: false }));
       }
     } else {
-      if (activeVideoId) {
-        const prevVideo = videoRefs.current.get(activeVideoId);
-        if (prevVideo) {
-          prevVideo.muted = true;
-        }
-      }
+      // New video: start playing
       setActiveVideoId(item.id);
       videoEl.muted = false;
       videoEl.play().catch(() => {
@@ -273,29 +356,16 @@ export function ExploreMediaMasonrySection({
     }
   }, [activeVideoId]);
 
-  // Pointer Handlers for Dragging & Swapping
   const handlePointerDown = useCallback(
     (e: React.PointerEvent<HTMLDivElement>, item: PositionedItem) => {
       if (e.pointerType === "mouse" && e.button !== 0) return;
-      const target = e.currentTarget;
-
-      try {
-        target.setPointerCapture(e.pointerId);
-      } catch {
-        // ignore
-      }
-
+      try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* ignore */ }
       setDragState({
         id: item.id,
-        startX: e.clientX,
-        startY: e.clientY,
-        origX: item.x,
-        origY: item.y,
-        currentX: item.x,
-        currentY: item.y,
-        pointerId: e.pointerId,
-        tilt: 0,
-        hasMoved: false,
+        startX: e.clientX, startY: e.clientY,
+        origX: item.x, origY: item.y,
+        currentX: item.x, currentY: item.y,
+        pointerId: e.pointerId, tilt: 0, hasMoved: false,
       });
     },
     []
@@ -308,27 +378,15 @@ export function ExploreMediaMasonrySection({
       const dx = e.clientX - dragState.startX;
       const dy = e.clientY - dragState.startY;
       const distSq = dx * dx + dy * dy;
-
       const hasMoved = dragState.hasMoved || distSq > 25;
       const newX = dragState.origX + dx;
       const newY = dragState.origY + dy;
       const tilt = Math.max(-4, Math.min(4, dx * 0.08));
 
-      setDragState((prev) =>
-        prev
-          ? {
-              ...prev,
-              currentX: newX,
-              currentY: newY,
-              tilt,
-              hasMoved,
-            }
-          : null
-      );
+      setDragState((prev) => prev ? { ...prev, currentX: newX, currentY: newY, tilt, hasMoved } : null);
 
       if (!hasMoved) return;
 
-      // Real-time Collision Detection & Slot Swapping
       const now = typeof performance !== "undefined" ? performance.now() : Date.now();
       if (now - lastSwapTimeRef.current < 110) return;
 
@@ -339,17 +397,15 @@ export function ExploreMediaMasonrySection({
       const centerHeldY = newY + currentHeld.height / 2;
 
       let hitItem: PositionedItem | null = null;
-      for (const item of layoutItems) {
-        if (item.id === dragState.id) continue;
-        const padX = item.width * 0.15;
-        const padY = item.height * 0.15;
+      for (const it of layoutItems) {
+        if (it.id === dragState.id) continue;
+        const padX = it.width * 0.15;
+        const padY = it.height * 0.15;
         if (
-          centerHeldX >= item.x + padX &&
-          centerHeldX <= item.x + item.width - padX &&
-          centerHeldY >= item.y + padY &&
-          centerHeldY <= item.y + item.height - padY
+          centerHeldX >= it.x + padX && centerHeldX <= it.x + it.width - padX &&
+          centerHeldY >= it.y + padY && centerHeldY <= it.y + it.height - padY
         ) {
-          hitItem = item;
+          hitItem = it;
           break;
         }
       }
@@ -360,7 +416,6 @@ export function ExploreMediaMasonrySection({
           const fromIdx = prevOrder.indexOf(dragState.id);
           const toIdx = prevOrder.indexOf(hitItem.id);
           if (fromIdx < 0 || toIdx < 0 || fromIdx === toIdx) return prevOrder;
-
           const updated = [...prevOrder];
           const [moved] = updated.splice(fromIdx, 1);
           updated.splice(toIdx, 0, moved);
@@ -374,36 +429,26 @@ export function ExploreMediaMasonrySection({
   const handlePointerUp = useCallback(
     (e: React.PointerEvent<HTMLDivElement>, item: PositionedItem) => {
       if (!dragState || dragState.pointerId !== e.pointerId) return;
-
       try {
         if (e.currentTarget.hasPointerCapture(e.pointerId)) {
           e.currentTarget.releasePointerCapture(e.pointerId);
         }
-      } catch {
-        // ignore
-      }
+      } catch { /* ignore */ }
 
       const moved = dragState.hasMoved;
       setDragState(null);
 
-      // If clicked without dragging
-      if (!moved) {
-        if (item.mediaType === "video") {
-          toggleInCardVideo(item);
-        }
+      if (!moved && item.mediaType === "video") {
+        toggleInCardVideo(item);
       }
     },
     [dragState, toggleInCardVideo]
   );
 
-  // If no showcase items exist in sheet, do not render this section at all
-  if (showcaseItems.length === 0) {
-    return null;
-  }
+  if (showcaseItems.length === 0) return null;
 
   return (
     <section className="explore-section-block explore-draggable-showcase-section" aria-labelledby="showcase-heading">
-      {/* Section Header */}
       <div className="explore-section-header showcase-header">
         <div className="explore-section-header-left">
           <span className="explore-section-kicker">
@@ -415,15 +460,12 @@ export function ExploreMediaMasonrySection({
               : "Explore Products Image and Video Gallery"}
           </h2>
         </div>
-
-        {/* Drag to rearrange Section Header Text */}
         <div className="showcase-drag-hint" aria-hidden="true">
           <Move size={13} className="drag-hint-icon" />
           <span>{language === "bn" ? "ড্র্যাগ করে সাজান" : "Drag to rearrange"}</span>
         </div>
       </div>
 
-      {/* Masonry Canvas Container */}
       <div
         ref={containerRef}
         className="showcase-masonry-canvas"
@@ -438,7 +480,7 @@ export function ExploreMediaMasonrySection({
           const tilt = isHeld && dragState ? dragState.tilt : 0;
           const isVideo = item.mediaType === "video";
           const isCurrentActiveVideo = activeVideoId === item.id;
-          const isPlaying = isPlayingMap[item.id] ?? true;
+          const isPlaying = isPlayingMap[item.id] ?? false;
           const title = item.title;
 
           return (
@@ -464,17 +506,15 @@ export function ExploreMediaMasonrySection({
               onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") {
                   e.preventDefault();
-                  if (isVideo) {
-                    toggleInCardVideo(item);
-                  }
+                  if (isVideo) toggleInCardVideo(item);
                 }
               }}
             >
-              {/* Media Visual Layer */}
               <ShowcaseCardMedia
                 item={item}
                 title={title}
                 isVideo={isVideo}
+                isHeld={isHeld}
                 isCurrentActiveVideo={isCurrentActiveVideo}
                 videoRefCallback={(el) => {
                   if (el) videoRefs.current.set(item.id, el);
@@ -482,27 +522,19 @@ export function ExploreMediaMasonrySection({
                 }}
               />
 
-              {/* TOP HEADER: Title in Top Center of Card */}
               {title ? (
                 <div className="showcase-card-top-bar">
-                  <span className="showcase-card-top-title" title={title}>
-                    {title}
-                  </span>
+                  <span className="showcase-card-top-title" title={title}>{title}</span>
                 </div>
               ) : null}
 
-              {/* BOTTOM RIGHT ONLY: Round Circular Action Icon for Details or Video Play/Pause */}
               <div className="showcase-card-bottom-bar">
                 <div className="showcase-bottom-spacer" />
-
                 {isVideo ? (
                   <button
                     type="button"
                     className="showcase-action-icon-btn video-trigger-btn"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      toggleInCardVideo(item);
-                    }}
+                    onClick={(e) => { e.stopPropagation(); toggleInCardVideo(item); }}
                     aria-label={isCurrentActiveVideo && isPlaying ? "Pause video" : "Play video"}
                     title={isCurrentActiveVideo && isPlaying ? "Pause" : "Play"}
                   >
@@ -518,11 +550,7 @@ export function ExploreMediaMasonrySection({
                     className="showcase-action-icon-btn details-link-btn"
                     aria-label={`View details for ${title}`}
                     title="View Product Details"
-                    onClick={(e) => {
-                      if (dragState?.hasMoved) {
-                        e.preventDefault();
-                      }
-                    }}
+                    onClick={(e) => { if (dragState?.hasMoved) e.preventDefault(); }}
                   >
                     <ArrowUpRight size={16} />
                   </Link>
@@ -535,4 +563,6 @@ export function ExploreMediaMasonrySection({
     </section>
   );
 }
+
+
 

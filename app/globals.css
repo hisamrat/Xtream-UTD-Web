@@ -12290,3 +12290,56 @@ html[data-theme="light"] .catalogue-results-count {
   padding-bottom: clamp(100px, 12vh, 160px) !important;
 }
 
+
+/* ─────────────────────────────────────────────────
+   Carousel Arrow Buttons (Explore Page)
+   ───────────────────────────────────────────────── */
+.carousel-arrow-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 30;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  border: 1.5px solid rgba(255,255,255,0.18);
+  background: rgba(10, 12, 20, 0.62);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: #fff;
+  cursor: pointer;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+  outline: none;
+}
+
+.carousel-arrow-btn:hover,
+.carousel-arrow-btn:focus-visible {
+  background: rgba(30, 36, 60, 0.85);
+  border-color: rgba(255,255,255,0.42);
+  transform: translateY(-50%) scale(1.08);
+}
+
+.carousel-arrow-btn:active {
+  transform: translateY(-50%) scale(0.95);
+}
+
+.carousel-arrow-prev {
+  left: 14px;
+}
+
+.carousel-arrow-next {
+  right: 14px;
+}
+
+@media (min-width: 640px) {
+  .carousel-arrow-prev { left: 24px; }
+  .carousel-arrow-next { right: 24px; }
+}
+
+@media (min-width: 1024px) {
+  .carousel-arrow-prev { left: 36px; }
+  .carousel-arrow-next { right: 36px; }
+}

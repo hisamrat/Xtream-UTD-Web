@@ -1,8 +1,9 @@
-"use client";
+﻿"use client";
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
-import type { CSSProperties, PointerEvent as ReactPointerEvent } from "react";
+import type { CSSProperties } from "react";
 import { useRouter } from "next/navigation";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import { ProductArtwork } from "@/components/products/ProductArtwork";
 import { useLanguage } from "@/components/site/LanguageProvider";
 import { HomeFeaturesSection } from "@/components/home/HomeFeaturesSection";
@@ -20,15 +21,6 @@ export type ExploreClientProps = {
 type ViewportSize = {
   width: number;
   height: number;
-};
-
-type PointerState = {
-  active: boolean;
-  x: number;
-  y: number;
-  startX: number;
-  startY: number;
-  distance: number;
 };
 
 const CAROUSEL_PERSPECTIVE = 1400;
@@ -49,14 +41,16 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
   const bgRef = useRef<HTMLDivElement | null>(null);
   const lastInputTimeRef = useRef(0);
   const lastUserInteractionTimeRef = useRef(Date.now());
-  const pointerRef = useRef<PointerState>({
-    active: false,
-    x: 0,
-    y: 0,
-    startX: 0,
-    startY: 0,
-    distance: 0
-  });
+
+  // Mouse-drag state (desktop only — touch users scroll normally)
+  const mouseDragRef = useRef<{
+    active: boolean;
+    startX: number;
+    startY: number;
+    lastX: number;
+    distance: number;
+    isHorizontal: boolean | null;
+  }>({ active: false, startX: 0, startY: 0, lastX: 0, distance: 0, isHorizontal: null });
 
   // Ensure continuous ribbon of at least 18 cards
   const carouselProducts = useMemo(() => {
@@ -163,7 +157,7 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
     if (!mounted || isPaused) return;
     const interval = window.setInterval(() => {
       const now = Date.now();
-      if (now - lastUserInteractionTimeRef.current >= 3200 && !pointerRef.current.active) {
+      if (now - lastUserInteractionTimeRef.current >= 3200 && !mouseDragRef.current.active) {
         cameraSlotTargetRef.current += 1.0;
       }
     }, 3200);
@@ -221,7 +215,6 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
     };
 
     const count = carouselProducts.length;
-    // Synchronously place cards on initial pass so there is zero layout shift or pop-in
     if (count > 0) {
       const initialPos = cameraSlotCurrentRef.current;
       for (let i = 0; i < count; i += 1) {
@@ -263,40 +256,42 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
     return () => cancelAnimationFrame(rafId);
   }, [carouselProducts, cardGapPx, cardWidth, cardHeight]);
 
-  const beginPointer = useCallback((event: ReactPointerEvent<HTMLElement>) => {
+  // ──────────────────────────────────────────────
+  // Desktop-only mouse drag (does NOT block scroll)
+  // Touch users scroll naturally — arrows navigate
+  // ──────────────────────────────────────────────
+  const onMouseDown = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    if (e.button !== 0) return;
     lastUserInteractionTimeRef.current = Date.now();
-    pointerRef.current = {
+    mouseDragRef.current = {
       active: true,
-      x: event.clientX,
-      y: event.clientY,
-      startX: event.clientX,
-      startY: event.clientY,
-      distance: 0
+      startX: e.clientX,
+      startY: e.clientY,
+      lastX: e.clientX,
+      distance: 0,
+      isHorizontal: null,
     };
   }, []);
 
-  const movePointer = useCallback((event: ReactPointerEvent<HTMLElement>) => {
-    const pointer = pointerRef.current;
-    if (!pointer.active) return;
+  const onMouseMove = useCallback((e: React.MouseEvent<HTMLElement>) => {
+    const drag = mouseDragRef.current;
+    if (!drag.active) return;
     lastUserInteractionTimeRef.current = Date.now();
     lastInputTimeRef.current = Date.now();
-
-    const dx = event.clientX - pointer.x;
-    pointer.distance += Math.abs(dx) + Math.abs(event.clientY - pointer.y);
-    pointer.x = event.clientX;
-    pointer.y = event.clientY;
-
+    const dx = e.clientX - drag.lastX;
+    drag.distance += Math.abs(e.clientX - drag.startX) + Math.abs(e.clientY - drag.startY);
+    drag.lastX = e.clientX;
     cameraSlotTargetRef.current -= dx * 0.0035;
   }, []);
 
-  const endPointer = useCallback(() => {
-    pointerRef.current.active = false;
+  const onMouseUp = useCallback(() => {
+    mouseDragRef.current.active = false;
   }, []);
 
   const handleCardClick = useCallback(
     (product: Product, index: number) => {
       lastUserInteractionTimeRef.current = Date.now();
-      if (pointerRef.current.distance > dragThreshold) return;
+      if (mouseDragRef.current.distance > dragThreshold) return;
 
       const count = carouselProducts.length;
       let d = (index - cameraSlotCurrentRef.current) % count;
@@ -342,10 +337,10 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
       <section
         className={`explore-carousel-section world-shell reference-showcase is-in-carousel ${isReady ? "is-ready" : "is-loading"}`}
         aria-label="3D Product Explore Carousel"
-        onPointerDown={beginPointer}
-        onPointerMove={movePointer}
-        onPointerUp={endPointer}
-        onPointerCancel={endPointer}
+        onMouseDown={onMouseDown}
+        onMouseMove={onMouseMove}
+        onMouseUp={onMouseUp}
+        onMouseLeave={onMouseUp}
       >
         {/* Ambient Glow Background */}
         <div className="scale-carousel-viewport" style={{ perspective: `${CAROUSEL_PERSPECTIVE}px`, perspectiveOrigin: "50% 50%" }}>
@@ -420,10 +415,26 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
           </div>
         </div>
 
-        {/* Instructions HUD */}
+        {/* Left / Right Arrow Nav (always visible, primary nav for all screen sizes) */}
+        <button
+          type="button"
+          className="carousel-arrow-btn carousel-arrow-prev"
+          onClick={handlePrev}
+          aria-label="Previous product"
+        >
+          <ChevronLeft size={22} strokeWidth={2.5} />
+        </button>
+        <button
+          type="button"
+          className="carousel-arrow-btn carousel-arrow-next"
+          onClick={handleNext}
+          aria-label="Next product"
+        >
+          <ChevronRight size={22} strokeWidth={2.5} />
+        </button>
+
+        {/* Instructions HUD (desktop only) */}
         <div className="world-instructions" aria-hidden="true">
-          {t("scroll_to_explore")}
-          <br />
           {t("click_to_view_detail")}
           <br />
           {t("reload_to_reset")}
@@ -442,4 +453,3 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
     </main>
   );
 }
-
