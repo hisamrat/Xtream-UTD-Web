@@ -573,10 +573,15 @@ body.modal-open .bottom-dock-container {
 }
 
 .bottom-dock-arrow.is-scrolled-hidden {
+  display: none !important;
   opacity: 0 !important;
-  transform: scale(0.6) translateY(10px) !important;
   pointer-events: none !important;
-  visibility: hidden;
+  visibility: hidden !important;
+}
+
+/* When arrows are hidden, collapse the gap so .bottom-switch fills to full natural width */
+.bottom-dock-container.is-arrows-hidden {
+  gap: 0 !important;
 }
 
 .bottom-dock-arrow:hover {
@@ -603,17 +608,33 @@ body.modal-open .bottom-dock-container {
   box-shadow: 0 6px 20px rgba(60, 3, 102, 0.25);
 }
 
-@media (max-width: 640px) {
+@media (max-width: 699px) {
   .bottom-dock-container {
-    gap: 8px;
-    width: calc(100vw - 20px);
-    max-width: 100vw;
+    bottom: max(12px, env(safe-area-inset-bottom, 12px));
+    gap: 6px;
+    width: auto;
+    max-width: calc(100vw - 12px);
+  }
+  .bottom-dock-container.is-arrows-hidden {
+    gap: 0 !important;
+    width: auto;
+    max-width: calc(100vw - 20px);
   }
   .bottom-dock-arrow {
     width: 38px;
     height: 38px;
     min-width: 38px;
     min-height: 38px;
+  }
+  /* In upper section with arrows visible on mobile Explore, size switch compactly so dock fits mobile screen */
+  .bottom-dock-container:not(.is-arrows-hidden) .bottom-switch {
+    width: min(278px, calc(100vw - 104px));
+    max-width: calc(100vw - 104px);
+  }
+  /* When scrolled down and arrows are hidden, switch expands to match home page width */
+  .bottom-dock-container.is-arrows-hidden .bottom-switch {
+    width: min(390px, calc(100vw - 20px)) !important;
+    max-width: calc(100vw - 20px) !important;
   }
 }
 

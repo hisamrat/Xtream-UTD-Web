@@ -1,4 +1,4 @@
-﻿"use client";
+"use client";
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
@@ -202,7 +202,9 @@ export function BottomSwitch() {
 
   return (
     <div
-      className={`bottom-dock-container ${onHomeOrExplore ? "is-home-dock" : "is-subpage-dock"}`}
+      className={`bottom-dock-container ${onHomeOrExplore ? "is-home-dock" : "is-subpage-dock"} ${
+        onExplore && isScrolledDown ? "is-arrows-hidden" : ""
+      }`}
       style={
         onHome
           ? {

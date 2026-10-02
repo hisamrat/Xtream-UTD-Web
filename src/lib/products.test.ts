@@ -44,12 +44,12 @@ describe("catalogue helpers", () => {
 
   it("filters and sorts products", () => {
     const results = filterProducts(getAllProducts(), {
-      categories: ["Audio & Microphones"],
+      categories: ["Beauty & Personal Care"],
       sort: "price-desc"
     });
 
     expect(results.length).toBeGreaterThanOrEqual(1);
-    expect(results.every((product) => product.category === "Audio & Microphones")).toBe(true);
+    expect(results.every((product) => product.category === "Beauty & Personal Care")).toBe(true);
   });
 });
 
