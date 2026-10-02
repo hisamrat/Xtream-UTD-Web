@@ -31,7 +31,12 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
   const router = useRouter();
   const { t, tCategory } = useLanguage();
   const [mounted, setMounted] = useState(false);
-  const [viewportSize, setViewportSize] = useState<ViewportSize>({ width: 1440, height: 900 });
+  const [viewportSize, setViewportSize] = useState<ViewportSize>(() => {
+    if (typeof window !== "undefined") {
+      return { width: window.innerWidth, height: window.innerHeight };
+    }
+    return { width: 1440, height: 900 };
+  });
   const [isPaused, setIsPaused] = useState(false);
 
   const cameraSlotTargetRef = useRef(0);
@@ -60,9 +65,9 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
   }, [products]);
 
   const cardHeight = useMemo(() => {
-    const maxAvailableH = Math.max(240, viewportSize.height - 180);
+    const maxAvailableH = Math.max(240, viewportSize.height - 160);
     if (viewportSize.width < 700) {
-      return Math.min(maxAvailableH, Math.min(340, Math.max(220, Math.round(viewportSize.height * 0.42))));
+      return Math.min(maxAvailableH, Math.min(380, Math.max(260, Math.round(viewportSize.height * 0.46))));
     }
     if (viewportSize.width < 1024) {
       return Math.min(maxAvailableH, Math.min(480, Math.max(340, Math.round(viewportSize.height * 0.55))));
@@ -325,7 +330,7 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
                   width: cardWidth,
                   height: cardHeight,
                   marginLeft: -cardWidth / 2,
-                  marginTop: viewportSize.width < 700 ? -cardHeight / 2 + 10 : -cardHeight / 2 - 14,
+                  marginTop: -cardHeight / 2,
                   overflow: "visible",
                   backfaceVisibility: "hidden",
                   visibility: "hidden",
