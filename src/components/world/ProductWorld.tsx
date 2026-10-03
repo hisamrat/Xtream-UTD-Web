@@ -117,30 +117,38 @@ const desktopReferenceSlots: ReferenceShowcaseSlot[] = [
 ];
 
 const mobileReferenceSlots: ReferenceShowcaseSlot[] = [
-  // Center Column (3 cards)
+  // 1. Center Hero (Index 0)
   slot(0, 0, 192, 236, 80, "hero", { floatY: -7 }),
+
+  // 2-3. Center Top & Center Bottom (Indices 1, 2)
   slot(0, -280, 158, 172, 52, "feature", { floatY: -6 }),
   slot(0, 280, 158, 172, 48, "feature", { floatY: -6 }),
 
-  // Left Column (X = -195, 3 cards)
-  slot(-195, -195, 148, 160, 46, "medium", { floatY: -5 }),
+  // 4-5. Left Mid & Right Mid (Indices 3, 4) - Bilateral balance
   slot(-195, 90, 148, 160, 47, "medium", { floatY: -6 }),
-  slot(-195, 320, 142, 154, 38, "medium", { opacity: 0.94, floatY: -5 }),
-
-  // Right Column (X = 195, 3 cards)
-  slot(195, -195, 148, 160, 46, "medium", { floatY: -5 }),
   slot(195, 90, 148, 160, 47, "medium", { floatY: -6 }),
+
+  // 6-7. Left Top & Right Top (Indices 5, 6)
+  slot(-195, -195, 148, 160, 46, "medium", { floatY: -5 }),
+  slot(195, -195, 148, 160, 46, "medium", { floatY: -5 }),
+
+  // 8-9. Left Bottom & Right Bottom (Indices 7, 8)
+  slot(-195, 320, 142, 154, 38, "medium", { opacity: 0.94, floatY: -5 }),
   slot(195, 320, 142, 154, 38, "medium", { opacity: 0.94, floatY: -5 }),
 
-  // Top Diagonal Mini Cards (in green mark gaps on mobile)
+  // 10-11. Top Diagonals (Indices 9, 10)
   slot(-102, -295, 58, 58, 42, "mini", { opacity: 0.95, floatY: -5 }),
   slot(102, -295, 58, 58, 42, "mini", { opacity: 0.95, floatY: -5 }),
 
-  // Mini Badges (56x56)
+  // 12-13. Mid-Upper Minis (Indices 11, 12)
   slot(-195, -55, 56, 56, 22, "mini", { opacity: 0.92 }),
   slot(195, -55, 56, 56, 22, "mini", { opacity: 0.92 }),
+
+  // 14-15. Mid-Lower Minis (Indices 13, 14)
   slot(-195, 205, 56, 56, 20, "mini", { opacity: 0.9 }),
   slot(195, 205, 56, 56, 20, "mini", { opacity: 0.9 }),
+
+  // 16-18. Outer Minis (Indices 15, 16, 17)
   slot(-300, -195, 56, 56, 18, "mini", { opacity: 0.88 }),
   slot(-300, 90, 56, 56, 18, "mini", { opacity: 0.88 }),
   slot(300, 90, 56, 56, 18, "mini", { opacity: 0.88 })
@@ -219,24 +227,20 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const closeCooldownUntilRef = useRef<number>(0);
   const showcaseSlots = useMemo(() => getShowcaseSlots(viewportSize), [viewportSize]);
   const isMobile = viewportSize.width < 700;
-  const pageCapacity = isMobile ? 18 : 50;
+  // 13 items per page on mobile (25 products / 13 = 2 pages: 13 + 12 items, 0 duplicates)
+  // 50 items per page on desktop (25 products / 50 = 1 page: 25 items, 0 duplicates)
+  const pageCapacity = isMobile ? 13 : 50;
   const productSetCount = Math.max(1, Math.ceil(orderedProducts.length / pageCapacity));
   const safeProductSetIndex = Math.min(productSetIndex, productSetCount - 1);
   const firstVisibleProductIndex = safeProductSetIndex * pageCapacity;
+
+  // Slices strictly the unique products for this page - ZERO DUPLICATES
   const worldProducts = useMemo(() => {
     if (orderedProducts.length === 0) return [];
     const pageItems = orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + pageCapacity);
-    const otherItems = [
-      ...orderedProducts.slice(firstVisibleProductIndex + pageCapacity),
-      ...orderedProducts.slice(0, firstVisibleProductIndex)
-    ];
-    const fullList = [...pageItems, ...otherItems];
-    const result: Product[] = [];
-    while (result.length < showcaseSlots.length && fullList.length > 0) {
-      result.push(...fullList);
-    }
-    return result.slice(0, showcaseSlots.length);
+    return pageItems.slice(0, showcaseSlots.length);
   }, [firstVisibleProductIndex, orderedProducts, pageCapacity, showcaseSlots.length]);
+
   const activeSlots = showcaseSlots.slice(0, worldProducts.length);
   const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
   const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView);
@@ -381,7 +385,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
     window.setTimeout(() => {
       setShowUI(true);
       window.dispatchEvent(new CustomEvent("xtream-utd:world-ui-ready"));
-    }, 1350);
+    }, 450);
   }, [cancelHoverEnter, cancelHoverHide, productSetCount]);
 
   useEffect(() => {
@@ -920,8 +924,9 @@ function getShowcaseSlots(viewportSize: ViewportSize): ReferenceShowcaseSlot[] {
   return desktopReferenceSlots;
 }
 
-function getShowcaseStageScale(viewportSize: ViewportSize, slots: ReferenceShowcaseSlot[]): number {
-  const bounds = getShowcaseBounds(slots.length > 0 ? slots : desktopReferenceSlots);
+function getShowcaseStageScale(viewportSize: ViewportSize, _slots: ReferenceShowcaseSlot[] = []): number {
+  const reference = viewportSize.width < 700 ? mobileReferenceSlots : desktopReferenceSlots;
+  const bounds = getShowcaseBounds(reference);
   const boundsWidth = bounds.maxX - bounds.minX;
   const boundsHeight = bounds.maxY - bounds.minY;
   const horizontalReserve = viewportSize.width < 700 ? 24 : viewportSize.width >= 1500 ? 120 : 140;
