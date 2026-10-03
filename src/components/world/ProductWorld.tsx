@@ -193,46 +193,40 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const hoverEnterTimerRef = useRef<number | null>(null);
   const hoverHideTimerRef = useRef<number | null>(null);
   const closeCooldownUntilRef = useRef<number>(0);
-  const [swapOffset, setSwapOffset] = useState(0);
-
-  // On first render, hard reload, or navigation to home: swap cards
-  useEffect(() => {
-    if (!mounted) return;
-    try {
-      const stored = sessionStorage.getItem("xtream-utd:home-swap-seed");
-      const nextSeed = stored
-        ? (parseInt(stored, 10) + 7) % Math.max(1, products.length)
-        : Math.floor(Math.random() * Math.max(1, products.length));
-      sessionStorage.setItem("xtream-utd:home-swap-seed", String(nextSeed));
-      setSwapOffset(nextSeed);
-    } catch {
-      setSwapOffset(Math.floor(Math.random() * Math.max(1, products.length)));
-    }
-  }, [mounted, products.length]);
-
-  const orderedProducts = useMemo(() => {
-    if (prioritizedProducts.length <= 1) return prioritizedProducts;
-    const shift = swapOffset % prioritizedProducts.length;
-    return [...prioritizedProducts.slice(shift), ...prioritizedProducts.slice(0, shift)];
-  }, [prioritizedProducts, swapOffset]);
-
+  const orderedProducts = prioritizedProducts;
   const showcaseSlots = useMemo(() => getShowcaseSlots(viewportSize), [viewportSize]);
-  const pageCapacity = viewportSize.width < 700 ? 25 : 50;
+  const isMobile = viewportSize.width < 700;
+  const pageCapacity = isMobile ? 18 : 50;
   const productSetCount = Math.max(1, Math.ceil(orderedProducts.length / pageCapacity));
   const safeProductSetIndex = Math.min(productSetIndex, productSetCount - 1);
   const firstVisibleProductIndex = safeProductSetIndex * pageCapacity;
   const worldProducts = useMemo(() => {
     if (orderedProducts.length === 0) return [];
     const pageItems = orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + pageCapacity);
-    const filled: Product[] = [];
-    while (filled.length < showcaseSlots.length && pageItems.length > 0) {
-      filled.push(...pageItems);
-    }
-    return filled.slice(0, showcaseSlots.length);
+    const otherItems = [
+      ...orderedProducts.slice(firstVisibleProductIndex + pageCapacity),
+      ...orderedProducts.slice(0, firstVisibleProductIndex)
+    ];
+    return [...pageItems, ...otherItems].slice(0, showcaseSlots.length);
   }, [firstVisibleProductIndex, orderedProducts, pageCapacity, showcaseSlots.length]);
   const activeSlots = showcaseSlots.slice(0, worldProducts.length);
   const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
   const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView);
+
+  // Broadcast page count so BottomSwitch knows whether multiple pages exist
+  useEffect(() => {
+    const notifyPageInfo = () => {
+      window.dispatchEvent(
+        new CustomEvent("xtream-utd:world-page-info", {
+          detail: { productSetCount }
+        })
+      );
+    };
+
+    notifyPageInfo();
+    window.addEventListener("xtream-utd:request-page-info", notifyPageInfo);
+    return () => window.removeEventListener("xtream-utd:request-page-info", notifyPageInfo);
+  }, [productSetCount]);
 
   // Track user interaction time
   const lastUserInteractionTimeRef = useRef<number>(Date.now());
@@ -366,17 +360,16 @@ export function ProductWorld({ products }: ProductWorldProps) {
       startRotateX: 0,
       startRotateY: 0
     };
-    if (productSetCount > 1) {
-      setProductSetIndex((prev) => (prev + 1) % productSetCount);
-    } else {
-      setSwapOffset((prev) => (prev + 5) % Math.max(1, products.length));
+    if (productSetCount <= 1) {
+      return;
     }
+    setProductSetIndex((prev) => (prev + 1) % productSetCount);
     setShowUI(false);
     window.setTimeout(() => {
       setShowUI(true);
       window.dispatchEvent(new CustomEvent("xtream-utd:world-ui-ready"));
     }, 450);
-  }, [cancelHoverEnter, cancelHoverHide, productSetCount, products.length]);
+  }, [cancelHoverEnter, cancelHoverHide, productSetCount]);
 
   useEffect(() => {
     const handleKeyDown = (event: KeyboardEvent) => {
@@ -682,7 +675,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
           return (
             <ReferenceWorldProduct
-              key={`showcase-card-${safeProductSetIndex}-${swapOffset}-${product.id}-${index}`}
+              key={`showcase-card-${safeProductSetIndex}-${product.id}-${index}`}
               product={product}
               slot={cardSlot}
               isFlyingIn={!showUI}

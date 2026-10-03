@@ -55,11 +55,33 @@ export function BottomSwitch() {
     return () => window.removeEventListener("xtream-utd:world-ui-ready", handler);
   }, [onHome]);
 
+  const [hasMultiplePages, setHasMultiplePages] = useState(false);
+
+  // Check whether home showcase world has multiple pages
+  useEffect(() => {
+    if (!onHome) {
+      setHasMultiplePages(false);
+      return;
+    }
+    const handlePageInfo = (e: Event) => {
+      const detail = (e as CustomEvent<{ productSetCount: number }>).detail;
+      if (detail && typeof detail.productSetCount === "number") {
+        setHasMultiplePages(detail.productSetCount > 1);
+      }
+    };
+    window.addEventListener("xtream-utd:world-page-info", handlePageInfo);
+    window.dispatchEvent(new CustomEvent("xtream-utd:request-page-info"));
+    return () => window.removeEventListener("xtream-utd:world-page-info", handlePageInfo);
+  }, [onHome]);
+
   const handleReload = useCallback(() => {
+    if (onHome && !hasMultiplePages) {
+      return;
+    }
     setReloading(true);
     window.dispatchEvent(new CustomEvent("xtream-utd:world-reload"));
     window.setTimeout(() => setReloading(false), 500);
-  }, []);
+  }, [hasMultiplePages, onHome]);
 
   const handlePrev = useCallback(() => {
     window.dispatchEvent(new CustomEvent("xtream-utd:explore-prev"));
@@ -170,13 +192,28 @@ export function BottomSwitch() {
   // All other pages (Explore, Contact, About, Terms): Products (LayoutGrid)
   const renderSlot3 = () => {
     if (onHome) {
+      const isDisabled = !hasMultiplePages;
       return (
         <button
           type="button"
-          className="bottom-switch-reload"
+          className={`bottom-switch-reload ${isDisabled ? "is-disabled" : ""}`}
           onClick={handleReload}
-          aria-label="Reload products to see next set"
-          title={t("nav_reload")}
+          disabled={isDisabled}
+          aria-disabled={isDisabled}
+          aria-label={
+            isDisabled
+              ? language === "bn"
+                ? "শুধুমাত্র ১টি পৃষ্ঠা রয়েছে"
+                : "Only 1 page of products"
+              : t("nav_reload")
+          }
+          title={
+            isDisabled
+              ? language === "bn"
+                ? "শুধুমাত্র ১টি পৃষ্ঠা রয়েছে"
+                : "Only 1 page available"
+              : t("nav_reload")
+          }
         >
           <RotateCw size={15} className={reloading ? "is-spinning" : ""} aria-hidden="true" />
           <span>{t("nav_reload")}</span>
