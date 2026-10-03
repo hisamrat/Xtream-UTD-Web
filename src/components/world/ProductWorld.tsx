@@ -149,7 +149,7 @@ const mobileReferenceSlots: ReferenceShowcaseSlot[] = [
 export function ProductWorld({ products }: ProductWorldProps) {
   const router = useRouter();
   const { t, formatNumber, tCategory } = useLanguage();
-  const prioritizedProducts = useMemo(() => prioritizeWorldProducts(products), [products]);
+  const orderedProducts = products;
   const [mounted, setMounted] = useState(false);
   const [showUI, setShowUI] = useState(false);
   const [viewportSize, setViewportSize] = useState<ViewportSize>({ width: 1440, height: 1120 });
@@ -193,7 +193,6 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const hoverEnterTimerRef = useRef<number | null>(null);
   const hoverHideTimerRef = useRef<number | null>(null);
   const closeCooldownUntilRef = useRef<number>(0);
-  const orderedProducts = prioritizedProducts;
   const showcaseSlots = useMemo(() => getShowcaseSlots(viewportSize), [viewportSize]);
   const isMobile = viewportSize.width < 700;
   const pageCapacity = isMobile ? 18 : 50;
@@ -203,30 +202,11 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const worldProducts = useMemo(() => {
     if (orderedProducts.length === 0) return [];
     const pageItems = orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + pageCapacity);
-    const otherItems = [
-      ...orderedProducts.slice(firstVisibleProductIndex + pageCapacity),
-      ...orderedProducts.slice(0, firstVisibleProductIndex)
-    ];
-    return [...pageItems, ...otherItems].slice(0, showcaseSlots.length);
+    return pageItems.slice(0, showcaseSlots.length);
   }, [firstVisibleProductIndex, orderedProducts, pageCapacity, showcaseSlots.length]);
   const activeSlots = showcaseSlots.slice(0, worldProducts.length);
   const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
   const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView);
-
-  // Broadcast page count so BottomSwitch knows whether multiple pages exist
-  useEffect(() => {
-    const notifyPageInfo = () => {
-      window.dispatchEvent(
-        new CustomEvent("xtream-utd:world-page-info", {
-          detail: { productSetCount }
-        })
-      );
-    };
-
-    notifyPageInfo();
-    window.addEventListener("xtream-utd:request-page-info", notifyPageInfo);
-    return () => window.removeEventListener("xtream-utd:request-page-info", notifyPageInfo);
-  }, [productSetCount]);
 
   // Track user interaction time
   const lastUserInteractionTimeRef = useRef<number>(Date.now());
@@ -885,80 +865,8 @@ function ReferenceWorldProduct({
 }
 
 // -------------------------------------------------------------
-// Canonical Placement & Helper Functions (from 18edb0a)
+// Viewport Slot Configuration & Helper Functions
 // -------------------------------------------------------------
-const canonicalHomeSlugs = [
-  // Center Column:
-  "atomos-ninja-v", // Slot 0: Center Hero (Zoom Ninje V)
-  "manfrotto-tripod-mt055", // Slot 1: Center Top (Manfrotto Tripod)
-  "dji-rs-3-pro", // Slot 2: Center Bottom (DJI RS 3 Pro)
-
-  // Left Side:
-  "sennheiser-hd-660s", // Slot 3: Left Tier 1 Top (Sennheiser HD 660S)
-  "sigma-24-70mm-f2-8", // Slot 4: Left Tier 1 Mid (Sigma 24-70mm)
-  "rode-wireless-go-ii", // Slot 5: Left Tier 1 Bottom (RØDE Wireless GO II)
-  "desk-cable-clips", // Slot 6: Left Tier 2 Top (Stand Dot)
-  "anker-power-strip", // Slot 7: Left Tier 2 Mid (Rec Dot)
-  "shure-sm7b", // Slot 8: Left Tier 2 Bottom (Audio Link)
-  "elgato-stream-deck-mk2", // Slot 9: Left Tier 3 Mid (Cinema Slate)
-
-  // Right Side:
-  "aputure-1200-ji", // Slot 10: Right Tier 1 Top (Aputure 1200 3I)
-  "sony-a7-iv", // Slot 11: Right Tier 1 Mid (Sony A7 IV)
-  "canon-eos-r5", // Slot 12: Right Tier 1 Bottom (Canon EOS R5)
-  "aputure-120d-ii", // Slot 13: Right Tier 2 Top (Aputure 120D II)
-  "blackmagic-pocket-cinema-6k", // Slot 14: Right Tier 2 Mid (Blackmagic)
-  "godox-sl60w", // Slot 15: Right Tier 2 Bottom (Godox SL90W)
-  "manfrotto-monitor-mount", // Slot 16: Right Tier 3 Mid (Manftoge Trigurd)
-
-  // Surrounding Floating Badges (Slots 17+):
-  "mini-badge-dot-1",
-  "mini-badge-dot-2",
-  "mini-badge-dot-blue",
-  "mini-badge-dot-red",
-  "mini-badge-stand",
-  "mini-badge-rec",
-  "mini-badge-audio",
-  "mini-badge-slate",
-  "mini-badge-mic-green",
-  "mini-badge-lamp-orange",
-  "mini-badge-headset",
-  "mini-badge-cam-cyan",
-  "mini-badge-desk-orange",
-  "mini-badge-video-cyan",
-  "mini-badge-mic-pink",
-  "mini-badge-cinema-purple",
-  "mini-badge-monitor-cyan",
-  "mini-badge-lamp-yellow",
-  "mini-badge-tripod-blue",
-  "mini-badge-tripod-purple",
-  "mini-badge-bulb-green",
-  "mini-badge-msg-green"
-];
-
-function prioritizeWorldProducts(products: Product[]): Product[] {
-  const productMap = new Map(products.map((product) => [product.slug, product]));
-  const result: Product[] = [];
-  const seen = new Set<string>();
-
-  for (const slug of canonicalHomeSlugs) {
-    const product = productMap.get(slug);
-    if (product && !seen.has(slug)) {
-      result.push(product);
-      seen.add(slug);
-    }
-  }
-
-  for (const product of products) {
-    if (!seen.has(product.slug)) {
-      result.push(product);
-      seen.add(product.slug);
-    }
-  }
-
-  return result;
-}
-
 function getShowcaseSlots(viewportSize: ViewportSize): ReferenceShowcaseSlot[] {
   if (viewportSize.width < 700) {
     return mobileReferenceSlots;

@@ -738,26 +738,6 @@ body:has(.home-main) .bottom-switch a[aria-current="page"] {
   animation: world-reload-spin 480ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.bottom-switch button:disabled,
-.bottom-switch button.is-disabled {
-  opacity: 0.32 !important;
-  cursor: not-allowed !important;
-  filter: grayscale(0.8);
-}
-
-.bottom-switch button:disabled:hover,
-.bottom-switch button.is-disabled:hover {
-  background: transparent !important;
-  color: inherit !important;
-}
-
-body:has(.home-main) .bottom-switch button:disabled,
-body:has(.home-main) .bottom-switch button.is-disabled {
-  opacity: 0.3 !important;
-  cursor: not-allowed !important;
-  color: rgb(247 241 232 / 30%) !important;
-}
-
 .world-set-controls {
   position: fixed;
   z-index: 46;
