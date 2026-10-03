@@ -117,39 +117,53 @@ const desktopReferenceSlots: ReferenceShowcaseSlot[] = [
 ];
 
 const mobileReferenceSlots: ReferenceShowcaseSlot[] = [
-  // Center Column (3 cards)
-  slot(0, 0, 192, 236, 80, "hero", { floatY: -7 }),
-  slot(0, -280, 158, 172, 52, "feature", { floatY: -6 }),
-  slot(0, 280, 158, 172, 48, "feature", { floatY: -6 }),
+  // 1. Center Hero (Index 0)
+  slot(0, 0, 176, 212, 80, "hero", { floatY: -7 }),
 
-  // Left Column (X = -195, 3 cards)
-  slot(-195, -195, 148, 160, 46, "medium", { floatY: -5 }),
-  slot(-195, 90, 148, 160, 47, "medium", { floatY: -6 }),
-  slot(-195, 320, 142, 154, 38, "medium", { opacity: 0.94, floatY: -5 }),
+  // 2-3. Center Top & Center Bottom (Indices 1, 2)
+  slot(0, -255, 148, 160, 52, "feature", { floatY: -6 }),
+  slot(0, 255, 148, 160, 48, "feature", { floatY: -6 }),
 
-  // Right Column (X = 195, 3 cards)
-  slot(195, -195, 148, 160, 46, "medium", { floatY: -5 }),
-  slot(195, 90, 148, 160, 47, "medium", { floatY: -6 }),
-  slot(195, 320, 142, 154, 38, "medium", { opacity: 0.94, floatY: -5 }),
+  // 4-5. Left Mid & Right Mid (Indices 3, 4)
+  slot(-190, 40, 138, 148, 47, "medium", { floatY: -6 }),
+  slot(190, 40, 138, 148, 47, "medium", { floatY: -6 }),
 
-  // Top Diagonal Mini Cards (in green mark gaps on mobile)
-  slot(-102, -295, 58, 58, 42, "mini", { opacity: 0.95, floatY: -5 }),
-  slot(102, -295, 58, 58, 42, "mini", { opacity: 0.95, floatY: -5 }),
+  // 6-7. Left Top & Right Top (Indices 5, 6)
+  slot(-190, -180, 138, 148, 46, "medium", { floatY: -5 }),
+  slot(190, -180, 138, 148, 46, "medium", { floatY: -5 }),
 
-  // Mini Badges (56x56)
-  slot(-195, -55, 56, 56, 22, "mini", { opacity: 0.92 }),
-  slot(195, -55, 56, 56, 22, "mini", { opacity: 0.92 }),
-  slot(-195, 205, 56, 56, 20, "mini", { opacity: 0.9 }),
-  slot(195, 205, 56, 56, 20, "mini", { opacity: 0.9 }),
-  slot(-300, -195, 56, 56, 18, "mini", { opacity: 0.88 }),
-  slot(-300, 90, 56, 56, 18, "mini", { opacity: 0.88 }),
-  slot(300, 90, 56, 56, 18, "mini", { opacity: 0.88 })
+  // 8-9. Left Bottom & Right Bottom (Indices 7, 8) - ALWAYS IN CORE 9 GRID!
+  slot(-190, 230, 136, 146, 44, "medium", { opacity: 0.95, floatY: -5 }),
+  slot(190, 230, 136, 146, 44, "medium", { opacity: 0.95, floatY: -5 }),
+
+  // 10-11. Upper Diagonals (Indices 9, 10) - Fills upper gaps
+  slot(-96, -130, 56, 56, 42, "mini", { opacity: 0.95, floatY: -5 }),
+  slot(96, -130, 56, 56, 42, "mini", { opacity: 0.95, floatY: -5 }),
+
+  // 12-13. Lower Diagonals (Indices 11, 12) - Fills lower gaps
+  slot(-96, 130, 56, 56, 42, "mini", { opacity: 0.95, floatY: -5 }),
+  slot(96, 130, 56, 56, 42, "mini", { opacity: 0.95, floatY: -5 }),
+
+  // 14-15. Mid-Upper Flank Minis (Indices 13, 14)
+  slot(-190, -70, 54, 54, 38, "mini", { opacity: 0.92, floatY: -5 }),
+  slot(190, -70, 54, 54, 38, "mini", { opacity: 0.92, floatY: -5 }),
+
+  // 16-17. Mid-Lower Flank Minis (Indices 15, 16)
+  slot(-190, 135, 54, 54, 38, "mini", { opacity: 0.92, floatY: -5 }),
+  slot(190, 135, 54, 54, 38, "mini", { opacity: 0.92, floatY: -5 }),
+
+  // 18-19. Top Crown Minis (Indices 17, 18)
+  slot(-96, -265, 52, 52, 34, "mini", { opacity: 0.9, floatY: -5 }),
+  slot(96, -265, 52, 52, 34, "mini", { opacity: 0.9, floatY: -5 }),
+
+  // 20-21. Outer Margin Floats (Indices 19, 20)
+  slot(-280, -40, 52, 52, 20, "mini", { opacity: 0.86 }),
+  slot(280, -40, 52, 52, 20, "mini", { opacity: 0.86 })
 ];
 
 export function ProductWorld({ products }: ProductWorldProps) {
   const router = useRouter();
   const { t, formatNumber, tCategory } = useLanguage();
-  const prioritizedProducts = useMemo(() => prioritizeWorldProducts(products), [products]);
   const [mounted, setMounted] = useState(false);
   const [showUI, setShowUI] = useState(false);
   const [viewportSize, setViewportSize] = useState<ViewportSize>({ width: 1440, height: 1120 });
@@ -165,6 +179,31 @@ export function ProductWorld({ products }: ProductWorldProps) {
   });
   const [productSetIndex, setProductSetIndex] = useState(0);
   const [indicatorPhase, setIndicatorPhase] = useState<"pages" | "scroll">("pages");
+  const [swapOffset, setSwapOffset] = useState(0);
+
+  // On first render, hard reload, or navigation from other pages to home: swap cards
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      const prevSeed = sessionStorage.getItem("xtream-utd:home-swap-offset");
+      const parsed = prevSeed ? parseInt(prevSeed, 10) : NaN;
+      const step = 1 + Math.floor(Math.random() * Math.max(1, products.length - 1));
+      const nextOffset = Number.isNaN(parsed)
+        ? Math.floor(Math.random() * Math.max(1, products.length))
+        : (parsed + step) % Math.max(1, products.length);
+
+      sessionStorage.setItem("xtream-utd:home-swap-offset", String(nextOffset));
+      setSwapOffset(nextOffset);
+    } catch {
+      setSwapOffset(Math.floor(Math.random() * Math.max(1, products.length)));
+    }
+  }, [mounted, products.length]);
+
+  const orderedProducts = useMemo(() => {
+    if (products.length <= 1 || swapOffset === 0) return products;
+    const shift = swapOffset % products.length;
+    return [...products.slice(shift), ...products.slice(0, shift)];
+  }, [products, swapOffset]);
 
   // Continuous 3-second alternating cycle between Pages Indicator and Animated Scroll Icon
   useEffect(() => {
@@ -193,26 +232,23 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const hoverEnterTimerRef = useRef<number | null>(null);
   const hoverHideTimerRef = useRef<number | null>(null);
   const closeCooldownUntilRef = useRef<number>(0);
-  const orderedProducts = prioritizedProducts;
   const showcaseSlots = useMemo(() => getShowcaseSlots(viewportSize), [viewportSize]);
-  const mainSlotCount = useMemo(
-    () => Math.max(1, showcaseSlots.filter((slot) => slot.kind !== "mini").length),
-    [showcaseSlots]
-  );
-  const productSetCount = Math.max(1, Math.ceil(orderedProducts.length / mainSlotCount));
+  const isMobile = viewportSize.width < 700;
+  // Dynamically calculate capacity: on mobile matches dynamically fitted slots, 50 on desktop
+  const pageCapacity = isMobile ? showcaseSlots.length : 50;
+  const productSetCount = Math.max(1, Math.ceil(orderedProducts.length / pageCapacity));
   const safeProductSetIndex = Math.min(productSetIndex, productSetCount - 1);
-  const firstVisibleProductIndex = safeProductSetIndex * mainSlotCount;
+  const firstVisibleProductIndex = safeProductSetIndex * pageCapacity;
+
+  // Slices strictly the unique products for this page - ZERO DUPLICATES
   const worldProducts = useMemo(() => {
     if (orderedProducts.length === 0) return [];
-    const pageItems = orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + mainSlotCount);
-    const otherItems = [
-      ...orderedProducts.slice(firstVisibleProductIndex + mainSlotCount),
-      ...orderedProducts.slice(0, firstVisibleProductIndex)
-    ];
-    return [...pageItems, ...otherItems].slice(0, showcaseSlots.length);
-  }, [firstVisibleProductIndex, mainSlotCount, orderedProducts, showcaseSlots.length]);
+    const pageItems = orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + pageCapacity);
+    return pageItems.slice(0, showcaseSlots.length);
+  }, [firstVisibleProductIndex, orderedProducts, pageCapacity, showcaseSlots.length]);
+
   const activeSlots = showcaseSlots.slice(0, worldProducts.length);
-  const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
+  const stageScale = getShowcaseStageScale(viewportSize, showcaseSlots);
   const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView);
 
   // Track user interaction time
@@ -355,7 +391,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
     window.setTimeout(() => {
       setShowUI(true);
       window.dispatchEvent(new CustomEvent("xtream-utd:world-ui-ready"));
-    }, 450);
+    }, 1350);
   }, [cancelHoverEnter, cancelHoverHide, productSetCount]);
 
   useEffect(() => {
@@ -622,7 +658,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
         hoveredSlug ? "is-hovering" : "",
         worldPaused ? "is-paused" : "",
         worldView.dragging ? "is-dragging" : "",
-        showUI ? "ui-ready" : "ui-pending"
+        showUI ? "ui-ready" : "ui-hidden"
       ]
         .filter(Boolean)
         .join(" ")}
@@ -789,16 +825,13 @@ export function ProductWorld({ products }: ProductWorldProps) {
   );
 }
 
-// -------------------------------------------------------------
-// Reference Showcase Card Component (from 18edb0a)
-// -------------------------------------------------------------
 type ReferenceWorldProductProps = {
   product: Product;
   slot: ReferenceShowcaseSlot;
+  flyInIndex: number;
   isFlyingIn: boolean;
   isDimmed: boolean;
   isHovered: boolean;
-  flyInIndex: number;
   onPreviewEnter: (slug: string) => void;
   onPreviewLeave: () => void;
   onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
@@ -810,10 +843,10 @@ type ReferenceWorldProductProps = {
 function ReferenceWorldProduct({
   product,
   slot: cardSlot,
+  flyInIndex,
   isFlyingIn,
   isDimmed,
   isHovered,
-  flyInIndex,
   onPreviewEnter,
   onPreviewLeave,
   onPointerDown,
@@ -871,84 +904,20 @@ function ReferenceWorldProduct({
   );
 }
 
-// -------------------------------------------------------------
-// Canonical Placement & Helper Functions (from 18edb0a)
-// -------------------------------------------------------------
-const canonicalHomeSlugs = [
-  // Center Column:
-  "atomos-ninja-v", // Slot 0: Center Hero (Zoom Ninje V)
-  "manfrotto-tripod-mt055", // Slot 1: Center Top (Manfrotto Tripod)
-  "dji-rs-3-pro", // Slot 2: Center Bottom (DJI RS 3 Pro)
-
-  // Left Side:
-  "sennheiser-hd-660s", // Slot 3: Left Tier 1 Top (Sennheiser HD 660S)
-  "sigma-24-70mm-f2-8", // Slot 4: Left Tier 1 Mid (Sigma 24-70mm)
-  "rode-wireless-go-ii", // Slot 5: Left Tier 1 Bottom (RØDE Wireless GO II)
-  "desk-cable-clips", // Slot 6: Left Tier 2 Top (Stand Dot)
-  "anker-power-strip", // Slot 7: Left Tier 2 Mid (Rec Dot)
-  "shure-sm7b", // Slot 8: Left Tier 2 Bottom (Audio Link)
-  "elgato-stream-deck-mk2", // Slot 9: Left Tier 3 Mid (Cinema Slate)
-
-  // Right Side:
-  "aputure-1200-ji", // Slot 10: Right Tier 1 Top (Aputure 1200 3I)
-  "sony-a7-iv", // Slot 11: Right Tier 1 Mid (Sony A7 IV)
-  "canon-eos-r5", // Slot 12: Right Tier 1 Bottom (Canon EOS R5)
-  "aputure-120d-ii", // Slot 13: Right Tier 2 Top (Aputure 120D II)
-  "blackmagic-pocket-cinema-6k", // Slot 14: Right Tier 2 Mid (Blackmagic)
-  "godox-sl60w", // Slot 15: Right Tier 2 Bottom (Godox SL90W)
-  "manfrotto-monitor-mount", // Slot 16: Right Tier 3 Mid (Manftoge Trigurd)
-
-  // Surrounding Floating Badges (Slots 17+):
-  "mini-badge-dot-1",
-  "mini-badge-dot-2",
-  "mini-badge-dot-blue",
-  "mini-badge-dot-red",
-  "mini-badge-stand",
-  "mini-badge-rec",
-  "mini-badge-audio",
-  "mini-badge-slate",
-  "mini-badge-mic-green",
-  "mini-badge-lamp-orange",
-  "mini-badge-headset",
-  "mini-badge-cam-cyan",
-  "mini-badge-desk-orange",
-  "mini-badge-video-cyan",
-  "mini-badge-mic-pink",
-  "mini-badge-cinema-purple",
-  "mini-badge-monitor-cyan",
-  "mini-badge-lamp-yellow",
-  "mini-badge-tripod-blue",
-  "mini-badge-tripod-purple",
-  "mini-badge-bulb-green",
-  "mini-badge-msg-green"
-];
-
-function prioritizeWorldProducts(products: Product[]): Product[] {
-  const productMap = new Map(products.map((product) => [product.slug, product]));
-  const result: Product[] = [];
-  const seen = new Set<string>();
-
-  for (const slug of canonicalHomeSlugs) {
-    const product = productMap.get(slug);
-    if (product && !seen.has(slug)) {
-      result.push(product);
-      seen.add(slug);
-    }
-  }
-
-  for (const product of products) {
-    if (!seen.has(product.slug)) {
-      result.push(product);
-      seen.add(product.slug);
-    }
-  }
-
-  return result;
+function getDynamicMobileSlotCount(viewportSize: ViewportSize): number {
+  const h = viewportSize.height;
+  const w = viewportSize.width;
+  if (h < 560 || w < 340) return 11;
+  if (h < 700 || w < 375) return 13;
+  if (h < 800) return 15;
+  if (h < 880) return 17;
+  return 19;
 }
 
 function getShowcaseSlots(viewportSize: ViewportSize): ReferenceShowcaseSlot[] {
   if (viewportSize.width < 700) {
-    return mobileReferenceSlots;
+    const slotCount = getDynamicMobileSlotCount(viewportSize);
+    return mobileReferenceSlots.slice(0, slotCount);
   }
 
   if (viewportSize.width < 1024) {
@@ -967,16 +936,24 @@ function getShowcaseSlots(viewportSize: ViewportSize): ReferenceShowcaseSlot[] {
 }
 
 function getShowcaseStageScale(viewportSize: ViewportSize, slots: ReferenceShowcaseSlot[]): number {
-  const bounds = getShowcaseBounds(slots.length > 0 ? slots : desktopReferenceSlots);
+  const reference =
+    viewportSize.width < 700
+      ? slots.length > 0
+        ? slots
+        : mobileReferenceSlots
+      : slots.length > 0
+      ? slots
+      : desktopReferenceSlots;
+  const bounds = getShowcaseBounds(reference);
   const boundsWidth = bounds.maxX - bounds.minX;
   const boundsHeight = bounds.maxY - bounds.minY;
-  const horizontalReserve = viewportSize.width < 700 ? 24 : viewportSize.width >= 1500 ? 120 : 140;
-  const verticalReserve = viewportSize.width < 700 ? 170 : 210;
+  const horizontalReserve = viewportSize.width < 700 ? 20 : viewportSize.width >= 1500 ? 120 : 140;
+  const verticalReserve = viewportSize.width < 700 ? 160 : 250;
   const widthFit = Math.max(0.2, (viewportSize.width - horizontalReserve) / boundsWidth);
   const heightFit = Math.max(0.2, (viewportSize.height - verticalReserve) / boundsHeight);
   const maxScale =
-    viewportSize.width < 700 ? 1 : viewportSize.width < 1024 ? 0.78 : viewportSize.width < 1180 ? 0.88 : 1.0;
-  const minScale = viewportSize.width < 700 ? 0.58 : 0.5;
+    viewportSize.width < 700 ? 1 : viewportSize.width < 1024 ? 0.78 : viewportSize.width < 1180 ? 0.88 : 0.96;
+  const minScale = viewportSize.width < 700 ? 0.58 : 0.45;
 
   return clamp(Math.min(widthFit, heightFit, maxScale), minScale, maxScale);
 }
@@ -988,10 +965,10 @@ function getShowcaseStageStyle(
 ): CSSProperties & Record<`--${string}`, string> {
   const verticalOffset =
     viewportSize.width < 700
-      ? "-26px"
+      ? "0px"
       : viewportSize.width >= 1500 && viewportSize.height < 960
-      ? "-18px"
-      : "-14px";
+      ? "-22px"
+      : "-16px";
 
   const effectiveScale = scale * worldView.zoom;
 
