@@ -149,7 +149,6 @@ const mobileReferenceSlots: ReferenceShowcaseSlot[] = [
 export function ProductWorld({ products }: ProductWorldProps) {
   const router = useRouter();
   const { t, formatNumber, tCategory } = useLanguage();
-  const orderedProducts = products;
   const [mounted, setMounted] = useState(false);
   const [showUI, setShowUI] = useState(false);
   const [viewportSize, setViewportSize] = useState<ViewportSize>({ width: 1440, height: 1120 });
@@ -165,6 +164,31 @@ export function ProductWorld({ products }: ProductWorldProps) {
   });
   const [productSetIndex, setProductSetIndex] = useState(0);
   const [indicatorPhase, setIndicatorPhase] = useState<"pages" | "scroll">("pages");
+  const [swapOffset, setSwapOffset] = useState(0);
+
+  // On first render, hard reload, or navigation from other pages to home: swap cards
+  useEffect(() => {
+    if (!mounted) return;
+    try {
+      const prevSeed = sessionStorage.getItem("xtream-utd:home-swap-offset");
+      const parsed = prevSeed ? parseInt(prevSeed, 10) : NaN;
+      const step = 1 + Math.floor(Math.random() * Math.max(1, products.length - 1));
+      const nextOffset = Number.isNaN(parsed)
+        ? Math.floor(Math.random() * Math.max(1, products.length))
+        : (parsed + step) % Math.max(1, products.length);
+
+      sessionStorage.setItem("xtream-utd:home-swap-offset", String(nextOffset));
+      setSwapOffset(nextOffset);
+    } catch {
+      setSwapOffset(Math.floor(Math.random() * Math.max(1, products.length)));
+    }
+  }, [mounted, products.length]);
+
+  const orderedProducts = useMemo(() => {
+    if (products.length <= 1 || swapOffset === 0) return products;
+    const shift = swapOffset % products.length;
+    return [...products.slice(shift), ...products.slice(0, shift)];
+  }, [products, swapOffset]);
 
   // Continuous 3-second alternating cycle between Pages Indicator and Animated Scroll Icon
   useEffect(() => {
@@ -655,7 +679,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
           return (
             <ReferenceWorldProduct
-              key={`showcase-card-${safeProductSetIndex}-${product.id}-${index}`}
+              key={`showcase-card-${safeProductSetIndex}-${swapOffset}-${product.id}-${index}`}
               product={product}
               slot={cardSlot}
               isFlyingIn={!showUI}
