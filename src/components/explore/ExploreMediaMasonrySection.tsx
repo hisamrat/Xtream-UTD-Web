@@ -54,6 +54,7 @@ function ShowcaseCardMedia({
   const [imgError, setImgError] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [candidateIndex, setCandidateIndex] = useState(0);
+  const [isLoaded, setIsLoaded] = useState(false);
 
   const youtubeId = useMemo(() => {
     return extractYouTubeVideoId(item.mediaUrl) || extractYouTubeVideoId(item.posterUrl);
@@ -91,6 +92,7 @@ function ShowcaseCardMedia({
     setCandidateIndex(0);
     setImgError(false);
     setVideoError(false);
+    setIsLoaded(false);
   }, [candidates, item.mediaUrl]);
 
   const activeSrc = candidates[candidateIndex] || "";
@@ -189,11 +191,21 @@ function ShowcaseCardMedia({
   if (activeSrc && !imgError) {
     return (
       <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
+        <div className="product-placeholder-underlay" aria-hidden="true">
+          <div className="product-placeholder-backdrop" />
+          <div className="product-placeholder-content">
+            <div className="product-placeholder-icon-wrap">
+              <Package size={28} className="product-placeholder-icon" strokeWidth={1.5} />
+            </div>
+          </div>
+        </div>
         <img
           src={activeSrc}
           alt={title}
           className="showcase-media-content showcase-image-element"
           style={{
+            position: "relative",
+            zIndex: 2,
             width: "100%",
             height: "100%",
             objectFit: "cover",
@@ -214,8 +226,11 @@ function ShowcaseCardMedia({
   return (
     <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
       <div className="product-placeholder-wrap" aria-hidden="true">
+        <div className="product-placeholder-backdrop" />
         <div className="product-placeholder-content">
-          <Package size={36} className="product-placeholder-icon" strokeWidth={1.5} />
+          <div className="product-placeholder-icon-wrap">
+            <Package size={36} className="product-placeholder-icon" strokeWidth={1.5} />
+          </div>
         </div>
       </div>
       <div className="showcase-card-scrim" aria-hidden="true" />

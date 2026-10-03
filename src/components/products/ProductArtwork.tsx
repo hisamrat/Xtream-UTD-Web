@@ -25,7 +25,6 @@ export function ProductArtwork({
   imageSrc,
   className = ""
 }: ProductArtworkProps) {
-  const accent = product.accent || "#3385FF";
   const [candidateIndex, setCandidateIndex] = useState(0);
   const [hasError, setHasError] = useState(false);
 
@@ -49,27 +48,19 @@ export function ProductArtwork({
     if (imageSrc) {
       addUrl(imageSrc);
     } else if (imageRole === "gallery" || imageRole === "thumbnail") {
-      if (product.gallery_images_url && product.gallery_images_url[viewIndex]) {
-        addUrl(product.gallery_images_url[viewIndex]);
-      } else if (product.gallery_images && product.gallery_images[viewIndex]) {
+      if (product.gallery_images && product.gallery_images[viewIndex]) {
         addUrl(product.gallery_images[viewIndex]);
-      } else if (product.poster_image_url) {
-        addUrl(product.poster_image_url);
       } else if (product.cover_image) {
         addUrl(product.cover_image);
       } else if (product.main_image) {
         addUrl(product.main_image);
       }
     } else {
-      // Default / cover: prioritize poster_image_url, fallback to cover_image, main_image, gallery
-      if (product.poster_image_url) {
-        addUrl(product.poster_image_url);
-      } else if (product.cover_image) {
+      // Default / cover: prioritize cover_image, fallback to main_image, gallery
+      if (product.cover_image) {
         addUrl(product.cover_image);
       } else if (product.main_image) {
         addUrl(product.main_image);
-      } else if (product.gallery_images_url && product.gallery_images_url.length > 0) {
-        addUrl(product.gallery_images_url[0]);
       } else if (product.gallery_images && product.gallery_images.length > 0) {
         addUrl(product.gallery_images[0]);
       }
@@ -94,29 +85,25 @@ export function ProductArtwork({
   };
 
   const showPlaceholder = hasError || !activeSrc;
+  const fitMode = imageRole === "gallery" ? "contain" : "cover";
 
-  // If there's no valid image or all candidate URLs failed, show the clean Package placeholder
+  // Solid clean dark placeholder when no valid image or all candidate URLs failed
   if (showPlaceholder) {
     return (
       <div
         className={`product-placeholder-wrap ${compact ? "is-compact" : ""} ${className}`}
-        style={{ "--art-accent": accent } as CSSProperties}
         aria-hidden="true"
       >
         <div className="product-placeholder-content">
           <Package
-            size={compact ? 22 : isThumbnail ? 24 : 40}
+            size={compact ? 20 : isThumbnail ? 22 : 36}
             className="product-placeholder-icon"
-            strokeWidth={1.5}
+            strokeWidth={1.25}
           />
         </div>
       </div>
     );
   }
-
-  // Cards and thumbnails use "cover" for edge-to-edge full bleed.
-  // Main gallery viewer in details page uses "contain" to prevent cropping detailed product shots.
-  const fitMode = imageRole === "gallery" ? "contain" : "cover";
 
   return (
     <div
@@ -124,9 +111,21 @@ export function ProductArtwork({
       className={`product-art ${compact ? "product-art-compact" : "product-art-full"} ${
         isThumbnail ? "product-art-thumb" : ""
       } ${className}`}
-      style={{ "--art-accent": accent, width: "100%", height: "100%" } as CSSProperties}
+      style={{ width: "100%", height: "100%", position: "relative" } as CSSProperties}
     >
       <div className={`product-real-image-wrap ${compact ? "is-compact" : ""} role-${imageRole}`}>
+        {/* Solid dark underlay visible while image loads */}
+        <div className="product-placeholder-underlay" aria-hidden="true">
+          <div className="product-placeholder-content">
+            <Package
+              size={compact ? 20 : isThumbnail ? 22 : 36}
+              className="product-placeholder-icon"
+              strokeWidth={1.25}
+            />
+          </div>
+        </div>
+
+        {/* Real Product Image */}
         <img
           key={activeSrc}
           src={activeSrc}
@@ -138,6 +137,8 @@ export function ProductArtwork({
             width: "100%",
             height: "100%",
             display: "block",
+            position: "relative",
+            zIndex: 2,
           }}
           referrerPolicy="no-referrer"
           loading="eager"
@@ -148,3 +149,4 @@ export function ProductArtwork({
     </div>
   );
 }
+
