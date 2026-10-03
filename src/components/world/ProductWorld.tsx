@@ -195,14 +195,22 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const closeCooldownUntilRef = useRef<number>(0);
   const orderedProducts = prioritizedProducts;
   const showcaseSlots = useMemo(() => getShowcaseSlots(viewportSize), [viewportSize]);
-  const productLimit = showcaseSlots.length;
-  const productSetCount = Math.max(1, Math.ceil(orderedProducts.length / productLimit));
-  const safeProductSetIndex = Math.min(productSetIndex, productSetCount - 1);
-  const firstVisibleProductIndex = safeProductSetIndex * productLimit;
-  const worldProducts = useMemo(
-    () => orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + productLimit),
-    [firstVisibleProductIndex, orderedProducts, productLimit]
+  const mainSlotCount = useMemo(
+    () => Math.max(1, showcaseSlots.filter((slot) => slot.kind !== "mini").length),
+    [showcaseSlots]
   );
+  const productSetCount = Math.max(1, Math.ceil(orderedProducts.length / mainSlotCount));
+  const safeProductSetIndex = Math.min(productSetIndex, productSetCount - 1);
+  const firstVisibleProductIndex = safeProductSetIndex * mainSlotCount;
+  const worldProducts = useMemo(() => {
+    if (orderedProducts.length === 0) return [];
+    const pageItems = orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + mainSlotCount);
+    const otherItems = [
+      ...orderedProducts.slice(firstVisibleProductIndex + mainSlotCount),
+      ...orderedProducts.slice(0, firstVisibleProductIndex)
+    ];
+    return [...pageItems, ...otherItems].slice(0, showcaseSlots.length);
+  }, [firstVisibleProductIndex, mainSlotCount, orderedProducts, showcaseSlots.length]);
   const activeSlots = showcaseSlots.slice(0, worldProducts.length);
   const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
   const stageStyle = getShowcaseStageStyle(stageScale, viewportSize, worldView);
@@ -339,7 +347,15 @@ export function ProductWorld({ products }: ProductWorldProps) {
       startRotateX: 0,
       startRotateY: 0
     };
+    if (productSetCount <= 1) {
+      return;
+    }
     setProductSetIndex((prev) => (prev + 1) % productSetCount);
+    setShowUI(false);
+    window.setTimeout(() => {
+      setShowUI(true);
+      window.dispatchEvent(new CustomEvent("xtream-utd:world-ui-ready"));
+    }, 450);
   }, [cancelHoverEnter, cancelHoverHide, productSetCount]);
 
   useEffect(() => {
@@ -646,7 +662,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
           return (
             <ReferenceWorldProduct
-              key={`showcase-card-${product.id}-${index}`}
+              key={`showcase-card-${safeProductSetIndex}-${product.id}-${index}`}
               product={product}
               slot={cardSlot}
               isFlyingIn={!showUI}
@@ -673,6 +689,8 @@ export function ProductWorld({ products }: ProductWorldProps) {
         {t("hover_for_details")}
         <br />
         {t("scroll_to_explore")}
+        <br />
+        {t("reload_for_more")}
       </div>
 
       {/* ------------------------------------------------------------- */}
@@ -735,33 +753,28 @@ export function ProductWorld({ products }: ProductWorldProps) {
           title={t("scroll_to_explore")}
         >
           {/* Layer A: Pages Indicator */}
-          <span
-            className={`indicator-slide-content is-pages ${indicatorPhase === "pages" ? "is-active" : "is-inactive"}`}
-            aria-hidden={indicatorPhase !== "pages"}
-          >
-            {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} /{" "}
-            {formatNumber(String(productSetCount).padStart(2, "0"))} {t("pages")} •{" "}
-            {formatNumber(products.length)} {t("products")}
-          </span>
-
-          {/* Layer B: Animated Scroll Icon & Chevron (Reference micro-animation) */}
-          <span
-            className={`indicator-slide-content is-scroll ${indicatorPhase === "scroll" ? "is-active" : "is-inactive"}`}
-            aria-hidden={indicatorPhase !== "scroll"}
-          >
-            <span className="scroll-mouse-wrap" aria-hidden="true">
-              <svg className="scroll-mouse-svg" width="12" height="17" viewBox="0 0 14 20" fill="none">
-                <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" strokeWidth="1.6" />
-                <line className="scroll-wheel-line" x1="7" y1="5" x2="7" y2="8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
-              </svg>
+          {indicatorPhase === "pages" ? (
+            <span key="indicator-pages" className="indicator-slide-content is-pages is-active">
+              {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} /{" "}
+              {formatNumber(String(productSetCount).padStart(2, "0"))} {t("pages")} •{" "}
+              {formatNumber(products.length)} {t("products")}
             </span>
-            <span className="scroll-label-text">{t("scroll_to_explore")}</span>
-            <span className="scroll-chevron-wrap" aria-hidden="true">
-              <svg className="scroll-chevron-svg" width="9" height="5" viewBox="0 0 10 6" fill="none">
-                <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
-              </svg>
+          ) : (
+            <span key="indicator-scroll" className="indicator-slide-content is-scroll is-active">
+              <span className="scroll-mouse-wrap" aria-hidden="true">
+                <svg className="scroll-mouse-svg" width="12" height="17" viewBox="0 0 14 20" fill="none">
+                  <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" strokeWidth="1.6" />
+                  <line className="scroll-wheel-line" x1="7" y1="5" x2="7" y2="8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+                </svg>
+              </span>
+              <span className="scroll-label-text">{t("scroll_to_explore")}</span>
+              <span className="scroll-chevron-wrap" aria-hidden="true">
+                <svg className="scroll-chevron-svg" width="9" height="5" viewBox="0 0 10 6" fill="none">
+                  <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </span>
             </span>
-          </span>
+          )}
         </button>
       </div>
 

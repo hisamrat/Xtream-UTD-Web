@@ -54,7 +54,6 @@ function ShowcaseCardMedia({
   const [imgError, setImgError] = useState(false);
   const [videoError, setVideoError] = useState(false);
   const [candidateIndex, setCandidateIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
 
   const youtubeId = useMemo(() => {
     return extractYouTubeVideoId(item.mediaUrl) || extractYouTubeVideoId(item.posterUrl);
@@ -92,7 +91,6 @@ function ShowcaseCardMedia({
     setCandidateIndex(0);
     setImgError(false);
     setVideoError(false);
-    setIsLoaded(false);
   }, [candidates, item.mediaUrl]);
 
   const activeSrc = candidates[candidateIndex] || "";

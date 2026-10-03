@@ -64,6 +64,7 @@ export type TranslationKey =
   | "cart"
   | "click_to_view_detail"
   | "reload_to_reset"
+  | "reload_for_more"
   | "feature_authentic_title"
   | "feature_authentic_desc"
   | "feature_dispatch_title"
@@ -145,6 +146,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     cart: "Shopping Cart",
     click_to_view_detail: "CLICK TO VIEW DETAIL",
     reload_to_reset: "RELOAD TO RESET",
+    reload_for_more: "RELOAD FOR MORE",
     feature_authentic_title: "100% Authentic Product",
     feature_authentic_desc: "100% authentic guarantee",
     feature_dispatch_title: "64-District Dispatch",
@@ -224,6 +226,7 @@ const translations: Record<Language, Record<TranslationKey, string>> = {
     cart: "শপিং কার্ট",
     click_to_view_detail: "বিস্তারিত দেখতে ক্লিক করুন",
     reload_to_reset: "রিলোডে ক্লিক করে রিসেট করুন",
+    reload_for_more: "আরও দেখতে রিলোড করুন",
     feature_authentic_title: "১০০% আসল পণ্য",
     feature_authentic_desc: "শতভাগ অরিজিনাল গ্যারান্টি",
     feature_dispatch_title: "৬৪ জেলায় ডেলিভারি",
