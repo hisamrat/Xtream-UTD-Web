@@ -2,7 +2,7 @@
 
 import { useState, useMemo, useCallback, useEffect, useRef } from "react";
 import Link from "next/link";
-import { Play, Pause, ArrowUpRight, Move, Package } from "lucide-react";
+import { Play, Pause, ArrowUpRight, Package } from "lucide-react";
 import { useLanguage } from "@/components/site/LanguageProvider";
 import {
   getGoogleDriveImageCandidates,
@@ -21,24 +21,10 @@ type PositionedItem = GalleryShowcaseItem & {
   colIndex: number;
 };
 
-type DragState = {
-  id: string;
-  startX: number;
-  startY: number;
-  origX: number;
-  origY: number;
-  currentX: number;
-  currentY: number;
-  pointerId: number;
-  tilt: number;
-  hasMoved: boolean;
-};
-
 type ShowcaseCardMediaProps = {
   item: GalleryShowcaseItem;
   title: string;
   isVideo: boolean;
-  isHeld: boolean;
   isCurrentActiveVideo: boolean;
   videoRefCallback: (el: HTMLVideoElement | null) => void;
 };
@@ -47,7 +33,6 @@ function ShowcaseCardMedia({
   item,
   title,
   isVideo,
-  isHeld,
   isCurrentActiveVideo,
   videoRefCallback,
 }: ShowcaseCardMediaProps) {
@@ -103,9 +88,8 @@ function ShowcaseCardMedia({
     }
   };
 
-  // 1. YouTube Video Showcase - paused by default, plays only when user activates
+  // 1. YouTube Video Showcase - plays when activated
   if (isVideo && isYouTube && youtubeId) {
-    // Only load the iframe when the user has explicitly clicked play
     const embedUrl = isCurrentActiveVideo
       ? getYouTubeEmbedUrl(youtubeId, {
           autoplay: true,
@@ -117,7 +101,6 @@ function ShowcaseCardMedia({
 
     return (
       <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
-        {/* Poster image - always shown when paused, hidden behind iframe when playing */}
         {activeSrc && !imgError ? (
           <img
             src={activeSrc}
@@ -141,7 +124,6 @@ function ShowcaseCardMedia({
           />
         ) : null}
 
-        {/* YouTube iframe - only mounted when playing */}
         {isCurrentActiveVideo && embedUrl ? (
           <iframe
             src={embedUrl}
@@ -153,7 +135,6 @@ function ShowcaseCardMedia({
               width: "100%",
               height: "100%",
               border: 0,
-              pointerEvents: isHeld ? "none" : "auto",
             }}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
             allowFullScreen
@@ -165,7 +146,7 @@ function ShowcaseCardMedia({
     );
   }
 
-  // 2. Direct MP4/Video File Showcase - paused by default
+  // 2. Direct MP4/Video File Showcase
   if (isVideo && item.mediaUrl && !videoError) {
     return (
       <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
@@ -242,24 +223,36 @@ type ExploreMediaMasonrySectionProps = {
 };
 
 export function ExploreMediaMasonrySection({
+  products = [],
   showcaseItems = [],
 }: ExploreMediaMasonrySectionProps) {
   const { language } = useLanguage();
   const containerRef = useRef<HTMLDivElement | null>(null);
   const [containerWidth, setContainerWidth] = useState<number>(1312);
-  const [order, setOrder] = useState<string[]>(() => showcaseItems.map((item) => item.id));
-  const [dragState, setDragState] = useState<DragState | null>(null);
-
-  useEffect(() => {
-    setOrder(showcaseItems.map((item) => item.id));
-  }, [showcaseItems]);
 
   const [activeVideoId, setActiveVideoId] = useState<string | null>(null);
   const [isPlayingMap, setIsPlayingMap] = useState<Record<string, boolean>>({});
   const videoRefs = useRef<Map<string, HTMLVideoElement>>(new Map());
 
-  const lastSwapTimeRef = useRef<number>(0);
-  const itemMap = useMemo(() => new Map(showcaseItems.map((item) => [item.id, item])), [showcaseItems]);
+  // Determine items to display: use showcaseItems from Google Sheets or fallback to products
+  const displayItems = useMemo(() => {
+    if (showcaseItems && showcaseItems.length > 0) {
+      return showcaseItems;
+    }
+    if (products && products.length > 0) {
+      return products.slice(0, 8).map((p, idx) => ({
+        id: `gallery-product-${p.slug || p.id}`,
+        slug: p.slug,
+        title: p.title,
+        mediaType: "image" as const,
+        mediaUrl: p.main_image || p.cover_image || "",
+        posterUrl: "",
+        aspectRatio: idx % 3 === 0 ? 0.75 : idx % 3 === 1 ? 1 : 0.85,
+        active: true,
+      }));
+    }
+    return [];
+  }, [showcaseItems, products]);
 
   useEffect(() => {
     const el = containerRef.current;
@@ -290,7 +283,7 @@ export function ExploreMediaMasonrySection({
   }, [containerWidth]);
 
   const { layoutItems, totalHeight } = useMemo(() => {
-    if (containerWidth <= 0 || showcaseItems.length === 0) {
+    if (containerWidth <= 0 || displayItems.length === 0) {
       return { layoutItems: [], totalHeight: 0 };
     }
 
@@ -298,10 +291,7 @@ export function ExploreMediaMasonrySection({
     const colHeights = Array(cols).fill(0);
     const positioned: PositionedItem[] = [];
 
-    for (const id of order) {
-      const item = itemMap.get(id);
-      if (!item) continue;
-
+    for (const item of displayItems) {
       let minCol = 0;
       for (let c = 1; c < cols; c++) {
         if (colHeights[c] < colHeights[minCol] - 0.5) minCol = c;
@@ -318,7 +308,7 @@ export function ExploreMediaMasonrySection({
 
     const maxH = Math.max(...colHeights);
     return { layoutItems: positioned, totalHeight: Math.max(0, maxH - gap) };
-  }, [order, itemMap, containerWidth, cols, gap, showcaseItems.length]);
+  }, [displayItems, containerWidth, cols, gap]);
 
   const toggleInCardVideo = useCallback((item: GalleryShowcaseItem) => {
     const isYt = isYouTubeUrl(item.mediaUrl) || isYouTubeUrl(item.posterUrl);
@@ -369,96 +359,7 @@ export function ExploreMediaMasonrySection({
     }
   }, [activeVideoId]);
 
-  const handlePointerDown = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>, item: PositionedItem) => {
-      if (e.pointerType === "mouse" && e.button !== 0) return;
-      try { e.currentTarget.setPointerCapture(e.pointerId); } catch { /* ignore */ }
-      setDragState({
-        id: item.id,
-        startX: e.clientX, startY: e.clientY,
-        origX: item.x, origY: item.y,
-        currentX: item.x, currentY: item.y,
-        pointerId: e.pointerId, tilt: 0, hasMoved: false,
-      });
-    },
-    []
-  );
-
-  const handlePointerMove = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>) => {
-      if (!dragState || dragState.pointerId !== e.pointerId) return;
-
-      const dx = e.clientX - dragState.startX;
-      const dy = e.clientY - dragState.startY;
-      const distSq = dx * dx + dy * dy;
-      const hasMoved = dragState.hasMoved || distSq > 25;
-      const newX = dragState.origX + dx;
-      const newY = dragState.origY + dy;
-      const tilt = Math.max(-4, Math.min(4, dx * 0.08));
-
-      setDragState((prev) => prev ? { ...prev, currentX: newX, currentY: newY, tilt, hasMoved } : null);
-
-      if (!hasMoved) return;
-
-      const now = typeof performance !== "undefined" ? performance.now() : Date.now();
-      if (now - lastSwapTimeRef.current < 110) return;
-
-      const currentHeld = layoutItems.find((p) => p.id === dragState.id);
-      if (!currentHeld) return;
-
-      const centerHeldX = newX + currentHeld.width / 2;
-      const centerHeldY = newY + currentHeld.height / 2;
-
-      let hitItem: PositionedItem | null = null;
-      for (const it of layoutItems) {
-        if (it.id === dragState.id) continue;
-        const padX = it.width * 0.15;
-        const padY = it.height * 0.15;
-        if (
-          centerHeldX >= it.x + padX && centerHeldX <= it.x + it.width - padX &&
-          centerHeldY >= it.y + padY && centerHeldY <= it.y + it.height - padY
-        ) {
-          hitItem = it;
-          break;
-        }
-      }
-
-      if (hitItem) {
-        lastSwapTimeRef.current = now;
-        setOrder((prevOrder) => {
-          const fromIdx = prevOrder.indexOf(dragState.id);
-          const toIdx = prevOrder.indexOf(hitItem.id);
-          if (fromIdx < 0 || toIdx < 0 || fromIdx === toIdx) return prevOrder;
-          const updated = [...prevOrder];
-          const [moved] = updated.splice(fromIdx, 1);
-          updated.splice(toIdx, 0, moved);
-          return updated;
-        });
-      }
-    },
-    [dragState, layoutItems]
-  );
-
-  const handlePointerUp = useCallback(
-    (e: React.PointerEvent<HTMLDivElement>, item: PositionedItem) => {
-      if (!dragState || dragState.pointerId !== e.pointerId) return;
-      try {
-        if (e.currentTarget.hasPointerCapture(e.pointerId)) {
-          e.currentTarget.releasePointerCapture(e.pointerId);
-        }
-      } catch { /* ignore */ }
-
-      const moved = dragState.hasMoved;
-      setDragState(null);
-
-      if (!moved && item.mediaType === "video") {
-        toggleInCardVideo(item);
-      }
-    },
-    [dragState, toggleInCardVideo]
-  );
-
-  if (showcaseItems.length === 0) return null;
+  if (displayItems.length === 0) return null;
 
   return (
     <section className="explore-section-block explore-draggable-showcase-section" aria-labelledby="showcase-heading">
@@ -473,10 +374,6 @@ export function ExploreMediaMasonrySection({
               : "Explore Products Image and Video Gallery"}
           </h2>
         </div>
-        <div className="showcase-drag-hint" aria-hidden="true">
-          <Move size={13} className="drag-hint-icon" />
-          <span>{language === "bn" ? "ড্র্যাগ করে সাজান" : "Drag to rearrange"}</span>
-        </div>
       </div>
 
       <div
@@ -487,67 +384,64 @@ export function ExploreMediaMasonrySection({
         aria-label="Interactive media masonry gallery"
       >
         {layoutItems.map((item) => {
-          const isHeld = dragState?.id === item.id;
-          const currentPosX = isHeld && dragState ? dragState.currentX : item.x;
-          const currentPosY = isHeld && dragState ? dragState.currentY : item.y;
-          const tilt = isHeld && dragState ? dragState.tilt : 0;
           const isVideo = item.mediaType === "video";
           const isCurrentActiveVideo = activeVideoId === item.id;
           const isPlaying = isPlayingMap[item.id] ?? false;
           const title = item.title;
+          const productHref = item.slug ? `/products/${item.slug}` : "/products";
 
-          return (
-            <div
-              key={item.id}
-              className={`showcase-card ${isHeld ? "is-held" : ""} ${isVideo ? "is-video" : "is-image"} ${isCurrentActiveVideo ? "is-active-video" : ""}`}
-              style={{
-                width: `${item.width}px`,
-                height: `${item.height}px`,
-                transform: `translate3d(${currentPosX}px, ${currentPosY}px, 0px) scale(${isHeld ? 1.05 : 1}) rotate(${tilt}deg)`,
-                zIndex: isHeld ? 50 : 1,
-                transition: isHeld
-                  ? "box-shadow 150ms ease, opacity 150ms ease"
-                  : "transform 380ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease, width 200ms ease, height 200ms ease",
-              }}
-              onPointerDown={(e) => handlePointerDown(e, item)}
-              onPointerMove={handlePointerMove}
-              onPointerUp={(e) => handlePointerUp(e, item)}
-              onPointerCancel={(e) => handlePointerUp(e, item)}
-              role="button"
-              tabIndex={0}
-              aria-label={`${title} (${isVideo ? "Video" : "Image"}) - Click to play or view details`}
-              onKeyDown={(e) => {
-                if (e.key === "Enter" || e.key === " ") {
-                  e.preventDefault();
-                  if (isVideo) toggleInCardVideo(item);
-                }
-              }}
-            >
-              <ShowcaseCardMedia
-                item={item}
-                title={title}
-                isVideo={isVideo}
-                isHeld={isHeld}
-                isCurrentActiveVideo={isCurrentActiveVideo}
-                videoRefCallback={(el) => {
-                  if (el) videoRefs.current.set(item.id, el);
-                  else videoRefs.current.delete(item.id);
+          const titleBadge = title ? (
+            <div className="showcase-card-top-bar">
+              <span className="showcase-card-top-title" title={title}>
+                {title}
+              </span>
+            </div>
+          ) : null;
+
+          if (isVideo) {
+            return (
+              <div
+                key={item.id}
+                className={`showcase-card is-video ${isCurrentActiveVideo ? "is-active-video" : ""}`}
+                style={{
+                  width: `${item.width}px`,
+                  height: `${item.height}px`,
+                  transform: `translate3d(${item.x}px, ${item.y}px, 0px)`,
+                  transition: "transform 380ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease, width 200ms ease, height 200ms ease",
                 }}
-              />
+                role="button"
+                tabIndex={0}
+                aria-label={`${title} (Video) - ${isCurrentActiveVideo && isPlaying ? "Pause video" : "Play video"}`}
+                onClick={() => toggleInCardVideo(item)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter" || e.key === " ") {
+                    e.preventDefault();
+                    toggleInCardVideo(item);
+                  }
+                }}
+              >
+                <ShowcaseCardMedia
+                  item={item}
+                  title={title}
+                  isVideo={true}
+                  isCurrentActiveVideo={isCurrentActiveVideo}
+                  videoRefCallback={(el) => {
+                    if (el) videoRefs.current.set(item.id, el);
+                    else videoRefs.current.delete(item.id);
+                  }}
+                />
 
-              {title ? (
-                <div className="showcase-card-top-bar">
-                  <span className="showcase-card-top-title" title={title}>{title}</span>
-                </div>
-              ) : null}
+                {titleBadge}
 
-              <div className="showcase-card-bottom-bar">
-                <div className="showcase-bottom-spacer" />
-                {isVideo ? (
+                <div className="showcase-card-bottom-bar">
+                  <div className="showcase-bottom-spacer" />
                   <button
                     type="button"
                     className="showcase-action-icon-btn video-trigger-btn"
-                    onClick={(e) => { e.stopPropagation(); toggleInCardVideo(item); }}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      toggleInCardVideo(item);
+                    }}
                     aria-label={isCurrentActiveVideo && isPlaying ? "Pause video" : "Play video"}
                     title={isCurrentActiveVideo && isPlaying ? "Pause" : "Play"}
                   >
@@ -557,25 +451,50 @@ export function ExploreMediaMasonrySection({
                       <Play size={15} fill="currentColor" />
                     )}
                   </button>
-                ) : item.slug ? (
-                  <Link
-                    href={`/products/${item.slug}`}
-                    className="showcase-action-icon-btn details-link-btn"
-                    aria-label={`View details for ${title}`}
-                    title="View Product Details"
-                    onClick={(e) => { if (dragState?.hasMoved) e.preventDefault(); }}
-                  >
-                    <ArrowUpRight size={16} />
-                  </Link>
-                ) : null}
+                </div>
               </div>
-            </div>
+            );
+          }
+
+          // Image Card: Clean Next.js Link directly to the product details page
+          return (
+            <Link
+              key={item.id}
+              href={productHref}
+              className="showcase-card is-image"
+              style={{
+                width: `${item.width}px`,
+                height: `${item.height}px`,
+                transform: `translate3d(${item.x}px, ${item.y}px, 0px)`,
+                transition: "transform 380ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 250ms ease, width 200ms ease, height 200ms ease",
+              }}
+              aria-label={`${title} - ${language === "bn" ? "বিস্তারিত দেখুন" : "View Details"}`}
+            >
+              <ShowcaseCardMedia
+                item={item}
+                title={title}
+                isVideo={false}
+                isCurrentActiveVideo={false}
+                videoRefCallback={() => {}}
+              />
+
+              {titleBadge}
+
+              {/* View details button ONLY on images */}
+              <div className="showcase-card-bottom-bar">
+                <div className="showcase-bottom-spacer" />
+                <span
+                  className="showcase-action-icon-btn details-link-btn"
+                  title={language === "bn" ? "বিস্তারিত দেখুন" : "View Product Details"}
+                  aria-hidden="true"
+                >
+                  <ArrowUpRight size={16} />
+                </span>
+              </div>
+            </Link>
           );
         })}
       </div>
     </section>
   );
 }
-
-
-

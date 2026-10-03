@@ -377,7 +377,7 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
       <div className="explore-extra-sections">
         <HomeFeaturesSection />
         <ExploreTopSellingSection products={products} />
-        <ExploreMediaMasonrySection showcaseItems={showcaseItems} />
+        <ExploreMediaMasonrySection showcaseItems={showcaseItems} products={products} />
         <ExploreReviewsSection />
       </div>
     </main>

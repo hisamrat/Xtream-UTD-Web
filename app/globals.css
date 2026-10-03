@@ -12177,8 +12177,6 @@ html[data-theme="light"] .catalogue-results-count {
   position: relative;
   width: 100%;
   box-sizing: border-box;
-  touch-action: pan-y;
-  user-select: none;
 }
 
 .showcase-card {
@@ -12190,19 +12188,12 @@ html[data-theme="light"] .catalogue-results-count {
   background: #141414;
   box-shadow: 0 6px 20px rgba(0, 0, 0, 0.25);
   border: none !important;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-  touch-action: none;
+  cursor: pointer;
   will-change: transform, box-shadow;
   box-sizing: border-box;
-}
-
-.showcase-card.is-held {
-  cursor: grabbing !important;
-  z-index: 50 !important;
-  border: none !important;
-  box-shadow: 0 20px 45px rgba(0, 0, 0, 0.7), 0 0 0 2px rgba(168, 85, 247, 0.6) !important;
+  text-decoration: none;
+  color: inherit;
+  display: block;
 }
 
 .showcase-card.is-active-video {
@@ -12236,9 +12227,16 @@ html[data-theme="light"] .catalogue-results-count {
 }
 
 @media (hover: hover) and (pointer: fine) {
-  .showcase-card:not(.is-held):hover .showcase-media-content {
+  .showcase-card:hover .showcase-media-content {
     transform: scale(1.04);
     filter: brightness(1.06);
+  }
+
+  .showcase-card:hover .showcase-action-icon-btn.details-link-btn {
+    background: #a855f7;
+    border-color: #c084fc;
+    color: #ffffff;
+    transform: scale(1.1);
   }
 }
 
