@@ -226,7 +226,16 @@ export function ProductWorld({ products }: ProductWorldProps) {
   const worldProducts = useMemo(() => {
     if (orderedProducts.length === 0) return [];
     const pageItems = orderedProducts.slice(firstVisibleProductIndex, firstVisibleProductIndex + pageCapacity);
-    return pageItems.slice(0, showcaseSlots.length);
+    const otherItems = [
+      ...orderedProducts.slice(firstVisibleProductIndex + pageCapacity),
+      ...orderedProducts.slice(0, firstVisibleProductIndex)
+    ];
+    const fullList = [...pageItems, ...otherItems];
+    const result: Product[] = [];
+    while (result.length < showcaseSlots.length && fullList.length > 0) {
+      result.push(...fullList);
+    }
+    return result.slice(0, showcaseSlots.length);
   }, [firstVisibleProductIndex, orderedProducts, pageCapacity, showcaseSlots.length]);
   const activeSlots = showcaseSlots.slice(0, worldProducts.length);
   const stageScale = getShowcaseStageScale(viewportSize, activeSlots);
@@ -372,7 +381,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
     window.setTimeout(() => {
       setShowUI(true);
       window.dispatchEvent(new CustomEvent("xtream-utd:world-ui-ready"));
-    }, 450);
+    }, 1350);
   }, [cancelHoverEnter, cancelHoverHide, productSetCount]);
 
   useEffect(() => {
@@ -679,7 +688,7 @@ export function ProductWorld({ products }: ProductWorldProps) {
 
           return (
             <ReferenceWorldProduct
-              key={`showcase-card-${safeProductSetIndex}-${swapOffset}-${product.id}-${index}`}
+              key={`showcase-card-${safeProductSetIndex}-${product.id}-${index}`}
               product={product}
               slot={cardSlot}
               isFlyingIn={!showUI}
