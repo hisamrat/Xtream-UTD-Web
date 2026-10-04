@@ -126,7 +126,10 @@ export function CatalogueClient({ products, initialFilters }: CatalogueClientPro
   const pageCount = Math.max(1, Math.ceil(results.length / productsPerPage));
   const safeCurrentPage = Math.min(currentPage, pageCount);
   const pageStart = (safeCurrentPage - 1) * productsPerPage;
-  const visibleProducts = results.slice(pageStart, pageStart + productsPerPage);
+  const visibleProducts = useMemo(
+    () => results.slice(pageStart, pageStart + productsPerPage),
+    [results, pageStart]
+  );
   const visibleStart = results.length ? pageStart + 1 : 0;
   const visibleEnd = Math.min(pageStart + visibleProducts.length, results.length);
 

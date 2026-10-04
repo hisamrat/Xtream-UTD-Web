@@ -21,10 +21,15 @@ export function ProductGrid({
 }: ProductGridProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const prevRectsRef = useRef<Map<string, DOMRect>>(new Map());
+  const prevProductIdsRef = useRef<string>("");
   const isFirstMountRef = useRef(true);
 
   useIsomorphicLayoutEffect(() => {
     if (typeof window === "undefined") return;
+
+    const currentProductIds = products.map((p) => p.id).join(",");
+    const isSameProductList = prevProductIdsRef.current === currentProductIds;
+    prevProductIdsRef.current = currentProductIds;
 
     const prefersReducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
     const container = containerRef.current;
@@ -48,7 +53,7 @@ export function ProductGrid({
       return;
     }
 
-    if (prefersReducedMotion) {
+    if (prefersReducedMotion || isSameProductList) {
       prevRectsRef.current = currentRects;
       return;
     }
@@ -133,3 +138,4 @@ export function ProductGrid({
     </div>
   );
 }
+

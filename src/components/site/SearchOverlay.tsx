@@ -14,7 +14,7 @@ type SearchOverlayProps = Readonly<{
   onClose: () => void;
 }>;
 
-const maxSuggestedProducts = 8;
+const maxSuggestedProducts = 3;
 
 export function SearchOverlay({ products, open, onClose }: SearchOverlayProps) {
   const router = useRouter();

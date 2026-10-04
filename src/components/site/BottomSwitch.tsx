@@ -203,7 +203,7 @@ export function BottomSwitch() {
   return (
     <div
       className={`bottom-dock-container ${onHomeOrExplore ? "is-home-dock" : "is-subpage-dock"} ${
-        onExplore && isScrolledDown ? "is-arrows-hidden" : ""
+        !onExplore || isScrolledDown ? "is-arrows-hidden" : ""
       }`}
       style={
         onHome

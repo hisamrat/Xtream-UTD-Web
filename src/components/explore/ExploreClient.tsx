@@ -98,11 +98,20 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
     return 14;
   }, [viewportSize.width]);
 
+  const [isScrolledDown, setIsScrolledDown] = useState(false);
+
   useEffect(() => {
     setMounted(true);
     window.scrollTo({ top: 0, left: 0, behavior: "instant" });
     router.prefetch("/");
     router.prefetch("/products");
+
+    const handleScroll = () => {
+      const scrollY = window.scrollY || document.documentElement.scrollTop;
+      setIsScrolledDown(scrollY > 50);
+    };
+    handleScroll();
+    window.addEventListener("scroll", handleScroll, { passive: true });
 
     const updateViewport = () => {
       setViewportSize({ width: window.innerWidth, height: window.innerHeight });
@@ -117,10 +126,20 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
     window.addEventListener("resize", updateViewport);
     document.addEventListener("visibilitychange", updatePaused);
     return () => {
+      window.removeEventListener("scroll", handleScroll);
       window.removeEventListener("resize", updateViewport);
       document.removeEventListener("visibilitychange", updatePaused);
     };
   }, [router]);
+
+  const scrollToExploreContent = useCallback(() => {
+    const target = document.querySelector(".explore-extra-sections");
+    if (target) {
+      target.scrollIntoView({ behavior: "smooth" });
+    } else {
+      window.scrollBy({ top: window.innerHeight * 0.85, behavior: "smooth" });
+    }
+  }, []);
 
   const handlePrev = useCallback(() => {
     lastUserInteractionTimeRef.current = Date.now();
@@ -371,9 +390,37 @@ export function ExploreClient({ products, showcaseItems = [] }: ExploreClientPro
         <div className="world-instructions explore-instructions" aria-hidden="true">
           {t("click_to_view_detail")}
           <br />
-          {t("reload_to_reset")}
+          {t("scroll_to_explore")}
         </div>
       </section>
+
+      {/* Floating SCROLL TO EXPLORE pill button (Strictly Mobile/Small-screen ONLY) */}
+      <div
+        className={`explore-mobile-scroll-controls ${isScrolledDown ? "is-hidden" : ""}`}
+        aria-label="Scroll to explore more products"
+      >
+        <button
+          type="button"
+          className="world-set-count explore-mobile-scroll-btn"
+          onClick={scrollToExploreContent}
+          aria-label="Scroll down to explore features and products"
+          title={t("scroll_to_explore")}
+        >
+          <span className="scroll-mouse-wrap" aria-hidden="true">
+            <svg className="scroll-mouse-svg" width="12" height="17" viewBox="0 0 14 20" fill="none">
+              <rect x="1" y="1" width="12" height="18" rx="6" stroke="currentColor" strokeWidth="1.6" />
+              <line className="scroll-wheel-line" x1="7" y1="5" x2="7" y2="8" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" />
+            </svg>
+          </span>
+          <span className="scroll-label-text">{t("scroll_to_explore")}</span>
+          <span className="scroll-chevron-wrap" aria-hidden="true">
+            <svg className="scroll-chevron-svg" width="9" height="5" viewBox="0 0 10 6" fill="none">
+              <path d="M1 1L5 5L9 1" stroke="currentColor" strokeWidth="1.6" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+          </span>
+        </button>
+      </div>
+
       <div className="explore-extra-sections">
         <HomeFeaturesSection />
         <ExploreTopSellingSection products={products} />
