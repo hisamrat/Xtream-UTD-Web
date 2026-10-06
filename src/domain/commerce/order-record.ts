@@ -48,21 +48,17 @@ export type OrderRecord = z.infer<typeof orderRecordSchema>;
 
 /** Formats a timestamp in Bangladesh Standard Time (UTC+6). */
 export function formatDhakaDate(date: Date = new Date()): string {
-  // Use Intl to format safely in Asia/Dhaka timezone
+  // Use Intl to format safely in Asia/Dhaka timezone as DD/MM/YYYY (day/month/year)
   const formatter = new Intl.DateTimeFormat("en-GB", {
     timeZone: "Asia/Dhaka",
     year: "numeric",
     month: "2-digit",
-    day: "2-digit",
-    hour: "2-digit",
-    minute: "2-digit",
-    second: "2-digit",
-    hour12: false
+    day: "2-digit"
   });
 
   const parts = formatter.formatToParts(date);
   const get = (type: string) => parts.find((p) => p.type === type)?.value ?? "";
-  return `${get("day")}/${get("month")}/${get("year")} ${get("hour")}:${get("minute")}:${get("second")}`;
+  return `${get("day")}/${get("month")}/${get("year")}`;
 }
 
 /** Generates a human-friendly unique Order Serial ID (e.g. ORD-20261006-8491). */

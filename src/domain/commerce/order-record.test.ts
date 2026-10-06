@@ -12,17 +12,17 @@ describe("order-record", () => {
     expect(id).toMatch(/^ORD-20261006-\d{4}$/);
   });
 
-  it("formats dates in Dhaka timezone (GMT+6)", () => {
-    // 2026-10-06 12:00:00 UTC is 18:00:00 in Dhaka
+  it("formats dates in Dhaka timezone (GMT+6) as DD/MM/YYYY", () => {
+    // 2026-10-06 12:00:00 UTC is 06/10/2026 in Dhaka
     const date = new Date("2026-10-06T12:00:00Z");
     const formatted = formatDhakaDate(date);
-    expect(formatted).toBe("06/10/2026 18:00:00");
+    expect(formatted).toBe("06/10/2026");
   });
 
   it("validates and formats order rows matching Google Sheet columns A to R", () => {
     const rawOrder = {
       orderId: "ORD-20261006-1234",
-      createdAt: "06/10/2026 21:30:00",
+      createdAt: "06/10/2026",
       customer: {
         firstName: "Rahim",
         lastName: "Uddin",
@@ -70,7 +70,7 @@ describe("order-record", () => {
     // Row 1
     expect(rows[0]).toEqual([
       "ORD-20261006-1234", // Col A: Sr No
-      "06/10/2026 21:30:00", // Col B: Date 📅
+      "06/10/2026", // Col B: Date 📅
       "1", // Col C: Product No 📍
       "Refillable Perfume Bottle 8ml", // Col D: Product Name 📌
       "Rahim Uddin", // Col E: Customer Name
