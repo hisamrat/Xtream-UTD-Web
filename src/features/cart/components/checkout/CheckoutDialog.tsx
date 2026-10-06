@@ -107,9 +107,9 @@ export function CheckoutDialog() {
     <div ref={dialogRef} className="checkout-modal-backdrop" role="dialog" aria-modal="true" aria-label={t("cart.checkout.dialogAria")}>
       <div className="checkout-modal-scrim" onClick={handleClose} aria-hidden="true" />
       <div className="checkout-modal-panel">
-        <div className="checkout-modal-header">
+        <div className={`checkout-modal-header ${sentMessage !== null ? "is-success-header" : ""}`}>
           <div className="checkout-title-group">
-            <h2>{t("cart.checkout.title")}</h2>
+            {sentMessage === null && <h2>{t("cart.checkout.title")}</h2>}
           </div>
           <button
             ref={closeRef}

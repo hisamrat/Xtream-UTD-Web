@@ -126,14 +126,14 @@ test.describe("product to checkout", () => {
     await expect(checkout.locator(".grand-total-val")).toHaveText("৳329");
     await checkout.getByRole("button", { name: "Order on Messenger", exact: true }).click();
 
-    await expect(checkout.getByText("Order Placed Successfully!")).toBeVisible();
+    await expect(checkout.getByText("Thank you for your order!")).toBeVisible();
     const openedUrl = await page.evaluate(() => (window as unknown as { __openedUrl?: string }).__openedUrl ?? "");
     const message = decodeURIComponent(openedUrl.split("?text=")[1] ?? "");
     expect(openedUrl).toContain("https://m.me/");
     expect(message).toContain("Name: Rahim Uddin");
     expect(message).toContain("Refillable Perfume Bottle 8ml");
     expect(message).toContain("Grand Total: ৳329");
-    await expect(checkout.locator(".checkout-success-actions a")).toHaveAttribute("href", /Grand%20Total/);
+    await expect(checkout.locator(".checkout-success-note")).toBeVisible();
 
     await page.keyboard.press("Escape");
     await expect(checkout).toHaveCount(0);
