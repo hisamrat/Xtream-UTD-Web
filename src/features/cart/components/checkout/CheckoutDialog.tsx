@@ -51,6 +51,45 @@ export function CheckoutDialog() {
       return;
     }
 
+    const orderPayload = {
+      customer: {
+        firstName: form.firstName.trim(),
+        lastName: form.lastName.trim(),
+        fullName: `${form.firstName.trim()} ${form.lastName.trim()}`.trim(),
+        phone: form.phone.trim(),
+        deliveryZone: form.deliveryZone,
+        deliveryZoneLabel: form.deliveryZone === "outside" ? "Outside Dhaka" : "Inside Dhaka",
+        address: form.address.trim(),
+        thana: form.thana.trim(),
+        district: form.district.trim(),
+        note: form.note.trim()
+      },
+      items: items.map((item) => ({
+        productId: item.product.id || "",
+        productTitle: item.product.title,
+        productSlug: item.product.slug,
+        variant: item.variant,
+        quantity: item.quantity,
+        unitPrice: item.product.price,
+        lineTotal: item.product.price * item.quantity
+      })),
+      financials: {
+        subtotal: totalPrice,
+        deliveryFee,
+        grandTotal: totalPrice + deliveryFee
+      },
+      orderMessage
+    };
+
+    void fetch("/api/orders", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(orderPayload),
+      keepalive: true
+    }).catch((err) => {
+      console.error("Failed to record order to Google Sheet:", err);
+    });
+
     setSentMessage(orderMessage);
     window.open(buildMessengerUrl(siteConfig.order.messengerUrl, orderMessage), "_blank", "noopener,noreferrer");
     clearCart();

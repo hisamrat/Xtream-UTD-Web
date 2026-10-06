@@ -188,6 +188,7 @@
   color: #0f172a;
 }
 
+[data-theme="light"] .checkout-messenger-btn,
 [data-theme="light"] .checkout-copy-btn,
 [data-theme="light"] .checkout-success-copy-btn {
   background: #f8fafc;
@@ -197,6 +198,7 @@
   border-radius: 0 !important;
 }
 
+[data-theme="light"] .checkout-messenger-btn:hover:not(:disabled),
 [data-theme="light"] .checkout-copy-btn:hover:not(:disabled),
 [data-theme="light"] .checkout-success-copy-btn:hover:not(:disabled) {
   background: #ffffff;

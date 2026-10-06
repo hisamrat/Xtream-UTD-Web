@@ -109,7 +109,7 @@ test.describe("product to checkout", () => {
 
     const checkout = page.getByRole("dialog", { name: "Checkout" });
     await expect(checkout).toBeVisible();
-    await checkout.getByRole("button", { name: "Confirm Order on Messenger" }).click();
+    await checkout.getByRole("button", { name: "Confirm Order", exact: true }).click();
     await expect(checkout.locator(".field-error")).toHaveCount(6);
 
     await checkout.locator("#checkout-firstName").fill("Rahim");
@@ -118,13 +118,13 @@ test.describe("product to checkout", () => {
     await checkout.locator("#checkout-address").fill("House 1, Road 2");
     await checkout.locator("#checkout-thana").fill("Mirpur");
     await checkout.locator("#checkout-district").fill("Dhaka");
-    await checkout.getByRole("button", { name: "Confirm Order on Messenger" }).click();
+    await checkout.getByRole("button", { name: "Confirm Order", exact: true }).click();
     await expect(checkout.locator(".field-error")).toHaveText("Please enter a valid 11-digit mobile number (e.g., 01712345678).");
 
     await checkout.locator("#checkout-phone").fill("01712345678");
     await checkout.getByText("OUTSIDE DHAKA").click();
     await expect(checkout.locator(".grand-total-val")).toHaveText("৳329");
-    await checkout.getByRole("button", { name: "Confirm Order on Messenger" }).click();
+    await checkout.getByRole("button", { name: "Confirm Order", exact: true }).click();
 
     await expect(checkout.getByText("Your Order Message Is Ready")).toBeVisible();
     const openedUrl = await page.evaluate(() => (window as unknown as { __openedUrl?: string }).__openedUrl ?? "");

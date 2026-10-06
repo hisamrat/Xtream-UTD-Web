@@ -603,7 +603,7 @@
   box-shadow: none;
 }
 
-/* Action Stack & Copy Button */
+/* Action Stack & Bottom Inline Actions */
 .checkout-action-stack {
   display: flex;
   flex-direction: column;
@@ -611,28 +611,39 @@
   width: 100%;
 }
 
+.checkout-action-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  width: 100%;
+}
+
+.checkout-messenger-btn,
 .checkout-copy-btn,
 .checkout-success-copy-btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 7px;
   width: 100%;
   min-height: 44px;
   height: 44px;
-  padding: 10px 16px;
+  padding: 10px 12px;
   background: var(--surface-800);
   border: 1px solid var(--border);
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.15);
   color: var(--text-soft);
-  font-size: 13.5px;
+  font-size: 13px;
   font-weight: 600;
   cursor: pointer;
   border-radius: 0 !important;
   transition: all 0.15s ease;
   box-sizing: border-box;
+  text-align: center;
+  white-space: nowrap;
 }
 
+.checkout-messenger-btn:hover:not(:disabled),
 .checkout-copy-btn:hover:not(:disabled),
 .checkout-success-copy-btn:hover:not(:disabled) {
   background: var(--surface-700);
@@ -642,6 +653,7 @@
   text-decoration: none;
 }
 
+.checkout-messenger-btn:disabled,
 .checkout-copy-btn:disabled,
 .checkout-success-copy-btn:disabled {
   opacity: 0.5;
@@ -659,6 +671,15 @@
 
 .copy-icon-success {
   color: #10b981;
+}
+
+@media (max-width: 380px) {
+  .checkout-messenger-btn,
+  .checkout-copy-btn {
+    padding: 8px 6px;
+    font-size: 11.5px;
+    gap: 4px;
+  }
 }
 
 .checkout-submit-btn {

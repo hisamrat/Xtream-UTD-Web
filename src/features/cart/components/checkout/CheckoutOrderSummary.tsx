@@ -125,21 +125,27 @@ export function CheckoutOrderSummary({ deliveryZone, deliveryFee, subtotal, orde
       </div>
 
       <div className="checkout-action-stack">
-        <button type="submit" className="button primary checkout-submit-btn" disabled={items.length === 0}>
-          <Send size={18} aria-hidden="true" />
+        <button type="submit" name="submitAction" value="confirm" className="button primary checkout-submit-btn" disabled={items.length === 0}>
+          <CheckCircle2 size={18} aria-hidden="true" />
           <span>{t("cart.checkout.submit")}</span>
         </button>
-        <button
-          type="button"
-          className={`button light checkout-copy-btn ${copied ? "is-copied" : ""}`}
-          onClick={() => void copy(orderMessage)}
-          disabled={items.length === 0}
-          aria-label={t("cart.checkout.copyAria")}
-          title={t("cart.checkout.copy")}
-        >
-          {copied ? <Check size={16} aria-hidden="true" className="copy-icon-success" /> : <Copy size={16} aria-hidden="true" />}
-          <span>{copied ? t("cart.checkout.copied") : t("cart.checkout.copy")}</span>
-        </button>
+        <div className="checkout-action-row">
+          <button type="submit" name="submitAction" value="messenger" className="button light checkout-messenger-btn" disabled={items.length === 0}>
+            <Send size={15} aria-hidden="true" />
+            <span>{t("cart.checkout.orderOnMessenger")}</span>
+          </button>
+          <button
+            type="button"
+            className={`button light checkout-copy-btn ${copied ? "is-copied" : ""}`}
+            onClick={() => void copy(orderMessage)}
+            disabled={items.length === 0}
+            aria-label={t("cart.checkout.copyAria")}
+            title={t("cart.checkout.copy")}
+          >
+            {copied ? <Check size={15} aria-hidden="true" className="copy-icon-success" /> : <Copy size={15} aria-hidden="true" />}
+            <span>{copied ? t("cart.checkout.copied") : t("cart.checkout.copy")}</span>
+          </button>
+        </div>
       </div>
     </div>
   );
