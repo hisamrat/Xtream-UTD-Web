@@ -126,7 +126,7 @@ test.describe("product to checkout", () => {
     await expect(checkout.locator(".grand-total-val")).toHaveText("৳329");
     await checkout.getByRole("button", { name: "Order on Messenger", exact: true }).click();
 
-    await expect(checkout.getByText("Your Order Message Is Ready")).toBeVisible();
+    await expect(checkout.getByText("Order Placed Successfully!")).toBeVisible();
     const openedUrl = await page.evaluate(() => (window as unknown as { __openedUrl?: string }).__openedUrl ?? "");
     const message = decodeURIComponent(openedUrl.split("?text=")[1] ?? "");
     expect(openedUrl).toContain("https://m.me/");
