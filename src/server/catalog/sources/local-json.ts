@@ -1,5 +1,5 @@
 import "server-only";
-import rawProducts from "../../../../design-reference/data/sample_products.json";
+import rawProducts from "../../../../data/sample_products.json";
 import { type Product, productSchema } from "@/domain/product/product-schema";
 
 /**
