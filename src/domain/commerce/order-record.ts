@@ -78,21 +78,21 @@ export function generateOrderId(date: Date = new Date()): string {
  * Maps an order record into rows formatted for the Google Sheet "WebSite Selling Information".
  * Header mapping:
  * Col A: Sr No
- * Col B: Date 🗓️
+ * Col B: Date 📅
  * Col C: Product No 📍
  * Col D: Product Name 📌
  * Col E: Customer Name
  * Col F: Phone Number
- * Col G: Variant
- * Col H: Quantity
- * Col I: Unit Price
- * Col J: Subtotal
- * Col K: Delivery Zone
- * Col L: Delivery Fee
- * Col M: Grand Total
- * Col N: Address
- * Col O: Thana
- * Col P: District
+ * Col G: Address
+ * Col H: Thana
+ * Col I: District
+ * Col J: Delivery Zone
+ * Col K: Variant
+ * Col L: Quantity
+ * Col M: Unit Price
+ * Col N: Subtotal
+ * Col O: Delivery Fee
+ * Col P: Grand Total
  * Col Q: Note
  * Col R: Order Status
  */
@@ -144,16 +144,16 @@ export function formatOrderRowsForSheet(order: OrderRecord): string[][] {
       prod.productTitle,
       order.customer.fullName,
       order.customer.phone,
+      order.customer.address,
+      order.customer.thana || "-",
+      order.customer.district || "-",
+      deliveryZoneLabel,
       `[Variants: ${prod.variants.join(", ")}]`,
       String(prod.totalQuantity),
       String(prod.unitPrice),
       String(prod.lineTotal),
-      deliveryZoneLabel,
       String(order.financials.deliveryFee),
       String(order.financials.grandTotal),
-      order.customer.address,
-      order.customer.thana || "-",
-      order.customer.district || "-",
       order.customer.note || "-",
       "Pending"
     ]);

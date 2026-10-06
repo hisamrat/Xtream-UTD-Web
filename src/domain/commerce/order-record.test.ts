@@ -70,21 +70,21 @@ describe("order-record", () => {
     // Row 1
     expect(rows[0]).toEqual([
       "ORD-20261006-1234", // Col A: Sr No
-      "06/10/2026 21:30:00", // Col B: Date
-      "1", // Col C: Product No
-      "Refillable Perfume Bottle 8ml", // Col D: Product Name
+      "06/10/2026 21:30:00", // Col B: Date 📅
+      "1", // Col C: Product No 📍
+      "Refillable Perfume Bottle 8ml", // Col D: Product Name 📌
       "Rahim Uddin", // Col E: Customer Name
       "01712345678", // Col F: Phone Number
-      "[Variants: Black:2]", // Col G: Variant
-      "2", // Col H: Quantity
-      "180", // Col I: Unit Price
-      "360", // Col J: Subtotal
-      "Outside Dhaka", // Col K: Delivery Zone
-      "130", // Col L: Delivery Fee
-      "1040", // Col M: Grand Total
-      "House 1, Road 2", // Col N: Address
-      "Mirpur", // Col O: Thana
-      "Dhaka", // Col P: District
+      "House 1, Road 2", // Col G: Address
+      "Mirpur", // Col H: Thana
+      "Dhaka", // Col I: District
+      "Outside Dhaka", // Col J: Delivery Zone
+      "[Variants: Black:2]", // Col K: Variant
+      "2", // Col L: Quantity
+      "180", // Col M: Unit Price
+      "360", // Col N: Subtotal
+      "130", // Col O: Delivery Fee
+      "1040", // Col P: Grand Total
       "Call on arrival", // Col Q: Note
       "Pending" // Col R: Order Status
     ]);
@@ -94,8 +94,9 @@ describe("order-record", () => {
     expect(rows[1][3]).toBe("Cloud Mirror Tulip Light");
     expect(rows[1][4]).toBe("Rahim Uddin");
     expect(rows[1][5]).toBe("01712345678");
-    expect(rows[1][6]).toBe("[Variants: Pink:1]");
-    expect(rows[1][12]).toBe("1040");
+    expect(rows[1][6]).toBe("House 1, Road 2");
+    expect(rows[1][10]).toBe("[Variants: Pink:1]");
+    expect(rows[1][15]).toBe("1040");
   });
 
   it("aggregates multiple variants of the same product into a single row with [Variants: name:qty, name:qty]", () => {
@@ -143,9 +144,12 @@ describe("order-record", () => {
 
     expect(rows).toHaveLength(1);
     expect(rows[0][3]).toBe("Led Candle Swing Mood");
-    expect(rows[0][6]).toBe("[Variants: 7.5cm 3pcs:1, 10cm 3pcs:2]");
-    expect(rows[0][7]).toBe("3"); // Total quantity
-    expect(rows[0][9]).toBe("3750"); // Line total
+    expect(rows[0][6]).toBe("Banani"); // Address
+    expect(rows[0][9]).toBe("Inside Dhaka"); // Delivery Zone
+    expect(rows[0][10]).toBe("[Variants: 7.5cm 3pcs:1, 10cm 3pcs:2]"); // Variant
+    expect(rows[0][11]).toBe("3"); // Total quantity
+    expect(rows[0][13]).toBe("3750"); // Subtotal
+    expect(rows[0][15]).toBe("3820"); // Grand Total
   });
 });
 
