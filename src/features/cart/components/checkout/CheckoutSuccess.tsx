@@ -22,7 +22,7 @@ export function CheckoutSuccess({ message: _message }: { message?: string } = {}
       <h3 className="checkout-success-title">{t("cart.checkout.successTitle")}</h3>
       <p className="checkout-success-desc">{t("cart.checkout.successDesc")}</p>
       <div className="checkout-success-note">
-        <span className="checkout-success-note-text">{t("cart.checkout.successNote")}</span>
+        <strong>{t("cart.checkout.successNote")}</strong>
       </div>
       <div className="checkout-success-socials-wrapper">
         <span className="checkout-success-socials-label">{t("cart.checkout.followUs")}</span>
