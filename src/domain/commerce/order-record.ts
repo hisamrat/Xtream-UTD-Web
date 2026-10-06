@@ -100,24 +100,64 @@ export function formatOrderRowsForSheet(order: OrderRecord): string[][] {
   const orderId = order.orderId?.trim() || generateOrderId();
   const orderDate = order.createdAt?.trim() || formatDhakaDate();
 
-  return order.items.map((item) => [
-    orderId,
-    orderDate,
-    item.productId || "-",
-    item.productTitle,
-    order.customer.fullName,
-    order.customer.phone,
-    item.variant || "Standard",
-    String(item.quantity),
-    String(item.unitPrice),
-    String(item.lineTotal || item.unitPrice * item.quantity),
-    order.customer.deliveryZoneLabel || (order.customer.deliveryZone === "outside" ? "Outside Dhaka" : "Inside Dhaka"),
-    String(order.financials.deliveryFee),
-    String(order.financials.grandTotal),
-    order.customer.address,
-    order.customer.thana || "-",
-    order.customer.district || "-",
-    order.customer.note || "-",
-    "Pending"
-  ]);
+  // Group by product so multiple variants for the same product are aggregated into one row
+  const productMap = new Map<string, {
+    productId: string;
+    productTitle: string;
+    variants: string[];
+    totalQuantity: number;
+    unitPrice: number;
+    lineTotal: number;
+  }>();
+
+  for (const item of order.items) {
+    const key = item.productId || item.productSlug || item.productTitle;
+    const variantName = item.variant?.trim() || "Standard";
+    const variantLabel = `${variantName}:${item.quantity}`;
+    const existing = productMap.get(key);
+    if (!existing) {
+      productMap.set(key, {
+        productId: item.productId || "-",
+        productTitle: item.productTitle,
+        variants: [variantLabel],
+        totalQuantity: item.quantity,
+        unitPrice: item.unitPrice,
+        lineTotal: item.lineTotal || item.unitPrice * item.quantity
+      });
+    } else {
+      existing.variants.push(variantLabel);
+      existing.totalQuantity += item.quantity;
+      existing.lineTotal += item.lineTotal || item.unitPrice * item.quantity;
+    }
+  }
+
+  const deliveryZoneLabel =
+    order.customer.deliveryZoneLabel ||
+    (order.customer.deliveryZone === "outside" ? "Outside Dhaka" : "Inside Dhaka");
+
+  const rows: string[][] = [];
+  for (const prod of productMap.values()) {
+    rows.push([
+      orderId,
+      orderDate,
+      prod.productId,
+      prod.productTitle,
+      order.customer.fullName,
+      order.customer.phone,
+      `[Variants: ${prod.variants.join(", ")}]`,
+      String(prod.totalQuantity),
+      String(prod.unitPrice),
+      String(prod.lineTotal),
+      deliveryZoneLabel,
+      String(order.financials.deliveryFee),
+      String(order.financials.grandTotal),
+      order.customer.address,
+      order.customer.thana || "-",
+      order.customer.district || "-",
+      order.customer.note || "-",
+      "Pending"
+    ]);
+  }
+
+  return rows;
 }

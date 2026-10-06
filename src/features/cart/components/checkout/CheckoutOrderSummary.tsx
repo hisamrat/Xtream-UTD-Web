@@ -13,9 +13,16 @@ type CheckoutOrderSummaryProps = {
   deliveryFee: number;
   subtotal: number;
   orderMessage: string;
+  onSelectAction?: (action: "confirm" | "messenger") => void;
 };
 
-export function CheckoutOrderSummary({ deliveryZone, deliveryFee, subtotal, orderMessage }: CheckoutOrderSummaryProps) {
+export function CheckoutOrderSummary({
+  deliveryZone,
+  deliveryFee,
+  subtotal,
+  orderMessage,
+  onSelectAction
+}: CheckoutOrderSummaryProps) {
   const { items, totalCount, removeItem, updateQuantity } = useCart();
   const { t, formatNumber } = useI18n();
   const { copy, isCopied } = useCopyToClipboard(2500);
@@ -125,12 +132,26 @@ export function CheckoutOrderSummary({ deliveryZone, deliveryFee, subtotal, orde
       </div>
 
       <div className="checkout-action-stack">
-        <button type="submit" name="submitAction" value="confirm" className="button primary checkout-submit-btn" disabled={items.length === 0}>
+        <button
+          type="submit"
+          name="submitAction"
+          value="confirm"
+          className="button primary checkout-submit-btn"
+          disabled={items.length === 0}
+          onClick={() => onSelectAction?.("confirm")}
+        >
           <CheckCircle2 size={18} aria-hidden="true" />
           <span>{t("cart.checkout.submit")}</span>
         </button>
         <div className="checkout-action-row">
-          <button type="submit" name="submitAction" value="messenger" className="button light checkout-messenger-btn" disabled={items.length === 0}>
+          <button
+            type="submit"
+            name="submitAction"
+            value="messenger"
+            className="button light checkout-messenger-btn"
+            disabled={items.length === 0}
+            onClick={() => onSelectAction?.("messenger")}
+          >
             <Send size={15} aria-hidden="true" />
             <span>{t("cart.checkout.orderOnMessenger")}</span>
           </button>

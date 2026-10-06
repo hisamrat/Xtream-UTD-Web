@@ -75,7 +75,7 @@ describe("order-record", () => {
       "Refillable Perfume Bottle 8ml", // Col D: Product Name
       "Rahim Uddin", // Col E: Customer Name
       "01712345678", // Col F: Phone Number
-      "Black", // Col G: Variant
+      "[Variants: Black:2]", // Col G: Variant
       "2", // Col H: Quantity
       "180", // Col I: Unit Price
       "360", // Col J: Subtotal
@@ -94,6 +94,58 @@ describe("order-record", () => {
     expect(rows[1][3]).toBe("Cloud Mirror Tulip Light");
     expect(rows[1][4]).toBe("Rahim Uddin");
     expect(rows[1][5]).toBe("01712345678");
+    expect(rows[1][6]).toBe("[Variants: Pink:1]");
     expect(rows[1][12]).toBe("1040");
   });
+
+  it("aggregates multiple variants of the same product into a single row with [Variants: name:qty, name:qty]", () => {
+    const rawOrder = {
+      customer: {
+        firstName: "Test",
+        lastName: "User",
+        fullName: "Test User",
+        phone: "01711111111",
+        deliveryZone: "dhaka" as const,
+        deliveryZoneLabel: "Inside Dhaka",
+        address: "Banani",
+        thana: "Banani",
+        district: "Dhaka"
+      },
+      items: [
+        {
+          productId: "candle-1",
+          productTitle: "Led Candle Swing Mood",
+          productSlug: "led-candle",
+          variant: "7.5cm 3pcs",
+          quantity: 1,
+          unitPrice: 1250,
+          lineTotal: 1250
+        },
+        {
+          productId: "candle-1",
+          productTitle: "Led Candle Swing Mood",
+          productSlug: "led-candle",
+          variant: "10cm 3pcs",
+          quantity: 2,
+          unitPrice: 1250,
+          lineTotal: 2500
+        }
+      ],
+      financials: {
+        subtotal: 3750,
+        deliveryFee: 70,
+        grandTotal: 3820
+      }
+    };
+
+    const parsed = orderRecordSchema.parse(rawOrder);
+    const rows = formatOrderRowsForSheet(parsed);
+
+    expect(rows).toHaveLength(1);
+    expect(rows[0][3]).toBe("Led Candle Swing Mood");
+    expect(rows[0][6]).toBe("[Variants: 7.5cm 3pcs:1, 10cm 3pcs:2]");
+    expect(rows[0][7]).toBe("3"); // Total quantity
+    expect(rows[0][9]).toBe("3750"); // Line total
+  });
 });
+

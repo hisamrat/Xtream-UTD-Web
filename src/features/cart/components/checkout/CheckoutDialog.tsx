@@ -19,6 +19,7 @@ export function CheckoutDialog() {
   const { orderLines, totalPrice, clearCart, items } = useCart();
   const { t } = useI18n();
   const closeRef = useRef<HTMLButtonElement>(null);
+  const submitActionRef = useRef<"confirm" | "messenger">("confirm");
   const dialogRef = useDialog({ open: isCheckoutOpen, onClose: closeCheckout, initialFocusRef: closeRef });
 
   const [form, setForm] = useState<CheckoutFormValues>(initialCheckoutForm);
@@ -50,6 +51,10 @@ export function CheckoutDialog() {
     if (hasErrors(nextErrors) || items.length === 0) {
       return;
     }
+
+    const submitEvent = event.nativeEvent as SubmitEvent | undefined;
+    const submitter = submitEvent?.submitter as HTMLButtonElement | null;
+    const isMessengerAction = submitter ? submitter.value === "messenger" : submitActionRef.current === "messenger";
 
     const orderPayload = {
       customer: {
@@ -90,8 +95,11 @@ export function CheckoutDialog() {
       console.error("Failed to record order to Google Sheet:", err);
     });
 
+    if (isMessengerAction) {
+      window.open(buildMessengerUrl(siteConfig.order.messengerUrl, orderMessage), "_blank", "noopener,noreferrer");
+    }
+
     setSentMessage(orderMessage);
-    window.open(buildMessengerUrl(siteConfig.order.messengerUrl, orderMessage), "_blank", "noopener,noreferrer");
     clearCart();
   };
 
@@ -124,6 +132,9 @@ export function CheckoutDialog() {
               deliveryFee={deliveryFee}
               subtotal={totalPrice}
               orderMessage={orderMessage}
+              onSelectAction={(action) => {
+                submitActionRef.current = action;
+              }}
             />
           </form>
         )}

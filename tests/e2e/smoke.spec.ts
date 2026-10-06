@@ -124,7 +124,7 @@ test.describe("product to checkout", () => {
     await checkout.locator("#checkout-phone").fill("01712345678");
     await checkout.getByText("OUTSIDE DHAKA").click();
     await expect(checkout.locator(".grand-total-val")).toHaveText("৳329");
-    await checkout.getByRole("button", { name: "Confirm Order", exact: true }).click();
+    await checkout.getByRole("button", { name: "Order on Messenger", exact: true }).click();
 
     await expect(checkout.getByText("Your Order Message Is Ready")).toBeVisible();
     const openedUrl = await page.evaluate(() => (window as unknown as { __openedUrl?: string }).__openedUrl ?? "");
