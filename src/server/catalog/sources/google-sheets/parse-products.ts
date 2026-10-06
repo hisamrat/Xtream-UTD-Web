@@ -62,9 +62,11 @@ export function rowToProductInput(table: SheetTable, row: SheetRow): ProductInpu
   const posterImage = toEmbeddableImageUrl(cell(...POSTER_COLUMNS));
   const galleryImages = pipeSplit(cell(...GALLERY_COLUMNS)).map(toEmbeddableImageUrl).filter(Boolean);
   const mainImageRaw = cell(...MAIN_IMAGE_COLUMNS);
+  const rawProductNo = cell("product_no", "product_id", "productno", "product_number", "id", "sr_no");
+  const cleanProductNo = rawProductNo ? rawProductNo.replace(/\.$/, "").trim() : "";
 
   return {
-    id: `prd-${slug}`,
+    id: cleanProductNo || `prd-${slug}`,
     slug,
     title: cell("title") || slug,
     category: cell("category") || "General",
