@@ -93,7 +93,7 @@ describe("order-record", () => {
     ]);
 
     // Row 2
-    expect(rows[1][2]).toBe("2");
+    expect(rows[1][2]).toBe("11");
     expect(rows[1][3]).toBe("Cloud Mirror Tulip Light");
     expect(rows[1][4]).toBe("Rahim Uddin");
     expect(rows[1][5]).toBe("01712345678");

@@ -95,6 +95,34 @@ export function generateOrderId(date: Date = new Date()): string {
  * Col T: Delivery Status
  * Col U: Note
  */
+const PRODUCT_NO_BY_SLUG: Record<string, string> = {
+  "refillable-perfume-bottle-8ml": "1",
+  "cloud-mirror-tulip-light": "11",
+  "led-candle-swing-mood": "5",
+  "coffee-mixer-milk-frother-c1": "3",
+  "aluminum-calendar-card": "9",
+  "7-in-1-multifunctional-cleaning-brush": "4",
+  "3d-solar-round-glowing-crystal": "14",
+  "retro-recorder-keychain-mini-tape": "27",
+  "silicone-folding-water-bottle": "10",
+  "refillable-perfume-bottle-8ml-gradient": "20",
+  "laptop-mini-portable-stand-l1": "6",
+  "laptop-mini-portable-stand-l2": "7",
+  "coffee-mixer-milk-frother-c2": "19",
+  "coffee-mixer-milk-frother-c3": "18",
+  "refillable-perfume-bottle-10ml": "16",
+  "tulip-artificial-flower-home-decoration": "13",
+  "cube-mirror-tulip-night-light": "12",
+  "neon-light-strip-5m": "23",
+  "glass-tulip-flower-night-light": "28",
+  "sky-crystal-ball-3d-carving-luminous": "29",
+  "mini-portable-scalp-applicator": "30",
+  "original-labubu-3.0-pop-mart-product": "31",
+  "wood-stick-sensor-led-night-light": "22",
+  "press-and-stare-turtle-coaster": "25",
+  "led-artificial-rose-tree-lamp": "26"
+};
+
 export function formatOrderRowsForSheet(order: OrderRecord): string[][] {
   const orderId = order.orderId?.trim() || generateOrderId();
   const orderDate = order.createdAt?.trim() || formatDhakaDate();
@@ -110,13 +138,20 @@ export function formatOrderRowsForSheet(order: OrderRecord): string[][] {
   }>();
 
   for (const item of order.items) {
-    const key = item.productId || item.productSlug || item.productTitle;
+    const slugKey = (item.productSlug || item.productId || "").replace(/^prd-/, "");
+    const resolvedProductNo =
+      PRODUCT_NO_BY_SLUG[slugKey] ||
+      PRODUCT_NO_BY_SLUG[item.productId || ""] ||
+      (item.productId && !item.productId.startsWith("prd-") ? item.productId : slugKey) ||
+      "-";
+
+    const key = item.productSlug || item.productId || item.productTitle;
     const variantName = item.variant?.trim() || "Standard";
     const variantLabel = `${variantName}:${item.quantity}`;
     const existing = productMap.get(key);
     if (!existing) {
       productMap.set(key, {
-        productId: item.productId || "-",
+        productId: resolvedProductNo,
         productTitle: item.productTitle,
         variants: [variantLabel],
         totalQuantity: item.quantity,
