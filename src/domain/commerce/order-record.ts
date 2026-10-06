@@ -76,7 +76,7 @@ export function generateOrderId(date: Date = new Date()): string {
 
 /**
  * Maps an order record into rows formatted for the Google Sheet "WebSite Selling Information".
- * Header mapping:
+ * Header mapping (21 Columns):
  * Col A: Sr No
  * Col B: Date 📅
  * Col C: Product No 📍
@@ -87,14 +87,17 @@ export function generateOrderId(date: Date = new Date()): string {
  * Col H: Thana
  * Col I: District
  * Col J: Delivery Zone
- * Col K: Variant
+ * Col K: Product Variants 🔖
  * Col L: Quantity
- * Col M: Unit Price
- * Col N: Subtotal
- * Col O: Delivery Fee
- * Col P: Grand Total
- * Col Q: Note
- * Col R: Order Status
+ * Col M: Product Price
+ * Col N: Delivery Charge 
+ * Col O: Total Amount 📌with delivery Charge 
+ * Col P: Delivery Platform
+ * Col Q: Paid Delivery Charge To Courier
+ * Col R: Amount Received after calculate COD amount with platform charge %
+ * Col S: Final Received Amount 📌 ( After Paid Delivery Fee )
+ * Col T: Delivery Status
+ * Col U: Note
  */
 export function formatOrderRowsForSheet(order: OrderRecord): string[][] {
   const orderId = order.orderId?.trim() || generateOrderId();
@@ -151,11 +154,14 @@ export function formatOrderRowsForSheet(order: OrderRecord): string[][] {
       `[Variants: ${prod.variants.join(", ")}]`,
       String(prod.totalQuantity),
       String(prod.unitPrice),
-      String(prod.lineTotal),
       String(order.financials.deliveryFee),
       String(order.financials.grandTotal),
-      order.customer.note || "-",
-      "Pending"
+      "", // Delivery Platform
+      "", // Paid Delivery Charge To Courier
+      "", // Amount Received after calculate COD amount with platform charge %
+      "", // Final Received Amount 📌 ( After Paid Delivery Fee )
+      "Pending", // Delivery Status
+      order.customer.note || "-" // Note
     ]);
   }
 
