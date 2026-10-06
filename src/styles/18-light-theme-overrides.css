@@ -216,6 +216,44 @@
   color: #059669;
 }
 
+[data-theme="light"] .checkout-success-title {
+  color: #0f172a;
+}
+
+[data-theme="light"] .checkout-success-desc {
+  color: #334155;
+}
+
+[data-theme="light"] .checkout-success-note {
+  background: #f5f3ff;
+  border: 1.5px solid #ddd6fe;
+  color: #581c87;
+  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+}
+
+[data-theme="light"] .checkout-note-icon {
+  color: #7c3aed;
+}
+
+[data-theme="light"] .checkout-success-socials-wrapper {
+  border-top-color: #e2e8f0;
+}
+
+[data-theme="light"] .checkout-success-socials-label {
+  color: #64748b;
+}
+
+[data-theme="light"] .checkout-social-btn {
+  background: #f8fafc;
+  border: 1.5px solid #cbd5e1;
+  color: #1e293b;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.06);
+}
+
+[data-theme="light"] .checkout-social-btn:hover {
+  color: #ffffff !important;
+}
+
 /* Light Theme Overrides for 2026 Products & Details */
 [data-theme="light"] .product-card {
   background: transparent !important;
