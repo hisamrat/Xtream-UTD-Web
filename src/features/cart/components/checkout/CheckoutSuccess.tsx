@@ -17,7 +17,7 @@ export function CheckoutSuccess({ message: _message }: { message?: string } = {}
   return (
     <div className="checkout-success-state" role="status">
       <div className="checkout-success-icon-wrap">
-        <CheckCircle2 size={64} className="checkout-success-icon" aria-hidden="true" />
+        <CheckCircle2 size={68} className="checkout-success-icon" aria-hidden="true" />
       </div>
       <h3 className="checkout-success-title">{t("cart.checkout.successTitle")}</h3>
       <p className="checkout-success-desc">{t("cart.checkout.successDesc")}</p>
