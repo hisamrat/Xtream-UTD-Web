@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { TermsClient } from "@/components/terms/TermsClient";
+import { TermsView } from "@/features/content-pages/components/TermsView";
 
 export const metadata: Metadata = {
   title: "Terms & Conditions",
@@ -7,5 +7,5 @@ export const metadata: Metadata = {
 };
 
 export default function TermsPage() {
-  return <TermsClient />;
+  return <TermsView />;
 }

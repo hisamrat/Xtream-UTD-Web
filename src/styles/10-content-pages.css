@@ -1,0 +1,30 @@
+
+
+.category-pills {
+display: grid;
+grid-template-columns: repeat(4, minmax(0, 1fr));
+gap: 12px;
+}
+
+.category-pill {
+min-height: 42px;
+border: 1px solid var(--border);
+border-radius: var(--radius-pill);
+display: inline-flex;
+align-items: center;
+justify-content: center;
+padding: 0 14px;
+color: var(--text-primary);
+font-size: var(--type-small);
+font-weight: 800;
+line-height: 1.2;
+text-align: center;
+}
+
+.stack-section {
+margin-top: 56px;
+}
+
+/* ==========================================================================
+   2026 Modern Contact Page & Hub Styles
+   ========================================================================== */

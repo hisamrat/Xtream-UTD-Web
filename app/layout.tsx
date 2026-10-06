@@ -1,15 +1,12 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import { siteConfig } from "@/config/site";
-import { fetchAllProducts } from "@/lib/products-server";
-import { Header } from "@/components/site/Header";
-import { Footer } from "@/components/site/Footer";
-import { ThemeProvider } from "@/components/site/ThemeProvider";
-import { LanguageProvider } from "@/components/site/LanguageProvider";
-import { CartProvider } from "@/components/cart/CartProvider";
-import { CartDrawer } from "@/components/cart/CartDrawer";
-import { BottomSwitch } from "@/components/site/BottomSwitch";
+import { hasProductionUrl, siteConfig } from "@/config/site";
+import { AppShell } from "@/features/shell/components/AppShell";
+import { LanguageProvider } from "@/i18n/LanguageProvider";
+import { getProductSummaries } from "@/server/catalog/get-catalog";
+import { ThemeProvider } from "@/shared/theme/ThemeProvider";
+import { ThemeScript } from "@/shared/theme/ThemeScript";
 
 const inter = Inter({
   subsets: ["latin"],
@@ -18,6 +15,7 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
+  ...(hasProductionUrl ? { metadataBase: new URL(siteConfig.url) } : {}),
   title: {
     default: "Xtream UTD Product Catalogue",
     template: "%s | Xtream UTD"
@@ -31,29 +29,17 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
-  const products = await fetchAllProducts();
+  const catalogue = await getProductSummaries();
 
   return (
     <html lang="en" className={inter.variable} data-theme="dark" suppressHydrationWarning>
       <head>
-        <script
-          dangerouslySetInnerHTML={{
-            __html: `(function(){try{var t=localStorage.getItem('xtream-theme');if(t==='light'){document.documentElement.dataset.theme='light';document.documentElement.classList.remove('dark');document.documentElement.classList.add('light');document.documentElement.style.colorScheme='light';}else{document.documentElement.dataset.theme='dark';document.documentElement.classList.remove('light');document.documentElement.classList.add('dark');document.documentElement.style.colorScheme='dark';}if('scrollRestoration' in history){history.scrollRestoration='manual';}}catch(e){}})();`
-          }}
-        />
+        <ThemeScript />
       </head>
       <body className={inter.className} suppressHydrationWarning>
         <ThemeProvider>
           <LanguageProvider>
-            <CartProvider>
-              <div className="site-shell">
-                <Header products={products} />
-                {children}
-                <Footer />
-                <BottomSwitch />
-                <CartDrawer />
-              </div>
-            </CartProvider>
+            <AppShell catalogue={catalogue}>{children}</AppShell>
           </LanguageProvider>
         </ThemeProvider>
       </body>

@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { ProductWorld } from "@/components/world/ProductWorld";
 import { siteConfig } from "@/config/site";
-import { fetchAllProducts } from "@/lib/products-server";
+import { HomeWorld } from "@/features/showcase/world/HomeWorld";
+import { getProductSummaries } from "@/server/catalog/get-catalog";
 
 export const revalidate = 60;
 
@@ -11,10 +11,10 @@ export const metadata: Metadata = {
 };
 
 export default async function HomePage() {
-  const products = await fetchAllProducts();
+  const products = await getProductSummaries();
   return (
     <main className="home-main">
-      <ProductWorld products={products} />
+      <HomeWorld products={products} />
     </main>
   );
 }

@@ -12,3 +12,8 @@ pnpm-debug.log*
 dev-server.log
 dev-server.err.log
 test-artifacts/
+
+# Runtime/build caches
+.cache/
+tsconfig.tsbuildinfo
+playwright-report/

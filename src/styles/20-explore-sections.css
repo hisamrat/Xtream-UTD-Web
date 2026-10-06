@@ -1,0 +1,218 @@
+/* ------------------------------------------------------------- */
+/* Value Proposition Feature Section (Image 2)                   */
+/* ------------------------------------------------------------- */
+.home-features-section {
+  width: 100%;
+  padding: 36px 24px 40px;
+  max-width: 1360px;
+  margin: 0 auto;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 10;
+  background: transparent;
+}
+
+.home-features-container {
+  position: relative;
+  z-index: 2;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  width: 100%;
+}
+
+.home-feature-card {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 18px 20px;
+  border-radius: 0;
+  background: #121620;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+  transition: all 0.2s ease;
+  box-sizing: border-box;
+}
+
+.home-feature-card:hover {
+  border-color: rgba(168, 85, 247, 0.4);
+  transform: translateY(-2px);
+  box-shadow: none;
+}
+
+[data-theme="light"] .home-feature-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: none;
+}
+
+[data-theme="light"] .home-feature-card:hover {
+  border-color: #cbd5e1;
+  background: #ffffff;
+  transform: translateY(-2px);
+  box-shadow: none;
+}
+
+.feature-card-icon-wrap {
+  width: 42px;
+  height: 42px;
+  min-width: 42px;
+  min-height: 42px;
+  border-radius: 0;
+  display: grid;
+  place-items: center;
+  background: rgba(168, 85, 247, 0.12);
+  color: #c084fc;
+  flex-shrink: 0;
+}
+
+[data-theme="light"] .feature-card-icon-wrap {
+  background: #f3e8ff;
+  color: #6b21a8;
+}
+
+.feature-card-content {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: left;
+  overflow: hidden;
+}
+
+.feature-card-title {
+  font-size: 13.5px;
+  font-weight: 750;
+  margin: 0;
+  line-height: 1.25;
+  color: #f8fafc;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="light"] .feature-card-title {
+  color: #0f172a;
+}
+
+.feature-card-desc {
+  font-size: 11.5px;
+  margin: 0;
+  line-height: 1.35;
+  color: #94a3b8;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+[data-theme="light"] .feature-card-desc {
+  color: #64748b;
+}
+
+@media (max-width: 1024px) {
+  .home-features-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .home-features-container {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ------------------------------------------------------------- */
+/* Explore: Top Selling Products & Customer Reviews Sections     */
+/* ------------------------------------------------------------- */
+.explore-section-block {
+  width: 100%;
+  max-width: 1360px;
+  margin: 0 auto;
+  padding: 36px 24px 44px;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 10;
+  background: transparent;
+}
+
+.explore-section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  margin-bottom: 28px;
+}
+
+.explore-section-header-left {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.explore-section-kicker {
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+.explore-section-title {
+  font-size: clamp(24px, 3.2vw, 36px);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  color: var(--text-primary);
+  margin: 0;
+  line-height: 1.15;
+}
+
+.explore-shop-all-link {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 11.5px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+  text-decoration: none;
+  padding-bottom: 4px;
+  transition: color 150ms ease, transform 150ms ease;
+  white-space: nowrap;
+}
+
+.explore-shop-all-link:hover {
+  color: var(--text-primary);
+  transform: translateX(3px);
+}
+
+[data-theme="light"] .explore-shop-all-link {
+  color: #64748b;
+}
+
+[data-theme="light"] .explore-shop-all-link:hover {
+  color: #0f172a;
+}
+
+.explore-products-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 22px;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  .explore-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .explore-products-grid {
+    grid-template-columns: 1fr;
+  }
+  .explore-section-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+}

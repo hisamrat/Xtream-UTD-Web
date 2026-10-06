@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
-import { ExploreClient } from "@/components/explore/ExploreClient";
 import { siteConfig } from "@/config/site";
-import { fetchAllProducts, fetchGalleryShowcaseItems } from "@/lib/products-server";
+import { ExploreShowcase } from "@/features/showcase/explore/ExploreShowcase";
+import { getGalleryItems, getProductSummaries } from "@/server/catalog/get-catalog";
 
 export const revalidate = 60;
 
@@ -11,8 +11,6 @@ export const metadata: Metadata = {
 };
 
 export default async function ExplorePage() {
-  const products = await fetchAllProducts();
-  const showcaseItems = await fetchGalleryShowcaseItems();
-  return <ExploreClient products={products} showcaseItems={showcaseItems} />;
+  const [products, showcaseItems] = await Promise.all([getProductSummaries(), getGalleryItems()]);
+  return <ExploreShowcase products={products} showcaseItems={showcaseItems} />;
 }
-

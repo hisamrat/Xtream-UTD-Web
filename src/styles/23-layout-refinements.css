@@ -1,0 +1,114 @@
+/* Ensure bottom dock does not overlap page content */
+.details-page {
+  padding-bottom: clamp(120px, 16vh, 180px) !important;
+}
+
+.products-page-main {
+  padding-bottom: clamp(100px, 12vh, 160px) !important;
+}
+
+/* Ensure explore instructions stay anchored strictly inside top carousel section (scrolls off with top section) */
+.explore-carousel-section .world-instructions,
+.explore-instructions {
+  position: absolute !important;
+  top: 50%;
+  transform: translateY(-50%);
+  right: var(--page-x);
+  z-index: 15;
+  pointer-events: none;
+}
+
+/* Ensure mobile scroll works unimpeded across the entire explore carousel */
+.explore-carousel-section,
+.explore-carousel-section *,
+.scale-carousel-viewport,
+.scale-carousel-plates-container,
+.scale-carousel-card-slot,
+.scale-carousel-card,
+.scale-carousel-media,
+.scale-carousel-art-wrap {
+  touch-action: pan-y !important;
+}
+
+/* Explore Carousel Mobile Refinements */
+.explore-carousel-section.is-in-carousel .world-instructions {
+  opacity: 1 !important;
+  pointer-events: none;
+}
+
+@media (max-width: 699px) {
+  .explore-carousel-section {
+    height: 100vh !important;
+    height: 100dvh !important;
+    min-height: 100vh !important;
+    min-height: 100dvh !important;
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    touch-action: pan-y !important;
+  }
+  .scale-carousel-viewport {
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    touch-action: pan-y !important;
+  }
+  .world-instructions {
+    display: none !important;
+  }
+}
+
+/* Scroll Indicator Controls for Explore Page (Strictly Mobile/Small-screen ONLY) */
+.explore-mobile-scroll-controls {
+  display: none !important;
+}
+
+@media (max-width: 699px) {
+  .explore-mobile-scroll-controls {
+    position: fixed;
+    z-index: 46;
+    left: 50%;
+    bottom: calc(max(12px, env(safe-area-inset-bottom, 12px)) + 54px);
+    transform: translateX(-50%);
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    opacity: 1;
+    transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1), visibility 280ms;
+  }
+
+  .explore-mobile-scroll-controls.is-hidden,
+  .explore-mobile-scroll-controls.is-scrolled-hidden {
+    opacity: 0 !important;
+    transform: translateX(-50%) translateY(16px) !important;
+    pointer-events: none !important;
+    visibility: hidden !important;
+  }
+
+  body.modal-open .explore-mobile-scroll-controls {
+    display: none !important;
+  }
+
+  .explore-mobile-scroll-btn {
+    pointer-events: auto;
+    cursor: pointer;
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 16px;
+  }
+}
+
+body:has(.explore-main) .world-set-count,
+body:has(.explore-main) .world-alternating-indicator {
+  border-color: rgba(255, 255, 255, 0.12);
+  background: rgba(16, 20, 27, 0.85);
+  color: rgba(247, 241, 232, 0.9);
+}
+
+[data-theme="light"] body:has(.explore-main) .world-set-count,
+[data-theme="light"] body:has(.explore-main) .world-alternating-indicator {
+  background: rgba(255, 255, 255, 0.92);
+  border-color: rgba(0, 0, 0, 0.12);
+  color: #1a1d24;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+}

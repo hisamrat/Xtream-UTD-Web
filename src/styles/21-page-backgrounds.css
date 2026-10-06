@@ -1,0 +1,88 @@
+/* ============================================================= */
+/* SCOPED STOREFRONT THEMED BACKGROUNDS                          */
+/* ============================================================= */
+
+/* 1. Full-Page Storefront Pages - Night Mode (Unified Solid Luxury #090a0d Theme) */
+html[data-theme="dark"],
+html[data-theme="dark"] body,
+html[data-theme="dark"] .site-shell,
+html:not([data-theme="light"]),
+html:not([data-theme="light"]) body,
+html:not([data-theme="light"]) .site-shell {
+  background: #090a0d !important;
+  color: #f5f1e8;
+  min-height: 100vh;
+}
+
+/* Ensure all subpage wrappers, content sections, and footer blend seamlessly into the #090a0d atmosphere in Night Mode */
+html[data-theme="dark"] .page-main,
+html[data-theme="dark"] .catalogue-page-main,
+html[data-theme="dark"] .catalogue-page,
+html[data-theme="dark"] .details-page-main,
+html[data-theme="dark"] .details-page,
+html[data-theme="dark"] .about-page-main,
+html[data-theme="dark"] .about-page,
+html[data-theme="dark"] .contact-page-main,
+html[data-theme="dark"] .contact-page,
+html[data-theme="dark"] .explore-extra-sections,
+html[data-theme="dark"] .explore-extra-sections .home-features-section,
+html[data-theme="dark"] .explore-extra-sections .explore-section-block,
+html[data-theme="dark"] .explore-extra-sections .site-footer,
+html[data-theme="dark"] .site-footer,
+html:not([data-theme="light"]) .page-main,
+html:not([data-theme="light"]) .catalogue-page-main,
+html:not([data-theme="light"]) .catalogue-page,
+html:not([data-theme="light"]) .details-page-main,
+html:not([data-theme="light"]) .details-page,
+html:not([data-theme="light"]) .about-page-main,
+html:not([data-theme="light"]) .about-page,
+html:not([data-theme="light"]) .contact-page-main,
+html:not([data-theme="light"]) .contact-page,
+html:not([data-theme="light"]) .explore-extra-sections,
+html:not([data-theme="light"]) .explore-extra-sections .home-features-section,
+html:not([data-theme="light"]) .explore-extra-sections .explore-section-block,
+html:not([data-theme="light"]) .explore-extra-sections .site-footer,
+html:not([data-theme="light"]) .site-footer {
+  background: transparent !important;
+}
+
+/* ============================================================= */
+/* LIGHT MODE (DAY MOOD) STOREFRONT BACKGROUNDS                  */
+/* ============================================================= */
+
+html[data-theme="light"],
+html[data-theme="light"] body,
+html[data-theme="light"] .site-shell,
+html[data-theme="light"] .page-main,
+html[data-theme="light"] .catalogue-page-main,
+html[data-theme="light"] .catalogue-page,
+html[data-theme="light"] .details-page-main,
+html[data-theme="light"] .details-page,
+html[data-theme="light"] .about-page-main,
+html[data-theme="light"] .about-page,
+html[data-theme="light"] .contact-page-main,
+html[data-theme="light"] .contact-page,
+html[data-theme="light"] .explore-extra-sections {
+  background: #f8fafc !important;
+  color: #0f172a !important;
+  min-height: 100vh;
+}
+
+html[data-theme="light"] .explore-extra-sections .home-features-section,
+html[data-theme="light"] .explore-extra-sections .explore-section-block,
+html[data-theme="light"] .explore-extra-sections .site-footer {
+  background: transparent !important;
+}
+
+html[data-theme="light"] .site-footer {
+  background: #ffffff !important;
+}
+
+html[data-theme="light"] .page-title,
+html[data-theme="light"] .catalogue-title {
+  color: #0f172a !important;
+}
+
+html[data-theme="light"] .page-lede {
+  color: #475569 !important;
+}

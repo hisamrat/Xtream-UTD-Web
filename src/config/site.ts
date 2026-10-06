@@ -1,12 +1,14 @@
+import type { LocalizedText } from "@/shared/i18n/languages";
+
+/**
+ * Editable business details. Delivery fees and timelines live in `config/commerce.ts`.
+ * Replace `url` with the production domain before launch (used for canonical/OG URLs).
+ */
 export const siteConfig = {
   name: "Xtream UTD",
-  description:
-    "Trending gadgets and accessories for your desk, home and everyday life.",
-  trustLine:
-    "Quality products - Affordable prices - Delivery across Bangladesh",
+  description: "Trending gadgets and accessories for your desk, home and everyday life.",
   url: "https://example.com",
   order: {
-    primaryLabel: "Order Now",
     messengerUrl: "https://m.me/xtreamutd",
     whatsappUrl: "https://wa.me/8801622001879",
     phone: "01622001879",
@@ -19,27 +21,25 @@ export const siteConfig = {
   },
   business: {
     facebookPageUrl: "https://www.facebook.com/xtreamutd",
-    location: "Mirpur-10, Dhaka, Bangladesh",
-    hours: "Everyday: 9:00 AM – 10:00 PM (BST)",
-    deliveryDhaka: "Inside Dhaka: ৳70 (24–48 hours)",
-    deliveryOutside: "Outside Dhaka: ৳130 (48–72 hours)",
-    delivery: "Inside Dhaka (24–48h, ৳70) & nationwide delivery across all 64 districts in Bangladesh (48–72h, ৳130) with Cash on Delivery.",
-    returns: "Home delivery available nationwide within 2–3 days. Order will be confirmed after the order processing message from seller."
-  },
-  categories: [
-    "All Products",
-    "New Arrivals",
-    "Best Sellers",
-    "Mobile Accessories",
-    "Computer Accessories",
-    "Desk Accessories",
-    "Home and Lifestyle",
-    "Decorative Lights",
-    "Audio Products",
-    "Smart Gadgets",
-    "Travel Accessories",
-    "Gift Items"
-  ]
+    facebookPageLabel: "facebook.com/xtreamutd",
+    location: {
+      en: "Mirpur-10, Dhaka, Bangladesh",
+      bn: "মিরপুর-১০, ঢাকা, বাংলাদেশ"
+    } satisfies LocalizedText,
+    locationShort: {
+      en: "Mirpur-10, Dhaka",
+      bn: "মিরপুর-১০, ঢাকা"
+    } satisfies LocalizedText,
+    hours: {
+      en: "Everyday: 9:00 AM – 10:00 PM (BST)",
+      bn: "প্রতিদিন: সকাল ৯:০০ – রাত ১০:০০ (BST)"
+    } satisfies LocalizedText,
+    hoursShort: {
+      en: "Everyday: 9:00 AM – 10:00 PM",
+      bn: "প্রতিদিন: সকাল ৯:০০ – রাত ১০:০০"
+    } satisfies LocalizedText
+  }
 } as const;
 
-export type SiteConfig = typeof siteConfig;
+/** True when `siteConfig.url` still holds the placeholder domain. */
+export const hasProductionUrl = !siteConfig.url.includes("example.com");

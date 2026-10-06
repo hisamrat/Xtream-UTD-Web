@@ -1,0 +1,371 @@
+/* ============================================================
+   Framer 3D Scale Carousel Overlay & Arc Stage System
+   ============================================================ */
+.scale-carousel-viewport {
+  position: absolute;
+  inset: 0;
+  overflow-x: clip;
+  overflow-y: visible;
+  touch-action: pan-y !important;
+  perspective: 1200px;
+  perspective-origin: 50% 50%;
+  pointer-events: none;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: opacity 250ms ease;
+}
+
+.scale-carousel-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+  z-index: 0;
+  background: transparent;
+  transition: background-color 300ms ease;
+}
+
+[data-theme="light"] .scale-carousel-bg {
+  background: transparent;
+}
+
+.scale-carousel-bg .bg-blob-a,
+.scale-carousel-bg .bg-blob-b {
+  display: none !important;
+}
+
+.scale-carousel-plates-container {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  pointer-events: none;
+  z-index: 5;
+}
+
+.scale-carousel-card-slot {
+  transform-style: preserve-3d;
+}
+
+.scale-carousel-card {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0;
+  border: none;
+  outline: none;
+  padding: 0;
+  overflow: hidden;
+  text-decoration: none;
+  cursor: pointer;
+  backface-visibility: hidden;
+  transform-style: preserve-3d;
+  will-change: transform, opacity, filter;
+  box-sizing: border-box;
+  pointer-events: auto;
+
+  /* Dark theme 3D scale card */
+  background: linear-gradient(165deg, rgba(22, 28, 40, 0.98) 0%, rgba(10, 14, 22, 1) 100%);
+  box-shadow:
+    0 24px 60px -10px rgba(0, 0, 0, 0.75),
+    0 0 35px color-mix(in srgb, var(--card-accent, #3385ff) 16%, transparent);
+  color: #F5F1E8;
+  transition: box-shadow 300ms ease, transform 300ms ease;
+}
+
+.scale-carousel-card:hover {
+  box-shadow:
+    0 32px 80px -10px rgba(0, 0, 0, 0.85),
+    0 0 50px color-mix(in srgb, var(--card-accent, #3385ff) 28%, transparent);
+}
+
+/* Light Theme 3D Scale Card */
+[data-theme="light"] .scale-carousel-card {
+  background: #ffffff;
+  border: none;
+  outline: none;
+  box-shadow:
+    0 20px 50px -8px rgba(15, 23, 42, 0.14);
+  color: #0f172a;
+}
+
+[data-theme="light"] .scale-carousel-card:hover {
+  box-shadow:
+    0 28px 65px -10px rgba(15, 23, 42, 0.22);
+}
+
+/* Full-Bleed Media Section: Covers 100% of card body */
+.scale-carousel-media {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.scale-carousel-art-wrap {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  margin: 0;
+  overflow: hidden;
+  border-radius: 0;
+  filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+  filter: drop-shadow(0 16px 36px rgba(0, 0, 0, 0.45));
+  transition: transform 400ms cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+.scale-carousel-art-wrap .product-art,
+.scale-carousel-art-wrap .product-art-full,
+.scale-carousel-art-wrap .world-product-media {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  border-radius: 0;
+}
+
+/* -------------------------------------------------------------
+   Active Focus HUD: Viewfinder Brackets, Top Title, Bottom Bar
+   ------------------------------------------------------------- */
+.carousel-card-hud {
+  opacity: var(--hud-opacity, 0);
+  pointer-events: var(--hud-pointer, none);
+  transition: opacity 120ms ease;
+}
+
+/* Top Title (Outside / Above Card) */
+.carousel-focus-top {
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  width: max-content;
+  max-width: min(90vw, 420px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  pointer-events: none;
+  z-index: 10;
+}
+
+.carousel-focus-title {
+  font-family: inherit;
+  font-size: 16px;
+  font-weight: 750;
+  letter-spacing: -0.01em;
+  color: #F5F1E8;
+  text-align: center;
+  white-space: nowrap;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  max-width: 100%;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.6);
+  transition: color 250ms ease;
+}
+
+[data-theme="light"] .carousel-focus-title {
+  color: #0f172a;
+  text-shadow: none;
+}
+
+/* Bottom Bar: Category Centered (Outside / Below Card) */
+.carousel-focus-bottom {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: -80px;
+  right: -80px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  pointer-events: auto;
+  z-index: 10;
+}
+
+.carousel-focus-category {
+  font-family: inherit;
+  font-size: 11.5px;
+  font-weight: 650;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  color: #94a3b8;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.5);
+  transition: color 250ms ease;
+}
+
+[data-theme="light"] .carousel-focus-category {
+  color: #64748b;
+  text-shadow: none;
+}
+
+@media (max-width: 699px) {
+
+  .carousel-focus-top {
+    bottom: calc(100% + 6px);
+    max-width: min(85vw, 320px);
+  }
+
+  .carousel-focus-title {
+    font-size: 13px;
+    font-weight: 700;
+  }
+
+  .carousel-focus-bottom {
+    top: calc(100% + 6px);
+  }
+
+  .carousel-focus-category {
+    font-size: 10px;
+    letter-spacing: 0.12em;
+  }
+}
+
+.world-shell.is-in-carousel::before,
+.world-shell.is-in-carousel::after {
+  display: block;
+}
+
+.world-shell.is-in-carousel .world-set-controls {
+  opacity: 0 !important;
+  pointer-events: none !important;
+}
+
+.world-shell.is-in-carousel .world-instructions {
+  opacity: 1 !important;
+  pointer-events: none;
+}
+
+/* ------------------------------------------------------------- */
+/* Explore Page & Side Arrow Buttons                             */
+/* ------------------------------------------------------------- */
+.explore-main {
+  min-height: 100vh;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow-x: hidden;
+  animation: explorePageFadeIn 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  background: var(--canvas-950);
+}
+
+[data-theme="light"] .explore-main {
+  background: #ffffff;
+}
+
+.explore-carousel-section {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  height: 100dvh;
+  min-height: 100vh;
+  min-height: 100dvh;
+  overflow-x: clip;
+  overflow-y: visible;
+  touch-action: pan-y !important;
+  user-select: none;
+  opacity: 0;
+  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  background:
+    radial-gradient(circle at 50% 44%, rgba(60, 3, 102, 0.75), transparent 32rem),
+    radial-gradient(circle at 34% 52%, rgba(126, 34, 206, 0.18), transparent 22rem),
+    radial-gradient(circle at 68% 51%, rgba(168, 85, 247, 0.15), transparent 23rem),
+    radial-gradient(circle at 51% 73%, rgba(88, 28, 135, 0.15), transparent 23rem),
+    linear-gradient(180deg, #05020a 0%, #030106 62%, #010003 100%) !important;
+}
+
+[data-theme="light"] .explore-carousel-section {
+  background:
+    radial-gradient(circle at 50% 40%, rgba(241, 245, 249, 0.95), transparent 34rem),
+    radial-gradient(circle at 30% 48%, rgba(224, 242, 254, 0.6), transparent 22rem),
+    radial-gradient(circle at 70% 48%, rgba(254, 226, 226, 0.5), transparent 22rem),
+    #ffffff !important;
+}
+
+.explore-carousel-section.is-ready {
+  opacity: 1;
+}
+
+.explore-extra-sections {
+  width: 100%;
+  position: relative;
+  background: var(--canvas-950);
+  animation: exploreExtraFadeIn 320ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+}
+
+[data-theme="light"] .explore-extra-sections {
+  background: #ffffff;
+}
+
+@keyframes exploreExtraFadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.site-header.is-transparent-nav {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+.site-header.is-transparent-nav .wordmark,
+.site-header.is-transparent-nav .icon-button {
+  color: #f7f1e8;
+}
+
+[data-theme="light"] .site-header.is-transparent-nav {
+  background: transparent !important;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  border: none !important;
+  border-bottom: none !important;
+  box-shadow: none !important;
+}
+
+[data-theme="light"] .site-header.is-transparent-nav .wordmark,
+[data-theme="light"] .site-header.is-transparent-nav .icon-button {
+  color: #0f172a;
+}
+
+[data-theme="light"] .site-header.is-transparent-nav .desktop-nav-link {
+  color: #64748b;
+}
+
+[data-theme="light"] .site-header.is-transparent-nav .desktop-nav-link:hover {
+  color: var(--accent);
+}
+
+[data-theme="light"] .site-header.is-transparent-nav .desktop-nav-link.is-active {
+  color: #0f172a !important;
+  font-weight: 850;
+}
