@@ -53,7 +53,7 @@ export async function saveOrder(order: OrderRecord): Promise<SaveOrderResult> {
           rows
         }),
         redirect: "follow",
-        signal: AbortSignal.timeout(10000)
+        signal: AbortSignal.timeout(20000)
       });
 
       if (!response.ok) {
