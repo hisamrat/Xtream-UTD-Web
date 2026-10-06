@@ -225,14 +225,14 @@
 }
 
 [data-theme="light"] .checkout-success-note {
-  background: #f5f3ff;
-  border: 1.5px solid #ddd6fe;
-  color: #581c87;
-  box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+  background: #fffbeb;
+  border: 1.5px solid #f59e0b;
+  box-shadow: 0 4px 14px rgba(245, 158, 11, 0.15);
 }
 
-[data-theme="light"] .checkout-note-icon {
-  color: #7c3aed;
+[data-theme="light"] .checkout-success-note-text {
+  color: #78350f;
+  font-weight: 750;
 }
 
 [data-theme="light"] .checkout-success-socials-wrapper {
