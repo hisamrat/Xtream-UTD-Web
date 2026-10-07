@@ -21,6 +21,8 @@ export type SaveOrderResult = {
 
 const DEFAULT_ORDERS_SPREADSHEET_ID = "15DQKQJiuK4LQCgDau3GnAUZ43b6KNqiARRQEZ4pYplc";
 const DEFAULT_ORDERS_SHEET_TAB = "WebSite Selling Information";
+const DEFAULT_ORDER_SHEET_WEBHOOK_URL =
+  "https://script.google.com/macros/s/AKfycbwgZnY_0Zi_Uxmo1lajhO-Mxz73GWoJuFAvkrpMrPDq4X4omof6741TAGB8YEhASKC3Ag/exec";
 
 /**
  * Saves a customer order into the Google Sheet.
@@ -71,7 +73,8 @@ export async function saveOrder(order: OrderRecord): Promise<SaveOrderResult> {
   // Method 1: Google Apps Script Web App Webhook (Recommended)
   const webhookUrl =
     process.env.ORDER_SHEET_WEBHOOK_URL?.trim() ||
-    process.env.GOOGLE_SHEETS_ORDERS_WEBHOOK_URL?.trim();
+    process.env.GOOGLE_SHEETS_ORDERS_WEBHOOK_URL?.trim() ||
+    DEFAULT_ORDER_SHEET_WEBHOOK_URL;
 
   if (webhookUrl) {
     try {
