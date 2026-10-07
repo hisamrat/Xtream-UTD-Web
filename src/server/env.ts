@@ -16,14 +16,13 @@ function readEnv(name: string): string | undefined {
   return value ? value : undefined;
 }
 
-/** Google Sheets configuration, or `null` when the bundled catalogue should be used. */
-export function getSheetsConfig(): SheetsConfig | null {
-  const spreadsheetId = readEnv("GOOGLE_SHEETS_SPREADSHEET_ID");
-  if (!spreadsheetId) {
-    return null;
-  }
+const DEFAULT_CATALOG_SPREADSHEET_ID = "10IOwFL58y9X6U5eEP24vPReFlgqZrjwsNhGRX2JUslU";
+const DEFAULT_GOOGLE_SHEETS_API_KEY = "AIzaSyClMKINFTuAmLirG-oENC0MrG_kXMOF6Io";
 
-  const apiKey = readEnv("GOOGLE_SHEETS_API_KEY");
+/** Google Sheets configuration, or fallback defaults so zero configuration is needed on Vercel. */
+export function getSheetsConfig(): SheetsConfig | null {
+  const spreadsheetId = readEnv("GOOGLE_SHEETS_SPREADSHEET_ID") || DEFAULT_CATALOG_SPREADSHEET_ID;
+  const apiKey = readEnv("GOOGLE_SHEETS_API_KEY") || DEFAULT_GOOGLE_SHEETS_API_KEY;
   const email = readEnv("GOOGLE_SERVICE_ACCOUNT_EMAIL");
   const privateKey = readEnv("GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY");
 
