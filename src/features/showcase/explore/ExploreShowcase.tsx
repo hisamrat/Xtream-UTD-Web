@@ -9,6 +9,7 @@ import { useI18n } from "@/i18n/LanguageProvider";
 import { useScrollThreshold } from "@/shared/hooks/useScrollThreshold";
 import { ScrollHint } from "../ScrollHint";
 import { ExploreCarousel } from "./ExploreCarousel";
+import { ExploreReviews } from "./ExploreReviews";
 import { MediaMasonry } from "./MediaMasonry";
 import { TopSelling } from "./TopSelling";
 
@@ -58,6 +59,7 @@ export function ExploreShowcase({ products, showcaseItems }: ExploreShowcaseProp
         <TrustFeatures ids={["authentic", "dispatch", "cod", "supportChat"]} />
         <TopSelling products={products} />
         <MediaMasonry products={products} showcaseItems={showcaseItems} />
+        <ExploreReviews />
       </div>
     </main>
   );

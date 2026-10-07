@@ -25,7 +25,9 @@ export const showcaseMessages = defineMessages({
     "gallery.aria": "Interactive media masonry gallery",
     "gallery.play": "Play video",
     "gallery.pause": "Pause video",
-    "gallery.videoAria": "{title} (Video) - {action}"
+    "gallery.videoAria": "{title} (Video) - {action}",
+    "reviews.kicker": "CUSTOMER REVIEWS & FEEDBACK",
+    "reviews.title": "What people say after a year"
   },
   bn: {
     scrollToExplore: "স্ক্রোল করে দেখুন",
@@ -51,6 +53,8 @@ export const showcaseMessages = defineMessages({
     "gallery.aria": "ইন্টারঅ্যাক্টিভ মিডিয়া গ্যালারি",
     "gallery.play": "ভিডিও চালান",
     "gallery.pause": "ভিডিও থামান",
-    "gallery.videoAria": "{title} (ভিডিও) - {action}"
+    "gallery.videoAria": "{title} (ভিডিও) - {action}",
+    "reviews.kicker": "গ্রাহকদের বাস্তব রিভিউ ও মতামত",
+    "reviews.title": "আমাদের কাস্টমারদের বাস্তব অভিজ্ঞতা"
   }
 });

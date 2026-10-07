@@ -216,3 +216,117 @@
     gap: 12px;
   }
 }
+
+/* ------------------------------------------------------------- */
+/* Explore: Customer Reviews Section                             */
+/* ------------------------------------------------------------- */
+.explore-reviews-section {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 56px;
+}
+
+[data-theme="light"] .explore-reviews-section {
+  border-top-color: rgba(0, 0, 0, 0.08);
+}
+
+.explore-reviews-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.explore-review-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 30px 28px;
+  min-height: 240px;
+  background: #121620;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  box-shadow: none;
+  border-radius: 0;
+  transition: transform 200ms ease, border-color 200ms ease;
+  box-sizing: border-box;
+}
+
+.explore-review-card:hover {
+  border-color: rgba(168, 85, 247, 0.35);
+  transform: translateY(-3px);
+  box-shadow: none;
+}
+
+[data-theme="light"] .explore-review-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  box-shadow: none;
+}
+
+[data-theme="light"] .explore-review-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: none;
+}
+
+.review-stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 18px;
+}
+
+.review-quote {
+  margin: 0;
+  padding: 0;
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: var(--text-soft);
+  font-weight: 500;
+  font-style: normal;
+  flex: 1 1 auto;
+}
+
+[data-theme="light"] .review-quote {
+  color: #334155;
+}
+
+.review-author-info {
+  margin-top: 26px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.review-author-name {
+  font-size: 13px;
+  font-weight: 750;
+  color: var(--text-primary);
+}
+
+[data-theme="light"] .review-author-name {
+  color: #0f172a;
+}
+
+.review-author-location {
+  font-size: 10.5px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-muted);
+}
+
+[data-theme="light"] .review-author-location {
+  color: #64748b;
+}
+
+@media (max-width: 1024px) {
+  .explore-reviews-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 640px) {
+  .explore-reviews-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
