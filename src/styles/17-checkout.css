@@ -749,7 +749,7 @@
   border-radius: 0;
   background: color-mix(in srgb, var(--accent) 14%, var(--surface-800));
   border: 1px solid color-mix(in srgb, var(--accent) 38%, var(--border));
-  color: #e9d5ff;
+  color: #ffffff;
   font-size: 12.5px;
   font-weight: 750;
   line-height: 1.45;
@@ -757,6 +757,10 @@
   margin: 4px 0 6px;
   text-align: center;
   box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+}
+
+.checkout-success-note strong {
+  color: #ffffff;
 }
 
 .checkout-note-icon {
@@ -867,8 +871,12 @@
 [data-theme="light"] .checkout-success-note {
   background: #f5f3ff;
   border: 1.5px solid #ddd6fe;
-  color: #581c87;
+  color: #000000;
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+}
+
+[data-theme="light"] .checkout-success-note strong {
+  color: #000000;
 }
 
 [data-theme="light"] .checkout-note-icon {

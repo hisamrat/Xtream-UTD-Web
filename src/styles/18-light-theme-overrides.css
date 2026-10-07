@@ -227,8 +227,12 @@
 [data-theme="light"] .checkout-success-note {
   background: #f5f3ff;
   border: 1.5px solid #ddd6fe;
-  color: #581c87;
+  color: #000000;
   box-shadow: 0 2px 8px rgba(124, 58, 237, 0.08);
+}
+
+[data-theme="light"] .checkout-success-note strong {
+  color: #000000;
 }
 
 [data-theme="light"] .checkout-note-icon {
