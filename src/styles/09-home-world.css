@@ -25,13 +25,52 @@ radial-gradient(circle at 31% 48%, rgb(10 210 190 / 12%), transparent 20rem),
 radial-gradient(circle at 69% 50%, rgb(255 91 62 / 10%), transparent 22rem),
 radial-gradient(circle at 47% 70%, rgb(28 82 170 / 13%), transparent 22rem),
 linear-gradient(180deg, #060a0d 0%, #030608 58%, #010203 100%);
-transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1), transform 280ms cubic-bezier(0.16, 1, 0.3, 1);
+transition: opacity 650ms cubic-bezier(0.19, 1, 0.22, 1), transform 720ms cubic-bezier(0.19, 1, 0.22, 1);
+perspective: 1400px;
+perspective-origin: 50% 50%;
+will-change: transform, opacity;
 }
 
 .world-shell.is-navigating-to-explore {
   opacity: 0 !important;
-  transform: translateY(-24px) scale(0.97) !important;
+  transform: perspective(1400px) translate3d(0, -40px, 360px) scale(1.18) !important;
   pointer-events: none !important;
+}
+
+.world-shell.is-navigating-to-explore .showcase-stage,
+.world-shell.is-navigating-to-explore .world-stage {
+  transform: scale(1.22) translateZ(120px) !important;
+  transition: transform 720ms cubic-bezier(0.19, 1, 0.22, 1) !important;
+}
+
+.world-shell.is-navigating-to-explore .world-card {
+  transition: transform 720ms cubic-bezier(0.19, 1, 0.22, 1), opacity 600ms ease !important;
+}
+
+.world-shell.is-navigating-to-explore .world-set-controls {
+  opacity: 0 !important;
+  transform: translateX(-50%) translateY(24px) scale(0.92) !important;
+  transition: transform 450ms cubic-bezier(0.19, 1, 0.22, 1), opacity 380ms ease !important;
+}
+
+.world-shell.is-navigating-to-explore .world-instructions {
+  opacity: 0 !important;
+  transform: translateY(-50%) translateX(24px) !important;
+  transition: transform 450ms cubic-bezier(0.19, 1, 0.22, 1), opacity 380ms ease !important;
+}
+
+.world-shell.is-navigating-to-explore .world-center-preview {
+  opacity: 0 !important;
+  transform: translate(-50%, -50%) scale(0.92) !important;
+  transition: transform 380ms ease, opacity 320ms ease !important;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .world-shell.is-navigating-to-explore {
+    transform: none !important;
+    filter: none !important;
+    opacity: 0 !important;
+  }
 }
 
 .world-shell::before,

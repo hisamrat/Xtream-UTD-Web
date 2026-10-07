@@ -204,6 +204,16 @@ export function HomeWorld({ products }: HomeWorldProps) {
     [cancelHoverEnter, showPreviewNow]
   );
 
+  const navigationTimeoutRef = useRef<number | null>(null);
+
+  useEffect(() => {
+    return () => {
+      if (navigationTimeoutRef.current !== null) {
+        window.clearTimeout(navigationTimeoutRef.current);
+      }
+    };
+  }, []);
+
   const navigateToExplore = useCallback(() => {
     if (isNavigatingRef.current) return;
     isNavigatingRef.current = true;
@@ -211,8 +221,33 @@ export function HomeWorld({ products }: HomeWorldProps) {
     cancelHoverEnter();
     cancelHoverHide();
     setHoveredSlug(null);
-    router.push("/explore");
-  }, [cancelHoverEnter, cancelHoverHide, router]);
+
+    const performNavigation = () => {
+      router.push("/explore");
+    };
+
+    if (reducedMotion) {
+      performNavigation();
+      return;
+    }
+
+    if (navigationTimeoutRef.current !== null) {
+      window.clearTimeout(navigationTimeoutRef.current);
+    }
+
+    // Allow the 3D cinematic forward zoom exit animation to play smoothly (~700ms)
+    navigationTimeoutRef.current = window.setTimeout(() => {
+      if (
+        typeof document !== "undefined" &&
+        "startViewTransition" in document &&
+        typeof (document as Document & { startViewTransition?: (cb: () => void) => void }).startViewTransition === "function"
+      ) {
+        (document as Document & { startViewTransition: (cb: () => void) => void }).startViewTransition(performNavigation);
+      } else {
+        performNavigation();
+      }
+    }, 700);
+  }, [cancelHoverEnter, cancelHoverHide, reducedMotion, router]);
 
   const resetView = useCallback(() => {
     cancelHoverHide();
@@ -283,12 +318,27 @@ export function HomeWorld({ products }: HomeWorldProps) {
         }
       }
 
+      const dragUpward = pointer.startY - event.clientY;
+      const isTouch = event.pointerType === "touch" || viewportSize.width < 700;
+
       // Horizontal sweep ±65°, vertical tilt ±35°.
       const rotateY = clamp(pointer.startRotateY + (event.clientX - pointer.startX) * 0.32, -65, 65);
       const rotateX = clamp(pointer.startRotateX - (event.clientY - pointer.startY) * 0.24, -35, 35);
-      setWorldView((current) => ({ ...current, rotateX, rotateY, dragging: isDragging }));
+
+      // On mobile/touch swipe upward, add gentle upward parallax & slight zoom feedback
+      const parallaxY = isTouch && dragUpward > 0 ? -Math.min(20, dragUpward * 0.16) : 0;
+      const zoom = isTouch && dragUpward > 0 ? 1 + Math.min(0.035, dragUpward * 0.0005) : 1;
+
+      setWorldView((current) => ({
+        ...current,
+        rotateX,
+        rotateY,
+        parallaxY,
+        zoom,
+        dragging: isDragging
+      }));
     },
-    [showUI, cancelHoverHide]
+    [showUI, cancelHoverHide, viewportSize.width]
   );
 
   const endPointer = useCallback(
@@ -300,29 +350,28 @@ export function HomeWorld({ products }: HomeWorldProps) {
         event.currentTarget.releasePointerCapture(event.pointerId);
       }
 
-      // On mobile/small screen or touch, always spring back to default upright orientation so cards never stay tilted
+      // On mobile/small screen or touch, always spring back to default upright orientation
       if (viewportSize.width < 700 || event.pointerType === "touch") {
-        setWorldView((current) => ({
-          ...RESTING_VIEW,
-          zoom: current.zoom
-        }));
+        setWorldView(RESTING_VIEW);
       } else {
         setWorldView((current) => (current.dragging ? { ...current, dragging: false } : current));
       }
 
-      // A touch swipe up continues to the explore page.
-      if (event.pointerType === "touch" && dragUpward > 65) {
+      // A touch swipe up continues to the explore page smoothly
+      if (event.pointerType === "touch" && dragUpward > 36) {
         navigateToExplore();
       }
     },
     [navigateToExplore, viewportSize.width]
   );
 
-  // Wheel over the world continues to the explore page.
+  // Wheel over the world smoothly transitions to explore on downward scroll
   const handleWheel = useCallback(
     (event: ReactWheelEvent<HTMLElement>) => {
       const delta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
-      if (Math.abs(delta) >= 8) navigateToExplore();
+      if (event.deltaY > 8 || Math.abs(delta) >= 14) {
+        navigateToExplore();
+      }
     },
     [navigateToExplore]
   );

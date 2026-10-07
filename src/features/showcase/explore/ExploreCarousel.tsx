@@ -90,11 +90,13 @@ export function ExploreCarousel({ products }: { products: ProductSummary[] }) {
   const cardHeight = getCardHeight(viewport);
   const cardWidth = getCardWidth(cardHeight, viewport.width);
   const cardGap = getCardGap(viewport.width);
+  const cardHeightRef = useRef(cardHeight);
   const cardWidthRef = useRef(cardWidth);
 
   useEffect(() => {
     cardWidthRef.current = cardWidth;
-  }, [cardWidth]);
+    cardHeightRef.current = cardHeight;
+  }, [cardWidth, cardHeight]);
 
   const paused = documentHidden || anyModalOpen || !onScreen;
   // Cards are positioned in a layout effect right after hydration, before the first paint.
@@ -281,6 +283,55 @@ export function ExploreCarousel({ products }: { products: ProductSummary[] }) {
       }
       drag.active = false;
     }
+  }, []);
+
+  // Wheel Scroll: ONLY when hovering specifically over the center large image, rotate images smoothly without leaking into page scroll
+  useEffect(() => {
+    const onWheel = (event: WheelEvent) => {
+      // Only active when the user is at the top carousel section
+      if (window.scrollY > window.innerHeight * 0.45) {
+        return;
+      }
+
+      const clientX = event.clientX;
+      const clientY = event.clientY;
+
+      const centerX = window.innerWidth / 2;
+      const centerY = window.innerHeight / 2;
+      const halfW = (cardWidthRef.current || 380) / 2;
+      const halfH = (cardHeightRef.current || 480) / 2;
+
+      // Exact hitbox check for the center large image
+      const isOverCenterImage =
+        clientX >= centerX - halfW &&
+        clientX <= centerX + halfW &&
+        clientY >= centerY - halfH &&
+        clientY <= centerY + halfH;
+
+      if (!isOverCenterImage) {
+        // Outside the center large image -> naturally scroll down to the bottom sections
+        return;
+      }
+
+      // Strictly over the center large image -> UNCONDITIONALLY prevent native page scroll
+      event.preventDefault();
+      event.stopPropagation();
+
+      const delta = Math.abs(event.deltaY) > Math.abs(event.deltaX) ? event.deltaY : event.deltaX;
+      if (Math.abs(delta) < 0.1) return;
+
+      lastInteractionRef.current = Date.now();
+      lastInputTimeRef.current = Date.now();
+
+      const sensitivity = 0.0035;
+      targetRef.current += delta * sensitivity;
+    };
+
+    // Use window listener with passive: false to guarantee preventDefault works 100% of the time
+    window.addEventListener("wheel", onWheel, { passive: false });
+    return () => {
+      window.removeEventListener("wheel", onWheel);
+    };
   }, []);
 
   /** Clicking the centred card opens it; clicking a side card brings it to the centre. Drags are ignored. */

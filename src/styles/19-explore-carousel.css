@@ -268,8 +268,19 @@
   flex-direction: column;
   position: relative;
   overflow-x: hidden;
-  animation: explorePageFadeIn 280ms cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation: explorePageEnter 750ms cubic-bezier(0.19, 1, 0.22, 1) forwards;
   background: var(--canvas-950);
+}
+
+@keyframes explorePageEnter {
+  from {
+    opacity: 0;
+    transform: translateY(32px) scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
 }
 
 [data-theme="light"] .explore-main {
@@ -288,7 +299,8 @@
   touch-action: pan-y !important;
   user-select: none;
   opacity: 0;
-  transition: opacity 280ms cubic-bezier(0.16, 1, 0.3, 1);
+  transform: scale(0.95) translateY(24px);
+  transition: opacity 650ms cubic-bezier(0.19, 1, 0.22, 1), transform 750ms cubic-bezier(0.19, 1, 0.22, 1);
   background:
     radial-gradient(circle at 50% 44%, rgba(60, 3, 102, 0.75), transparent 32rem),
     radial-gradient(circle at 34% 52%, rgba(126, 34, 206, 0.18), transparent 22rem),
@@ -307,6 +319,7 @@
 
 .explore-carousel-section.is-ready {
   opacity: 1;
+  transform: scale(1) translateY(0);
 }
 
 .explore-extra-sections {
@@ -326,6 +339,15 @@
   }
   to {
     opacity: 1;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .explore-main {
+    animation: none !important;
+  }
+  .explore-carousel-section {
+    transform: none !important;
   }
 }
 
