@@ -28,7 +28,16 @@ const INPUT_SETTLE_MS = 140;
 const SETTLED_EPSILON = 0.0005;
 const SERVER_VIEWPORT = { width: 1440, height: 900 };
 
-type DragState = { active: boolean; startX: number; startY: number; lastX: number; distance: number };
+type DragState = {
+  active: boolean;
+  startX: number;
+  startY: number;
+  lastX: number;
+  lastY: number;
+  distance: number;
+  isHorizontal: boolean | null;
+  startTime: number;
+};
 
 function applyPlacement(node: HTMLDivElement | null, offset: number, cardWidth: number, cardGap: number) {
   if (!node) return;
@@ -66,12 +75,27 @@ export function ExploreCarousel({ products }: { products: ProductSummary[] }) {
   const currentRef = useRef(0);
   const lastInputTimeRef = useRef(0);
   const lastInteractionRef = useRef(0);
-  const dragRef = useRef<DragState>({ active: false, startX: 0, startY: 0, lastX: 0, distance: 0 });
+  const dragRef = useRef<DragState>({
+    active: false,
+    startX: 0,
+    startY: 0,
+    lastX: 0,
+    lastY: 0,
+    distance: 0,
+    isHorizontal: null,
+    startTime: 0
+  });
 
   const carouselProducts = useMemo(() => repeatToMinimum(products), [products]);
   const cardHeight = getCardHeight(viewport);
   const cardWidth = getCardWidth(cardHeight, viewport.width);
   const cardGap = getCardGap(viewport.width);
+  const cardWidthRef = useRef(cardWidth);
+
+  useEffect(() => {
+    cardWidthRef.current = cardWidth;
+  }, [cardWidth]);
+
   const paused = documentHidden || anyModalOpen || !onScreen;
   // Cards are positioned in a layout effect right after hydration, before the first paint.
   const isReady = hydrated && carouselProducts.length > 0;
@@ -131,7 +155,7 @@ export function ExploreCarousel({ products }: { products: ProductSummary[] }) {
     let frame = 0;
     const tick = () => {
       frame = requestAnimationFrame(tick);
-      if (Date.now() - lastInputTimeRef.current > INPUT_SETTLE_MS) {
+      if (Date.now() - lastInputTimeRef.current > INPUT_SETTLE_MS && !dragRef.current.active) {
         const nearest = Math.round(targetRef.current);
         targetRef.current += (nearest - targetRef.current) * (reducedMotion ? 1 : SNAP_EASE);
       }
@@ -153,10 +177,20 @@ export function ExploreCarousel({ products }: { products: ProductSummary[] }) {
     return () => cancelAnimationFrame(frame);
   }, [carouselProducts, cardGap, cardWidth, paused, reducedMotion]);
 
+  // Mouse Drag (Desktop)
   const onMouseDown = useCallback((event: React.MouseEvent<HTMLElement>) => {
-    if (event.button !== 0 || window.matchMedia("(pointer: coarse)").matches) return;
+    if (event.button !== 0) return;
     lastInteractionRef.current = Date.now();
-    dragRef.current = { active: true, startX: event.clientX, startY: event.clientY, lastX: event.clientX, distance: 0 };
+    dragRef.current = {
+      active: true,
+      startX: event.clientX,
+      startY: event.clientY,
+      lastX: event.clientX,
+      lastY: event.clientY,
+      distance: 0,
+      isHorizontal: true,
+      startTime: Date.now()
+    };
   }, []);
 
   const onMouseMove = useCallback((event: React.MouseEvent<HTMLElement>) => {
@@ -165,13 +199,88 @@ export function ExploreCarousel({ products }: { products: ProductSummary[] }) {
     lastInteractionRef.current = Date.now();
     lastInputTimeRef.current = Date.now();
     const deltaX = event.clientX - drag.lastX;
-    drag.distance += Math.abs(event.clientX - drag.startX) + Math.abs(event.clientY - drag.startY);
+    drag.distance += Math.abs(event.clientX - drag.lastX) + Math.abs(event.clientY - drag.lastY);
     drag.lastX = event.clientX;
-    targetRef.current -= deltaX * 0.0035;
+    drag.lastY = event.clientY;
+    const sensitivity = 1 / Math.max(220, cardWidthRef.current * 1.15);
+    targetRef.current -= deltaX * sensitivity;
   }, []);
 
   const onMouseUp = useCallback(() => {
-    dragRef.current.active = false;
+    if (dragRef.current.active) {
+      dragRef.current.active = false;
+      targetRef.current = Math.round(targetRef.current);
+    }
+  }, []);
+
+  // Touch Swipe (Mobile) - Horizontal swipes rotate the carousel, vertical swipes naturally scroll the page
+  const onTouchStart = useCallback((event: React.TouchEvent<HTMLElement>) => {
+    const touch = event.touches[0];
+    if (!touch) return;
+    lastInteractionRef.current = Date.now();
+    dragRef.current = {
+      active: true,
+      startX: touch.clientX,
+      startY: touch.clientY,
+      lastX: touch.clientX,
+      lastY: touch.clientY,
+      distance: 0,
+      isHorizontal: null,
+      startTime: Date.now()
+    };
+  }, []);
+
+  const onTouchMove = useCallback((event: React.TouchEvent<HTMLElement>) => {
+    const drag = dragRef.current;
+    if (!drag.active) return;
+    const touch = event.touches[0];
+    if (!touch) return;
+
+    const deltaX = touch.clientX - drag.lastX;
+    const totalDx = touch.clientX - drag.startX;
+    const totalDy = touch.clientY - drag.startY;
+    drag.distance += Math.abs(deltaX) + Math.abs(touch.clientY - drag.lastY);
+
+    // Lock direction after initial movement
+    if (drag.isHorizontal === null && (Math.abs(totalDx) > 8 || Math.abs(totalDy) > 8)) {
+      drag.isHorizontal = Math.abs(totalDx) > Math.abs(totalDy);
+    }
+
+    // If horizontal gesture, rotate the carousel smoothly
+    if (drag.isHorizontal === true) {
+      lastInteractionRef.current = Date.now();
+      lastInputTimeRef.current = Date.now();
+      const sensitivity = 1 / Math.max(180, cardWidthRef.current * 0.95);
+      targetRef.current -= deltaX * sensitivity;
+    }
+
+    drag.lastX = touch.clientX;
+    drag.lastY = touch.clientY;
+  }, []);
+
+  const onTouchEnd = useCallback(() => {
+    const drag = dragRef.current;
+    if (drag.active) {
+      if (drag.isHorizontal === true) {
+        lastInteractionRef.current = Date.now();
+        lastInputTimeRef.current = Date.now();
+
+        const totalDx = drag.lastX - drag.startX;
+        const duration = Math.max(1, Date.now() - drag.startTime);
+        const velocity = Math.abs(totalDx) / duration;
+
+        // Advance card on swipe momentum or distance threshold
+        if (Math.abs(totalDx) > 32 || velocity > 0.3) {
+          const deltaCard = totalDx < 0 ? 1 : -1;
+          const currentPos = currentRef.current;
+          const targetPos = deltaCard > 0 ? Math.ceil(currentPos) : Math.floor(currentPos);
+          targetRef.current = targetPos === Math.round(currentPos) ? Math.round(currentPos) + deltaCard : targetPos;
+        } else {
+          targetRef.current = Math.round(targetRef.current);
+        }
+      }
+      drag.active = false;
+    }
   }, []);
 
   /** Clicking the centred card opens it; clicking a side card brings it to the centre. Drags are ignored. */
@@ -199,6 +308,10 @@ export function ExploreCarousel({ products }: { products: ProductSummary[] }) {
       onMouseMove={onMouseMove}
       onMouseUp={onMouseUp}
       onMouseLeave={onMouseUp}
+      onTouchStart={onTouchStart}
+      onTouchMove={onTouchMove}
+      onTouchEnd={onTouchEnd}
+      onTouchCancel={onTouchEnd}
       onDragStart={(event) => event.preventDefault()}
     >
       <div className="scale-carousel-viewport" style={{ perspective: `${CAROUSEL_PERSPECTIVE}px`, perspectiveOrigin: "50% 50%" }}>
