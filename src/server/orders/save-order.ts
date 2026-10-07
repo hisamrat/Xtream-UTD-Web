@@ -6,6 +6,9 @@ import {
   type OrderRecord
 } from "@/domain/commerce/order-record";
 
+import { getProducts } from "@/server/catalog/get-catalog";
+import { loadLocalProducts } from "@/server/catalog/sources/local-json";
+
 export type SaveOrderResult = {
   success: boolean;
   orderId: string;
@@ -28,7 +31,41 @@ const DEFAULT_ORDERS_SHEET_TAB = "WebSite Selling Information";
  */
 export async function saveOrder(order: OrderRecord): Promise<SaveOrderResult> {
   const orderId = order.orderId?.trim() || generateOrderId();
-  const orderWithId: OrderRecord = { ...order, orderId };
+
+  // Resolve Product IDs from catalog if any item has missing or 'prd-' prefixed ID
+  let catalogProducts: { id?: string; slug: string; title: string }[] = [];
+  try {
+    catalogProducts = await getProducts();
+  } catch {
+    catalogProducts = loadLocalProducts();
+  }
+
+  const slugToIdMap = new Map<string, string>();
+  for (const p of catalogProducts) {
+    if (p.id && !p.id.startsWith("prd-")) {
+      slugToIdMap.set(p.slug.toLowerCase().trim(), p.id);
+      slugToIdMap.set(p.title.toLowerCase().trim(), p.id);
+    }
+  }
+
+  const enrichedItems = order.items.map((item) => {
+    let resolvedId = item.productId?.trim() || "";
+    if (!resolvedId || resolvedId.startsWith("prd-")) {
+      const slugKey = (item.productSlug || item.productId.replace(/^prd-/, "")).toLowerCase().trim();
+      const foundId =
+        (slugKey && slugToIdMap.get(slugKey)) ||
+        slugToIdMap.get(item.productTitle.toLowerCase().trim());
+      if (foundId) {
+        resolvedId = foundId;
+      }
+    }
+    return {
+      ...item,
+      productId: resolvedId || item.productId || "-"
+    };
+  });
+
+  const orderWithId: OrderRecord = { ...order, orderId, items: enrichedItems };
   const rows = formatOrderRowsForSheet(orderWithId);
 
   // Method 1: Google Apps Script Web App Webhook (Recommended)

@@ -62,9 +62,10 @@ export function rowToProductInput(table: SheetTable, row: SheetRow): ProductInpu
   const posterImage = toEmbeddableImageUrl(cell(...POSTER_COLUMNS));
   const galleryImages = pipeSplit(cell(...GALLERY_COLUMNS)).map(toEmbeddableImageUrl).filter(Boolean);
   const mainImageRaw = cell(...MAIN_IMAGE_COLUMNS);
+  const rawId = cell("product_no", "product_id", "product_number", "id", "no", "productno", "product_no_");
 
   return {
-    id: `prd-${slug}`,
+    id: rawId || `prd-${slug}`,
     slug,
     title: cell("title") || slug,
     category: cell("category") || "General",
