@@ -299,14 +299,23 @@ export function HomeWorld({ products }: HomeWorldProps) {
       if (event.currentTarget.hasPointerCapture(event.pointerId)) {
         event.currentTarget.releasePointerCapture(event.pointerId);
       }
-      setWorldView((current) => (current.dragging ? { ...current, dragging: false } : current));
+
+      // On mobile/small screen or touch, always spring back to default upright orientation so cards never stay tilted
+      if (viewportSize.width < 700 || event.pointerType === "touch") {
+        setWorldView((current) => ({
+          ...RESTING_VIEW,
+          zoom: current.zoom
+        }));
+      } else {
+        setWorldView((current) => (current.dragging ? { ...current, dragging: false } : current));
+      }
 
       // A touch swipe up continues to the explore page.
       if (event.pointerType === "touch" && dragUpward > 65) {
         navigateToExplore();
       }
     },
-    [navigateToExplore]
+    [navigateToExplore, viewportSize.width]
   );
 
   // Wheel over the world continues to the explore page.
@@ -321,7 +330,9 @@ export function HomeWorld({ products }: HomeWorldProps) {
   const leaveWorld = useCallback(() => {
     if (pointerRef.current.active) return;
     setWorldView((current) =>
-      current.parallaxX === 0 && current.parallaxY === 0 ? current : { ...current, parallaxX: 0, parallaxY: 0 }
+      current.rotateX === 0 && current.rotateY === 0 && current.parallaxX === 0 && current.parallaxY === 0
+        ? current
+        : { ...current, rotateX: 0, rotateY: 0, parallaxX: 0, parallaxY: 0 }
     );
   }, []);
 

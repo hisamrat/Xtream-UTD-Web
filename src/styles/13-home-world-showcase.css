@@ -508,8 +508,10 @@ body:has(.home-main) .world-shell.ui-ready .world-set-controls {
 
 @media (max-width: 1023px) {
 .world-shell.reference-showcase {
-min-height: 100svh;
-height: 100svh;
+min-height: 100vh;
+min-height: 100dvh;
+height: 100vh;
+height: 100dvh;
 }
 
 .reference-world-card {
@@ -531,8 +533,10 @@ scale(var(--world-card-hover-scale, 1.08));
 
 @media (max-width: 699px) {
 .world-shell.reference-showcase {
-min-height: 100svh;
-height: 100svh;
+min-height: 100vh;
+min-height: 100dvh;
+height: 100vh;
+height: 100dvh;
 background:
 radial-gradient(circle at 50% 42%, rgb(27 35 45 / 78%), transparent 19rem),
 radial-gradient(circle at 32% 48%, rgb(0 228 208 / 13%), transparent 14rem),

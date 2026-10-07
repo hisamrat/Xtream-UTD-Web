@@ -196,12 +196,12 @@ export function getShowcaseStageScale(viewportSize: ViewportSize, slots: Referen
   const boundsWidth = bounds.maxX - bounds.minX;
   const boundsHeight = bounds.maxY - bounds.minY;
   const horizontalReserve = viewportSize.width < 700 ? 20 : viewportSize.width >= 1500 ? 120 : 140;
-  const verticalReserve = viewportSize.width < 700 ? 160 : 250;
+  const verticalReserve = viewportSize.width < 700 ? 175 : 250;
   const widthFit = Math.max(0.2, (viewportSize.width - horizontalReserve) / boundsWidth);
   const heightFit = Math.max(0.2, (viewportSize.height - verticalReserve) / boundsHeight);
   const maxScale =
-    viewportSize.width < 700 ? 1 : viewportSize.width < 1024 ? 0.78 : viewportSize.width < 1180 ? 0.88 : 0.96;
-  const minScale = viewportSize.width < 700 ? 0.58 : 0.45;
+    viewportSize.width < 700 ? 0.98 : viewportSize.width < 1024 ? 0.78 : viewportSize.width < 1180 ? 0.88 : 0.96;
+  const minScale = viewportSize.width < 700 ? 0.52 : 0.45;
 
   return clamp(Math.min(widthFit, heightFit, maxScale), minScale, maxScale);
 }
@@ -213,7 +213,7 @@ export function getShowcaseStageStyle(
 ): CSSProperties & Record<`--${string}`, string> {
   const verticalOffset =
     viewportSize.width < 700
-      ? "0px"
+      ? "-12px"
       : viewportSize.width >= 1500 && viewportSize.height < 960
       ? "-22px"
       : "-16px";
