@@ -16,8 +16,10 @@ function readEnv(name: string): string | undefined {
   return value ? value : undefined;
 }
 
-const DEFAULT_CATALOG_SPREADSHEET_ID = "10IOwFL58y9X6U5eEP24vPReFlgqZrjwsNhGRX2JUslU";
+const DEFAULT_CATALOG_SPREADSHEET_ID = "15DQKQJiuK4LQCgDau3GnAUZ43b6KNqiARRQEZ4pYplc";
 const DEFAULT_GOOGLE_SHEETS_API_KEY = "AIzaSyClMKINFTuAmLirG-oENC0MrG_kXMOF6Io";
+const DEFAULT_PRODUCTS_TAB = "Website Product Information";
+const DEFAULT_GALLERY_TAB = "Website Product Image & Video Gallery";
 
 /** Google Sheets configuration, or fallback defaults so zero configuration is needed on Vercel. */
 export function getSheetsConfig(): SheetsConfig | null {
@@ -39,8 +41,8 @@ export function getSheetsConfig(): SheetsConfig | null {
   return {
     spreadsheetId,
     auth,
-    productsTab: readEnv("GOOGLE_SHEETS_PRODUCTS_TAB"),
-    galleryTab: readEnv("GOOGLE_SHEETS_GALLERY_TAB")
+    productsTab: readEnv("GOOGLE_SHEETS_PRODUCTS_TAB") || DEFAULT_PRODUCTS_TAB,
+    galleryTab: readEnv("GOOGLE_SHEETS_GALLERY_TAB") || DEFAULT_GALLERY_TAB
   };
 }
 

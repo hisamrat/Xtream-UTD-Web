@@ -42,7 +42,11 @@ const SPECIFICATION_COLUMNS = ["specifications", "ppecifications", "specs"];
 const VARIANT_COLUMNS = ["colours_or_sizes_or_variants", "sizes_or_variants", "variants"];
 
 function isProductHeader(headers: readonly string[]): boolean {
-  return headers.includes("slug") || (headers.includes("title") && headers.includes("price"));
+  return (
+    headers.includes("slug") ||
+    headers.includes("slug_") ||
+    (headers.includes("title") && headers.includes("price"))
+  );
 }
 
 export function parseStock(value: string): StockStatus {
@@ -54,7 +58,7 @@ export function parseStock(value: string): StockStatus {
 
 export function rowToProductInput(table: SheetTable, row: SheetRow): ProductInput | null {
   const cell = (...aliases: string[]) => getCell(table, row, ...aliases);
-  const slug = cell("slug");
+  const slug = cell("slug", "slug_");
   if (!slug) {
     return null;
   }
