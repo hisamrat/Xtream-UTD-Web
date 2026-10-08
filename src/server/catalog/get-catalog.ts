@@ -39,38 +39,54 @@ function normalize2dRows(raw: unknown[][]): string[][] {
   );
 }
 
+let inFlightWebhookPromise: Promise<{ products: Product[]; gallery: GalleryShowcaseItem[] } | null> | null = null;
+
 async function fetchFromWebhook(): Promise<{ products: Product[]; gallery: GalleryShowcaseItem[] } | null> {
-  const url =
-    process.env.CATALOG_WEBHOOK_URL?.trim() ||
-    process.env.ORDER_SHEET_WEBHOOK_URL?.trim() ||
-    DEFAULT_CATALOG_WEBHOOK_URL;
-  if (!url) return null;
-
-  try {
-    const res = await fetch(url, { redirect: "follow", cache: "no-store" });
-    if (!res.ok) return null;
-    const data = (await res.json()) as WebhookCatalogResponse;
-    if (!data || data.success === false) return null;
-
-    let products: Product[] = [];
-    let gallery: GalleryShowcaseItem[] = [];
-
-    if (Array.isArray(data.productsRows) && data.productsRows.length > 0) {
-      const { products: parsedProducts } = parseProductsSheet(normalize2dRows(data.productsRows));
-      products = parsedProducts;
-    }
-
-    if (Array.isArray(data.galleryRows) && data.galleryRows.length > 0) {
-      gallery = parseGallerySheet(normalize2dRows(data.galleryRows));
-    }
-
-    if (products.length === 0) return null;
-
-    return { products, gallery };
-  } catch (error) {
-    console.warn("[catalog] Webhook catalog fetch skipped or unavailable:", error);
-    return null;
+  if (inFlightWebhookPromise) {
+    return inFlightWebhookPromise;
   }
+
+  inFlightWebhookPromise = (async () => {
+    const url =
+      process.env.CATALOG_WEBHOOK_URL?.trim() ||
+      process.env.ORDER_SHEET_WEBHOOK_URL?.trim() ||
+      DEFAULT_CATALOG_WEBHOOK_URL;
+    if (!url) return null;
+
+    try {
+      const res = await fetch(url, {
+        redirect: "follow",
+        cache: "no-store",
+        signal: AbortSignal.timeout(6000)
+      });
+      if (!res.ok) return null;
+      const data = (await res.json()) as WebhookCatalogResponse;
+      if (!data || data.success === false) return null;
+
+      let products: Product[] = [];
+      let gallery: GalleryShowcaseItem[] = [];
+
+      if (Array.isArray(data.productsRows) && data.productsRows.length > 0) {
+        const { products: parsedProducts } = parseProductsSheet(normalize2dRows(data.productsRows));
+        products = parsedProducts;
+      }
+
+      if (Array.isArray(data.galleryRows) && data.galleryRows.length > 0) {
+        gallery = parseGallerySheet(normalize2dRows(data.galleryRows));
+      }
+
+      if (products.length === 0) return null;
+
+      return { products, gallery };
+    } catch (error) {
+      console.warn("[catalog] Webhook catalog fetch skipped or unavailable:", error);
+      return null;
+    } finally {
+      inFlightWebhookPromise = null;
+    }
+  })();
+
+  return inFlightWebhookPromise;
 }
 
 async function fetchCatalogFromSheets(): Promise<Catalog | null> {
@@ -117,36 +133,46 @@ async function fetchGalleryFromSheets(): Promise<GalleryShowcaseItem[]> {
   }
 }
 
-const getCachedCatalog = unstable_cache(
-  async (): Promise<Catalog> => {
+type CachedCatalogData = {
+  catalog: Catalog;
+  gallery: GalleryShowcaseItem[];
+};
+
+const getCachedCatalogData = unstable_cache(
+  async (): Promise<CachedCatalogData> => {
     const fromWebhook = await fetchFromWebhook();
     if (fromWebhook && fromWebhook.products.length > 0) {
-      return { products: fromWebhook.products, source: "google-sheets" };
+      return {
+        catalog: { products: fromWebhook.products, source: "google-sheets" },
+        gallery: fromWebhook.gallery
+      };
     }
 
     const fromSheets = await fetchCatalogFromSheets();
     if (fromSheets && fromSheets.products.length > 0) {
-      return fromSheets;
+      const gallery = await fetchGalleryFromSheets();
+      return {
+        catalog: fromSheets,
+        gallery
+      };
     }
 
-    return { products: loadLocalProducts(), source: "bundled-json" };
+    return {
+      catalog: { products: loadLocalProducts(), source: "bundled-json" },
+      gallery: []
+    };
   },
-  ["catalog-products"],
+  ["catalog-unified-data"],
   { tags: [CATALOG_CACHE_TAG], revalidate: CATALOG_REVALIDATE_SECONDS }
 );
 
-const getCachedGallery = unstable_cache(
-  async (): Promise<GalleryShowcaseItem[]> => {
-    const fromWebhook = await fetchFromWebhook();
-    if (fromWebhook && fromWebhook.gallery.length > 0) {
-      return fromWebhook.gallery;
-    }
+const getCachedCatalog = async (): Promise<Catalog> => {
+  return (await getCachedCatalogData()).catalog;
+};
 
-    return await fetchGalleryFromSheets();
-  },
-  ["catalog-gallery"],
-  { tags: [CATALOG_CACHE_TAG], revalidate: CATALOG_REVALIDATE_SECONDS }
-);
+const getCachedGallery = async (): Promise<GalleryShowcaseItem[]> => {
+  return (await getCachedCatalogData()).gallery;
+};
 
 /** The whole catalogue, deduplicated per request and cached across requests. */
 export const getCatalog = cache(getCachedCatalog);

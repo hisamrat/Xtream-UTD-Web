@@ -38,24 +38,30 @@ export function toEmbeddableImageUrl(url: string): string {
   return trimmed.includes("/folders/") ? "" : trimmed;
 }
 
-/** Ordered list of URLs to try for an image; Drive files get several mirrors. */
-export function getImageCandidates(urlOrId?: string | null): string[] {
+/** Ordered list of URLs to try for an image; Drive files get several mirrors with CDN sizing. */
+export function getImageCandidates(urlOrId?: string | null, targetWidth: number = 600): string[] {
   const trimmed = urlOrId?.trim() ?? "";
   if (!trimmed || trimmed.includes("/folders/")) return [];
 
   const fileId = extractGoogleDriveFileId(trimmed);
   if (fileId) {
-    return [
-      `https://lh3.googleusercontent.com/d/${fileId}`,
-      `https://drive.google.com/thumbnail?id=${fileId}&sz=w1600`,
-      `https://drive.google.com/uc?export=view&id=${fileId}`
-    ];
+    const candidates: string[] = [];
+    if (targetWidth > 0) {
+      candidates.push(`https://lh3.googleusercontent.com/d/${fileId}=w${targetWidth}`);
+      candidates.push(`https://drive.google.com/thumbnail?id=${fileId}&sz=w${targetWidth}`);
+    }
+    candidates.push(`https://lh3.googleusercontent.com/d/${fileId}`);
+    candidates.push(`https://drive.google.com/uc?export=view&id=${fileId}`);
+    return candidates;
   }
 
   return [trimmed];
 }
 
-/** Flattens several source URLs into one de-duplicated candidate list. */
-export function collectImageCandidates(urls: ReadonlyArray<string | null | undefined>): string[] {
-  return Array.from(new Set(urls.flatMap((url) => getImageCandidates(url))));
+/** Flattens several source URLs into one de-duplicated candidate list with CDN sizing. */
+export function collectImageCandidates(
+  urls: ReadonlyArray<string | null | undefined>,
+  targetWidth: number = 600
+): string[] {
+  return Array.from(new Set(urls.flatMap((url) => getImageCandidates(url, targetWidth))));
 }

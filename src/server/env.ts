@@ -17,14 +17,13 @@ function readEnv(name: string): string | undefined {
 }
 
 const DEFAULT_CATALOG_SPREADSHEET_ID = "15DQKQJiuK4LQCgDau3GnAUZ43b6KNqiARRQEZ4pYplc";
-const DEFAULT_GOOGLE_SHEETS_API_KEY = "AIzaSyClMKINFTuAmLirG-oENC0MrG_kXMOF6Io";
 const DEFAULT_PRODUCTS_TAB = "Website Product Information";
 const DEFAULT_GALLERY_TAB = "Website Product Image & Video Gallery";
 
 /** Google Sheets configuration, or fallback defaults so zero configuration is needed on Vercel. */
 export function getSheetsConfig(): SheetsConfig | null {
   const spreadsheetId = readEnv("GOOGLE_SHEETS_SPREADSHEET_ID") || DEFAULT_CATALOG_SPREADSHEET_ID;
-  const apiKey = readEnv("GOOGLE_SHEETS_API_KEY") || DEFAULT_GOOGLE_SHEETS_API_KEY;
+  const apiKey = readEnv("GOOGLE_SHEETS_API_KEY");
   const email = readEnv("GOOGLE_SERVICE_ACCOUNT_EMAIL");
   const privateKey = readEnv("GOOGLE_SERVICE_ACCOUNT_PRIVATE_KEY");
 
@@ -47,4 +46,4 @@ export function getSheetsConfig(): SheetsConfig | null {
 }
 
 /** Seconds catalogue data may be served from cache before it is refetched. */
-export const CATALOG_REVALIDATE_SECONDS = 60;
+export const CATALOG_REVALIDATE_SECONDS = 300;

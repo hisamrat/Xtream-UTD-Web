@@ -41,9 +41,9 @@ function ShowcaseCardMedia({ item, isVideo, isActiveVideo, videoRefCallback }: M
     () =>
       Array.from(
         new Set([
-          ...collectImageCandidates([item.posterUrl]),
+          ...collectImageCandidates([item.posterUrl], 640),
           ...(youtubeId ? getYouTubeThumbnailCandidates(youtubeId) : []),
-          ...(!isVideo ? collectImageCandidates([item.mediaUrl]) : [])
+          ...(!isVideo ? collectImageCandidates([item.mediaUrl], 640) : [])
         ])
       ),
     [item.posterUrl, item.mediaUrl, isVideo, youtubeId]
@@ -78,6 +78,7 @@ function ShowcaseCardMedia({ item, isVideo, isActiveVideo, videoRefCallback }: M
             }}
             referrerPolicy="no-referrer"
             loading="lazy"
+            decoding="async"
             draggable={false}
             onError={handleImageError}
           />
@@ -145,6 +146,7 @@ function ShowcaseCardMedia({ item, isVideo, isActiveVideo, videoRefCallback }: M
           }}
           referrerPolicy="no-referrer"
           loading="lazy"
+          decoding="async"
           draggable={false}
           onError={handleImageError}
         />

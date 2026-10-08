@@ -19,24 +19,33 @@ type ProductImageProps = {
   className?: string;
   /** Load eagerly with high priority (above-the-fold images). */
   priority?: boolean;
+  /** Desired pixel width for remote image CDN resizing (default based on layout role). */
+  targetWidth?: number;
 };
 
 function resolveSources(
   product: ProductImageSource,
   imageRole: NonNullable<ProductImageProps["imageRole"]>,
   viewIndex: number,
+  compact: boolean,
+  isThumbnail: boolean,
+  customTargetWidth?: number,
   imageSrc?: string
 ): string[] {
+  const targetWidth =
+    customTargetWidth ??
+    (isThumbnail ? 240 : compact ? 360 : imageRole === "gallery" ? 1000 : 640);
+
   if (imageSrc) {
-    return collectImageCandidates([imageSrc]);
+    return collectImageCandidates([imageSrc], targetWidth);
   }
 
   if (imageRole === "gallery" || imageRole === "thumbnail") {
     const galleryImage = product.gallery_images?.[viewIndex];
-    return collectImageCandidates([galleryImage || product.cover_image || product.main_image]);
+    return collectImageCandidates([galleryImage || product.cover_image || product.main_image], targetWidth);
   }
 
-  return collectImageCandidates([product.cover_image || product.main_image || product.gallery_images?.[0]]);
+  return collectImageCandidates([product.cover_image || product.main_image || product.gallery_images?.[0]], targetWidth);
 }
 
 /**
@@ -51,11 +60,12 @@ export function ProductImage({
   imageRole = "cover",
   imageSrc,
   className = "",
-  priority = false
+  priority = false,
+  targetWidth
 }: ProductImageProps) {
   const candidateUrls = useMemo(
-    () => resolveSources(product, imageRole, viewIndex, imageSrc),
-    [product, imageRole, viewIndex, imageSrc]
+    () => resolveSources(product, imageRole, viewIndex, compact, isThumbnail, targetWidth, imageSrc),
+    [product, imageRole, viewIndex, compact, isThumbnail, targetWidth, imageSrc]
   );
   const candidateKey = candidateUrls.join("|");
   const [failure, setFailure] = useState({ key: candidateKey, failedCount: 0 });
