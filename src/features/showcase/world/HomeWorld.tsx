@@ -138,6 +138,7 @@ export function HomeWorld({ products }: HomeWorldProps) {
   // Intro fly-in, then reveal the HUD and shell chrome.
   useEffect(() => {
     if (!mounted) return;
+    window.scrollTo(0, 0);
     const timer = window.setTimeout(revealUI, reducedMotion ? 0 : UI_REVEAL_MS);
     return () => window.clearTimeout(timer);
   }, [mounted, reducedMotion, revealUI]);

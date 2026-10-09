@@ -869,26 +869,34 @@ justify-content: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: transparent !important;
-  border: none !important;
-  border-radius: 0 !important;
-  box-shadow: none !important;
+  background: rgba(0, 0, 0, 0.35) !important;
+  border: 1px solid rgba(255, 255, 255, 0.25) !important;
+  border-radius: 50% !important;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
   filter: none !important;
   text-shadow: none !important;
   color: #ffffff !important;
-  pointer-events: none;
+  pointer-events: auto;
+  cursor: pointer;
   user-select: none;
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, opacity 0.2s ease;
 }
 
-.gallery-main:hover .gallery-zoom-badge {
-  transform: scale(1.15);
+.gallery-zoom-badge:hover {
+  transform: scale(1.1);
+  background: rgba(0, 0, 0, 0.6) !important;
 }
 
 .gallery-main.is-hover-zoomed .gallery-zoom-badge {
-  opacity: 0;
-  transform: scale(0.85);
-  pointer-events: none;
+  opacity: 0.95;
+  transform: scale(1);
+  pointer-events: auto;
+  background: rgba(0, 0, 0, 0.65) !important;
 }
 
 .gallery-zoom-badge .zoom-icon {
@@ -903,18 +911,17 @@ justify-content: center;
 [data-theme="light"] .gallery-zoom-badge .zoom-icon {
   color: #ffffff !important;
   filter: none !important;
-  box-shadow: none !important;
-  text-shadow: none !important;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
 }
 
-[data-theme="light"] .gallery-main:hover .gallery-zoom-badge {
-  transform: scale(1.15);
+[data-theme="light"] .gallery-zoom-badge:hover {
+  transform: scale(1.1);
 }
 
 [data-theme="light"] .gallery-main.is-hover-zoomed .gallery-zoom-badge {
-  opacity: 0;
-  transform: scale(0.85);
-  pointer-events: none;
+  opacity: 0.95;
+  transform: scale(1);
+  pointer-events: auto;
 }
 
 @media (max-width: 600px) {

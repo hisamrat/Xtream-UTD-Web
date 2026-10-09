@@ -213,7 +213,7 @@ export function getShowcaseStageStyle(
 ): CSSProperties & Record<`--${string}`, string> {
   const verticalOffset =
     viewportSize.width < 700
-      ? "-12px"
+      ? "0px"
       : viewportSize.width >= 1500 && viewportSize.height < 960
       ? "-22px"
       : "-16px";

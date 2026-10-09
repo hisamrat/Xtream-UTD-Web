@@ -1,7 +1,7 @@
 "use client";
 
 import { useCallback, useRef, useState, type MouseEvent } from "react";
-import { ZoomIn } from "lucide-react";
+import { ZoomIn, ZoomOut } from "lucide-react";
 import type { Product } from "@/domain/product/product-schema";
 import { ProductImage } from "@/features/product/components/ProductImage";
 import type { TranslationKey } from "@/i18n/dictionary";
@@ -24,7 +24,9 @@ export function ProductGallery({ product }: { product: Product }) {
   // Gallery images in sheet order, falling back to the cover image.
   const galleryItems = product.gallery_images.length > 0 ? product.gallery_images : [product.cover_image];
 
-  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const lastTapRef = useRef<{ time: number; x: number; y: number } | null>(null);
+  const touchStartPosRef = useRef<{ x: number; y: number; time: number } | null>(null);
+  const lastTouchTimeRef = useRef(0);
 
   const updateZoomPosition = useCallback((clientX: number, clientY: number) => {
     const el = galleryMainRef.current;
@@ -38,38 +40,68 @@ export function ProductGallery({ product }: { product: Product }) {
   }, []);
 
   const handleMouseEnter = useCallback(() => {
+    if (Date.now() - lastTouchTimeRef.current < 600) return;
     setIsHoverZoomed(true);
   }, []);
 
   const handleMouseMove = useCallback(
     (e: MouseEvent<HTMLDivElement>) => {
+      if (Date.now() - lastTouchTimeRef.current < 600) return;
       updateZoomPosition(e.clientX, e.clientY);
     },
     [updateZoomPosition]
   );
 
   const handleMouseLeave = useCallback(() => {
+    if (Date.now() - lastTouchTimeRef.current < 600) return;
     setIsHoverZoomed(false);
     setZoomOrigin({ x: 50, y: 50 });
   }, []);
 
-  const handleClick = useCallback(() => {
-    setIsHoverZoomed((prev) => {
-      if (prev) {
-        setZoomOrigin({ x: 50, y: 50 });
-        return false;
-      }
-      return true;
-    });
-  }, []);
+  const handleClick = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      if (Date.now() - lastTouchTimeRef.current < 600) return;
+      updateZoomPosition(e.clientX, e.clientY);
+      setIsHoverZoomed((prev) => {
+        if (prev) {
+          setZoomOrigin({ x: 50, y: 50 });
+          return false;
+        }
+        return true;
+      });
+    },
+    [updateZoomPosition]
+  );
 
   const handleTouchStart = useCallback(
     (e: React.TouchEvent<HTMLDivElement>) => {
       const touch = e.touches[0];
       if (!touch) return;
-      touchStartRef.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
-      updateZoomPosition(touch.clientX, touch.clientY);
-      setIsHoverZoomed(true);
+      const now = Date.now();
+      lastTouchTimeRef.current = now;
+      touchStartPosRef.current = { x: touch.clientX, y: touch.clientY, time: now };
+
+      const lastTap = lastTapRef.current;
+      if (lastTap && now - lastTap.time < 380) {
+        const dx = Math.abs(touch.clientX - lastTap.x);
+        const dy = Math.abs(touch.clientY - lastTap.y);
+        if (dx < 40 && dy < 40) {
+          // Double tap detected: toggle zoom in/out!
+          lastTapRef.current = null;
+          setIsHoverZoomed((prev) => {
+            if (prev) {
+              setZoomOrigin({ x: 50, y: 50 });
+              return false;
+            }
+            updateZoomPosition(touch.clientX, touch.clientY);
+            return true;
+          });
+          return;
+        }
+      }
+
+      // First tap: save position and timestamp
+      lastTapRef.current = { time: now, x: touch.clientX, y: touch.clientY };
     },
     [updateZoomPosition]
   );
@@ -78,44 +110,44 @@ export function ProductGallery({ product }: { product: Product }) {
     (e: React.TouchEvent<HTMLDivElement>) => {
       const touch = e.touches[0];
       if (!touch) return;
-      updateZoomPosition(touch.clientX, touch.clientY);
-      if (!isHoverZoomed) {
-        setIsHoverZoomed(true);
+      lastTouchTimeRef.current = Date.now();
+
+      // When zoomed in, dragging/panning lets user inspect any section smoothly
+      if (isHoverZoomed) {
+        updateZoomPosition(touch.clientX, touch.clientY);
       }
     },
     [isHoverZoomed, updateZoomPosition]
   );
 
   const handleTouchEnd = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    lastTouchTimeRef.current = Date.now();
     const touch = e.changedTouches[0];
-    const start = touchStartRef.current;
+    const start = touchStartPosRef.current;
     if (touch && start) {
       const dx = Math.abs(touch.clientX - start.x);
       const dy = Math.abs(touch.clientY - start.y);
-      const dt = Date.now() - start.time;
-      // Quick stationary tap: toggle zoom
-      if (dx < 8 && dy < 8 && dt < 300) {
-        setIsHoverZoomed((prev) => {
-          if (prev) {
-            setZoomOrigin({ x: 50, y: 50 });
-            return false;
-          }
-          return true;
-        });
-      } else {
-        // Drag-to-zoom loupe gesture: reset smoothly upon lifting finger
-        setIsHoverZoomed(false);
-        setZoomOrigin({ x: 50, y: 50 });
+      if (dx > 20 || dy > 20) {
+        lastTapRef.current = null;
       }
-    } else {
-      setIsHoverZoomed(false);
-      setZoomOrigin({ x: 50, y: 50 });
     }
   }, []);
 
   const handleTouchCancel = useCallback(() => {
-    setIsHoverZoomed(false);
-    setZoomOrigin({ x: 50, y: 50 });
+    lastTouchTimeRef.current = Date.now();
+    lastTapRef.current = null;
+  }, []);
+
+  const handleZoomBadgeClick = useCallback((e: React.MouseEvent) => {
+    e.stopPropagation();
+    setIsHoverZoomed((prev) => {
+      if (prev) {
+        setZoomOrigin({ x: 50, y: 50 });
+        return false;
+      }
+      setZoomOrigin({ x: 50, y: 50 });
+      return true;
+    });
   }, []);
 
   return (
@@ -175,10 +207,16 @@ export function ProductGallery({ product }: { product: Product }) {
           />
         </div>
 
-        {/* Bottom-right Zoom Indicator (standalone icon) */}
-        <div className="gallery-zoom-badge" aria-hidden="true" title={t("product.details.zoomImage")}>
-          <ZoomIn size={22} className="zoom-icon" />
-        </div>
+        {/* Bottom-right Zoom Indicator (standalone icon button with toggle support) */}
+        <button
+          type="button"
+          className="gallery-zoom-badge"
+          aria-label={isHoverZoomed ? "Zoom out" : t("product.details.zoomImage")}
+          title={isHoverZoomed ? "Zoom out" : t("product.details.zoomImage")}
+          onClick={handleZoomBadgeClick}
+        >
+          {isHoverZoomed ? <ZoomOut size={22} className="zoom-icon" /> : <ZoomIn size={22} className="zoom-icon" />}
+        </button>
       </div>
 
       {galleryItems.length > 1 ? (

@@ -1,10 +1,10 @@
-/* Ensure bottom dock does not overlap page content */
+/* Balanced bottom padding before footer */
 .details-page {
-  padding-bottom: clamp(120px, 16vh, 180px) !important;
+  padding-bottom: clamp(24px, 4vw, 40px) !important;
 }
 
 .products-page-main {
-  padding-bottom: clamp(100px, 12vh, 160px) !important;
+  padding-bottom: clamp(24px, 4vw, 40px) !important;
 }
 
 /* Ensure explore instructions stay anchored strictly inside top carousel section (scrolls off with top section) */

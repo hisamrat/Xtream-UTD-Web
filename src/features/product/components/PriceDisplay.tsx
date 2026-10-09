@@ -20,12 +20,7 @@ export function PriceDisplay({ product, showDiscount = false, size = "md" }: Pri
   return (
     <div className={`price-row price-row-${size}`}>
       <span className="current-price">{formatPrice(product.price)}</span>
-      {hasOld ? (
-        <span className="old-price">
-          {size === "lg" ? t("product.price.was") : ""}
-          {formatPrice(product.old_price)}
-        </span>
-      ) : null}
+      {hasOld ? <span className="old-price">{formatPrice(product.old_price)}</span> : null}
       {showDiscount && discount > 0 ? (
         <span className="price-discount-pill">
           {`-${discount}%`}

@@ -1,3 +1,27 @@
+html:has(.home-main),
+body:has(.home-main) {
+  overflow: hidden !important;
+  height: 100% !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  touch-action: none !important;
+  overscroll-behavior: none !important;
+}
+
+body:has(.home-main) .site-shell {
+  overflow: hidden !important;
+  height: 100% !important;
+  height: 100vh !important;
+  height: 100dvh !important;
+  position: fixed !important;
+  inset: 0 !important;
+  width: 100% !important;
+  touch-action: none !important;
+}
+
 .home-main {
 min-height: 100vh;
 min-height: 100dvh;

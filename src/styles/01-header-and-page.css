@@ -287,7 +287,7 @@ border-color: var(--border-strong);
 
 .page-main {
   min-height: 100vh;
-  padding: calc(var(--header-height) + 24px) var(--page-x) 132px;
+  padding: calc(var(--header-height) + 24px) var(--page-x) clamp(24px, 3.5vw, 44px);
   max-width: 1440px;
   margin-inline: auto;
   width: 100%;
