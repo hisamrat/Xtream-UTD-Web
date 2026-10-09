@@ -155,6 +155,49 @@ test.describe("product to checkout", () => {
     await expect(trigger).toBeFocused();
   });
 
+  test("variant change and add to cart resets quantity to 1", async ({ page }) => {
+    await page.goto(`/products/${PRODUCT_SLUG}`);
+
+    // Increase quantity to 3
+    const increaseBtn = page.getByRole("button", { name: "Increase quantity" });
+    await increaseBtn.click();
+    await increaseBtn.click();
+    await expect(page.locator(".quantity-value")).toHaveText("3");
+
+    // Switching variant resets quantity back to 1
+    const silverChip = page.getByRole("button", { name: "Silver" });
+    if (await silverChip.isVisible()) {
+      await silverChip.click();
+      await expect(page.locator(".quantity-value")).toHaveText("1");
+    }
+
+    // Increase quantity to 2 and add to cart
+    await increaseBtn.click();
+    await expect(page.locator(".quantity-value")).toHaveText("2");
+    await page.locator(".add-to-cart-btn-main").click();
+
+    // Drawer opens, and buy box quantity resets to 1
+    const drawer = page.getByRole("dialog", { name: "Shopping Cart" });
+    await expect(drawer).toBeVisible();
+    await page.keyboard.press("Escape");
+    await expect(drawer).toHaveCount(0);
+    await expect(page.locator(".quantity-value")).toHaveText("1");
+  });
+
+  test("product gallery shows zoom badge and hover magnifier", async ({ page }) => {
+    await page.goto(`/products/${PRODUCT_SLUG}`);
+
+    // Zoom badge is visible in bottom-right corner of large image
+    const zoomBadge = page.locator(".gallery-zoom-badge");
+    await expect(zoomBadge).toBeVisible();
+
+    // Hovering over gallery-main activates hover zoom
+    const galleryMain = page.locator(".gallery-main");
+    await expect(galleryMain).toBeVisible();
+    await galleryMain.hover();
+    await expect(galleryMain).toHaveClass(/is-hover-zoomed/);
+  });
+
   test("unknown products show the product 404", async ({ page }) => {
     const response = await page.goto("/products/does-not-exist");
     expect(response?.status()).toBe(404);

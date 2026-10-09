@@ -72,13 +72,15 @@ export function ProductImage({
   const failedCount = failure.key === candidateKey ? failure.failedCount : 0;
 
   const activeSrc = candidateUrls[failedCount];
-  const iconSize = compact ? 20 : isThumbnail ? 22 : 36;
+  const iconSize = compact ? 18 : isThumbnail ? 20 : 28;
 
   if (!activeSrc) {
     return (
       <div className={`product-placeholder-wrap ${compact ? "is-compact" : ""} ${className}`} aria-hidden="true">
         <div className="product-placeholder-content">
-          <Package size={iconSize} className="product-placeholder-icon" strokeWidth={1.25} />
+          <div className="product-placeholder-icon-wrap">
+            <Package size={iconSize} className="product-placeholder-icon" strokeWidth={1.5} />
+          </div>
         </div>
       </div>
     );
@@ -95,7 +97,9 @@ export function ProductImage({
       <div className={`product-real-image-wrap ${compact ? "is-compact" : ""} role-${imageRole}`}>
         <div className="product-placeholder-underlay" aria-hidden="true">
           <div className="product-placeholder-content">
-            <Package size={iconSize} className="product-placeholder-icon" strokeWidth={1.25} />
+            <div className="product-placeholder-icon-wrap">
+              <Package size={iconSize} className="product-placeholder-icon" strokeWidth={1.5} />
+            </div>
           </div>
         </div>
 

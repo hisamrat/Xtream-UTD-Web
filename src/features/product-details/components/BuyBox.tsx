@@ -44,6 +44,7 @@ export function BuyBox({ product, selectedVariant, onVariantChange, quantity, on
   const handleAddToCart = () => {
     if (isOutOfStock) return;
     addItem(product, selectedVariant, quantity);
+    onQuantityChange(1);
     setCartAdded(true);
     if (addedTimerRef.current !== null) window.clearTimeout(addedTimerRef.current);
     addedTimerRef.current = window.setTimeout(() => setCartAdded(false), 1400);
@@ -52,6 +53,7 @@ export function BuyBox({ product, selectedVariant, onVariantChange, quantity, on
   const handleBuyNow = () => {
     if (isOutOfStock) return;
     addItem(product, selectedVariant, quantity);
+    onQuantityChange(1);
     openCheckout();
   };
 

@@ -27,30 +27,28 @@
   gap: 14px;
   padding: 18px 20px;
   border-radius: 0;
-  background: #121620;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: none;
-  transition: all 0.2s ease;
+  background: var(--surface-900);
+  border: none !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.28), 0 1px 3px rgba(0, 0, 0, 0.16);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
   box-sizing: border-box;
 }
 
 .home-feature-card:hover {
-  border-color: rgba(168, 85, 247, 0.4);
   transform: translateY(-2px);
-  box-shadow: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 [data-theme="light"] .home-feature-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.045), 0 1px 3px rgba(0, 0, 0, 0.025);
 }
 
 [data-theme="light"] .home-feature-card:hover {
-  border-color: #cbd5e1;
   background: #ffffff;
   transform: translateY(-2px);
-  box-shadow: none;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .feature-card-icon-wrap {
@@ -242,29 +240,28 @@
   justify-content: space-between;
   padding: 30px 28px;
   min-height: 240px;
-  background: #121620;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  box-shadow: none;
+  background: var(--surface-900);
+  border: none !important;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.28), 0 1px 3px rgba(0, 0, 0, 0.16);
   border-radius: 0;
-  transition: transform 200ms ease, border-color 200ms ease;
+  transition: transform 200ms ease, box-shadow 200ms ease;
   box-sizing: border-box;
 }
 
 .explore-review-card:hover {
-  border-color: rgba(168, 85, 247, 0.35);
   transform: translateY(-3px);
-  box-shadow: none;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 [data-theme="light"] .explore-review-card {
   background: #ffffff;
-  border: 1px solid #e2e8f0;
-  box-shadow: none;
+  border: none !important;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.045), 0 1px 3px rgba(0, 0, 0, 0.025);
 }
 
 [data-theme="light"] .explore-review-card:hover {
-  border-color: #cbd5e1;
-  box-shadow: none;
+  transform: translateY(-3px);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08), 0 2px 4px rgba(0, 0, 0, 0.04);
 }
 
 .review-stars {

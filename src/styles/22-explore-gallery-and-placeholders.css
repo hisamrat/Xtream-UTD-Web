@@ -201,6 +201,9 @@
 /* ==========================================================================
    Clean Product Image Placeholder with Common Graphic & Underlay
    ========================================================================== */
+/* ==========================================================================
+   Clean Consistent Product Image Placeholder (Day & Night)
+   ========================================================================== */
 .product-placeholder-underlay {
   position: absolute;
   inset: 0;
@@ -239,33 +242,36 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  color: rgba(255, 255, 255, 0.35);
+  color: rgba(255, 255, 255, 0.45);
   transition: color 0.25s ease, transform 0.25s ease;
   z-index: 1;
   position: relative;
 }
 
 .product-placeholder-icon-wrap {
-  width: 56px;
-  height: 56px;
+  width: 52px;
+  height: 52px;
   border-radius: 50%;
-  background: rgba(255, 255, 255, 0.05);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 255, 255, 0.12);
   display: grid;
   place-items: center;
   box-shadow: 0 4px 18px rgba(0, 0, 0, 0.35);
+  transition: transform 0.2s ease, background 0.2s ease, color 0.2s ease;
 }
 
 .product-placeholder-wrap.is-compact .product-placeholder-icon-wrap,
-.product-placeholder-underlay .product-placeholder-icon-wrap {
-  width: 32px;
-  height: 32px;
+.product-art-thumb .product-placeholder-icon-wrap,
+.product-art-compact .product-placeholder-icon-wrap {
+  width: 30px;
+  height: 30px;
 }
 
 .product-card:hover .product-placeholder-content,
 .world-card:hover .product-placeholder-content,
-.world-center-preview-card:hover .product-placeholder-content {
-  color: rgba(255, 255, 255, 0.65);
+.world-center-preview-card:hover .product-placeholder-content,
+.showcase-card:hover .product-placeholder-content {
+  color: rgba(255, 255, 255, 0.85);
   transform: scale(1.06);
 }
 
@@ -273,31 +279,25 @@
   display: block;
 }
 
-/* Light Mode Placeholder */
-[data-theme="light"] .product-placeholder-wrap {
-  background: radial-gradient(circle at 50% 45%, #f1f5f9 0%, #e2e8f0 100%);
-}
-
-[data-theme="light"] .product-placeholder-backdrop {
-  background: radial-gradient(
-    circle at 50% 45%,
-    color-mix(in srgb, var(--art-accent, #3c0366) 14%, transparent),
-    transparent 72%
-  );
+/* Light Mode (Day Mood) Placeholder */
+[data-theme="light"] .product-placeholder-wrap,
+[data-theme="light"] .product-placeholder-underlay {
+  background: #f1f5f9 !important;
 }
 
 [data-theme="light"] .product-placeholder-content {
-  color: rgba(15, 23, 42, 0.38);
+  color: rgba(15, 23, 42, 0.45);
 }
 
 [data-theme="light"] .product-placeholder-icon-wrap {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(255, 255, 255, 0.95);
   border: 1px solid rgba(0, 0, 0, 0.08);
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="light"] .product-card:hover .product-placeholder-content,
 [data-theme="light"] .world-card:hover .product-placeholder-content,
-[data-theme="light"] .world-center-preview-card:hover .product-placeholder-content {
-  color: rgba(15, 23, 42, 0.7);
+[data-theme="light"] .world-center-preview-card:hover .product-placeholder-content,
+[data-theme="light"] .showcase-card:hover .product-placeholder-content {
+  color: rgba(15, 23, 42, 0.85);
 }

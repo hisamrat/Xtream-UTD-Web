@@ -31,6 +31,11 @@ export function ProductDetailsView({ product, relatedProducts }: ProductDetailsV
   const specifications = Object.entries(product.specifications);
   const { nationwideDeliveryDays } = commerceConfig;
 
+  const handleVariantChange = (variant: string) => {
+    setSelectedVariant(variant);
+    setQuantity(1);
+  };
+
   return (
     <>
       <section className="details-page">
@@ -49,7 +54,7 @@ export function ProductDetailsView({ product, relatedProducts }: ProductDetailsV
           <BuyBox
             product={product}
             selectedVariant={selectedVariant}
-            onVariantChange={setSelectedVariant}
+            onVariantChange={handleVariantChange}
             quantity={quantity}
             onQuantityChange={setQuantity}
             onInquiry={() => setInquiryOpen(true)}

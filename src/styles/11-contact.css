@@ -46,17 +46,16 @@
   align-items: center;
   gap: 12px;
   padding: 14px 18px;
-  border: 1px solid color-mix(in srgb, var(--border) 85%, transparent);
+  border: none;
   border-radius: 0;
-  background: color-mix(in srgb, var(--surface-900) 70%, transparent);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 10px 24px rgb(0 0 0 / 12%);
-  transition: transform 180ms ease, border-color 180ms ease, background 180ms ease;
+  background: var(--surface-900);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.28), 0 1px 3px rgba(0, 0, 0, 0.16);
+  transition: transform 180ms ease, box-shadow 180ms ease, background 180ms ease;
 }
 
 .perk-chip:hover {
   transform: translateY(-2px);
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
   background: color-mix(in srgb, var(--surface-900) 90%, var(--accent) 5%);
 }
 
@@ -179,12 +178,11 @@
   justify-content: space-between;
   gap: 16px;
   padding: 22px;
-  border: 1px solid var(--border);
+  border: none;
   border-radius: 0;
-  background: color-mix(in srgb, var(--surface-900) 82%, transparent);
-  backdrop-filter: blur(14px);
-  box-shadow: 0 16px 36px rgb(0 0 0 / 14%);
-  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), border-color 200ms ease, box-shadow 200ms ease;
+  background: var(--surface-900);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.28), 0 1px 3px rgba(0, 0, 0, 0.16);
+  transition: transform 200ms cubic-bezier(0.16, 1, 0.3, 1), box-shadow 200ms ease;
   position: relative;
   overflow: hidden;
 }
@@ -199,8 +197,7 @@
 
 .bento-card:hover {
   transform: translateY(-3px);
-  border-color: color-mix(in srgb, var(--accent) 45%, var(--border));
-  box-shadow: 0 24px 50px rgb(0 0 0 / 24%);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 .bento-card-top {
@@ -367,12 +364,9 @@
   gap: 20px;
   padding: clamp(24px, 3.5vw, 36px);
   border-radius: 0;
-  border: 1px solid color-mix(in srgb, var(--border) 90%, var(--accent) 10%);
-  background:
-    radial-gradient(circle at 100% 0%, color-mix(in srgb, var(--accent) 12%, transparent), transparent 45%),
-    color-mix(in srgb, var(--surface-900) 88%, transparent);
-  backdrop-filter: blur(16px);
-  box-shadow: 0 24px 64px rgb(0 0 0 / 22%);
+  border: none;
+  background: var(--surface-900);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.28), 0 1px 3px rgba(0, 0, 0, 0.16);
 }
 
 .form-card-header {
@@ -631,8 +625,9 @@
   gap: 10px;
   padding: 18px;
   border-radius: 0;
-  background: color-mix(in srgb, var(--surface-800) 85%, transparent);
-  border: 1px solid var(--border);
+  background: var(--surface-900);
+  border: none;
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.28), 0 1px 3px rgba(0, 0, 0, 0.16);
 }
 
 .receipt-row {
@@ -728,17 +723,16 @@
 }
 
 .faq-accordion-item {
-  border: 1px solid var(--border);
+  border: none;
   border-radius: 0;
-  background: color-mix(in srgb, var(--surface-900) 80%, transparent);
-  backdrop-filter: blur(12px);
+  background: var(--surface-900);
+  box-shadow: 0 2px 16px rgba(0, 0, 0, 0.28), 0 1px 3px rgba(0, 0, 0, 0.16);
   overflow: hidden;
-  transition: border-color 180ms ease, box-shadow 180ms ease;
+  transition: box-shadow 180ms ease;
 }
 
 .faq-accordion-item.is-open {
-  border-color: color-mix(in srgb, var(--accent) 55%, var(--border));
-  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.35);
 }
 
 .faq-question-btn {

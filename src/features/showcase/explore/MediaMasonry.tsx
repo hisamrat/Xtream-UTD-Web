@@ -158,10 +158,9 @@ function ShowcaseCardMedia({ item, isVideo, isActiveVideo, videoRefCallback }: M
   return (
     <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
       <div className="product-placeholder-wrap" aria-hidden="true">
-        <div className="product-placeholder-backdrop" />
         <div className="product-placeholder-content">
           <div className="product-placeholder-icon-wrap">
-            <Package size={36} className="product-placeholder-icon" strokeWidth={1.5} />
+            <Package size={28} className="product-placeholder-icon" strokeWidth={1.5} />
           </div>
         </div>
       </div>
