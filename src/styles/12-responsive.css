@@ -206,7 +206,7 @@ min-height: var(--world-card-height, 122px);
 
 .world-card.hovered,
 .world-card.selected {
-transform: translateZ(18px) scale(1.1);
+transform: translate3d(-50%, -50%, var(--world-card-depth, 0px)) scale(var(--world-card-scale, 1)) !important;
 }
 }
 

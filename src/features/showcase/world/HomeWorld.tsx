@@ -285,7 +285,7 @@ export function HomeWorld({ products }: HomeWorldProps) {
         startX: event.clientX,
         startY: event.clientY,
         distance: 0,
-        startRotateX: worldViewRef.current.rotateX,
+        startRotateX: 0,
         startRotateY: worldViewRef.current.rotateY
       };
     },
@@ -310,27 +310,19 @@ export function HomeWorld({ products }: HomeWorldProps) {
         }
       }
 
-      const dragUpward = pointer.startY - event.clientY;
-      const isTouch = event.pointerType === "touch" || viewportSize.width < 700;
-
-      // Horizontal sweep ±65°, vertical tilt ±35°.
+      // Horizontal sweep ±65°, vertical tilt disabled (rotateX = 0)
       const rotateY = clamp(pointer.startRotateY + (event.clientX - pointer.startX) * 0.32, -65, 65);
-      const rotateX = clamp(pointer.startRotateX - (event.clientY - pointer.startY) * 0.24, -35, 35);
-
-      // On mobile/touch swipe upward, add gentle upward parallax & slight zoom feedback
-      const parallaxY = isTouch && dragUpward > 0 ? -Math.min(20, dragUpward * 0.16) : 0;
-      const zoom = isTouch && dragUpward > 0 ? 1 + Math.min(0.035, dragUpward * 0.0005) : 1;
 
       setWorldView((current) => ({
         ...current,
-        rotateX,
+        rotateX: 0,
         rotateY,
-        parallaxY,
-        zoom,
+        parallaxY: 0,
+        zoom: 1,
         dragging: isDragging
       }));
     },
-    [showUI, cancelHoverHide, viewportSize.width]
+    [showUI, cancelHoverHide]
   );
 
   const endPointer = useCallback(

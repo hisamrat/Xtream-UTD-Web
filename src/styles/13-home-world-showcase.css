@@ -196,25 +196,24 @@ pointer-events: none;
 
 .world-stage .reference-world-card.hovered,
 .world-stage .reference-world-card.selected {
-  z-index: 220 !important;
+  z-index: 100 !important;
   opacity: 1 !important;
   border: none !important;
   outline: none !important;
   border-color: transparent !important;
   transform:
-    translate3d(-50%, calc(-50% - 10px), 0)
+    translate3d(-50%, -50%, var(--world-card-depth, 0px))
     rotate(var(--world-card-rotation, 0deg))
-    scale(var(--world-card-hover-scale, 1.18)) !important;
+    scale(var(--world-card-scale, 1)) !important;
+  box-shadow:
+    0 16px 48px rgb(0 0 0 / 60%),
+    0 0 24px color-mix(in srgb, var(--world-card-accent, var(--accent)) 22%, transparent) !important;
 }
 
-.world-stage .reference-world-card.kind-hero.hovered,
-.world-stage .reference-world-card.kind-hero.selected {
-  border: none !important;
-  outline: none !important;
-  transform:
-    translate3d(-50%, calc(-50% - 12px), 0)
-    rotate(var(--world-card-rotation, 0deg))
-    scale(var(--world-card-hover-scale, 1.12)) !important;
+.world-stage .reference-world-card.hovered .world-product-media,
+.world-stage .reference-world-card.selected .world-product-media {
+  height: 100% !important;
+  aspect-ratio: auto !important;
 }
 
 .reference-world-card .world-product-media {
@@ -258,12 +257,12 @@ pointer-events: none;
 
 .world-stage .reference-world-card.hovered .product-art,
 .reference-world-card:hover .product-art {
-  transform: translate3d(0, 0, 0) scale(1.18);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .world-stage .reference-world-card.kind-mini.hovered .product-art,
 .reference-world-card.kind-mini:hover .product-art {
-  transform: translate3d(0, 0, 0) scale(1.25);
+  transform: translate3d(0, 0, 0) scale(1);
 }
 
 .reference-world-card .world-card-copy {
@@ -284,9 +283,9 @@ pointer-events: none;
 
 .world-stage .reference-world-card.hovered .world-card-copy,
 .reference-world-card:hover .world-card-copy {
-  opacity: 1 !important;
+  display: none !important;
+  opacity: 0 !important;
   pointer-events: none;
-  transform: translate3d(0, 0, 0) !important;
 }
 
 .reference-world-card.kind-mini .world-card-copy {
@@ -659,9 +658,9 @@ border-radius: 0;
 .world-stage .reference-world-card.hovered,
 .world-stage .reference-world-card.selected {
 transform:
-translate(-50%, calc(-50% - 7px))
+translate(-50%, -50%)
 rotate(var(--world-card-rotation, 0deg))
-scale(var(--world-card-hover-scale, 1.08));
+scale(var(--world-card-scale, 1)) !important;
 }
 }
 
@@ -957,14 +956,17 @@ transition-duration: 40ms;
 }
 
 .world-shell.reference-showcase .world-stage .reference-world-card.hovered {
-  z-index: 220 !important;
+  z-index: 100 !important;
   border: none !important;
   outline: none !important;
   border-color: transparent !important;
   transform:
-    translate3d(-50%, calc(-50% - 10px), var(--world-card-hover-depth, 90px))
+    translate3d(-50%, -50%, var(--world-card-depth, 0px))
     rotate(var(--world-card-rotation, 0deg))
-    scale(var(--world-card-hover-scale, 1.28)) !important;
+    scale(var(--world-card-scale, 1)) !important;
+  box-shadow:
+    0 16px 48px rgb(0 0 0 / 60%),
+    0 0 24px color-mix(in srgb, var(--world-card-accent, var(--accent)) 22%, transparent) !important;
 }
 
 .world-shell.reference-showcase .world-instructions {
@@ -1062,11 +1064,11 @@ transition-duration: 40ms;
   border-color: transparent !important;
   background: #ffffff !important;
   background-image: none !important;
-  box-shadow:
-    0 10px 24px -4px rgba(0, 0, 0, 0.05),
-    0 24px 56px -8px rgba(15, 23, 42, 0.16),
-    0 40px 88px -16px rgba(15, 23, 42, 0.12),
-    0 0 0 1px rgba(0, 0, 0, 0.05) !important;
+  transform:
+    translate3d(-50%, -50%, var(--world-card-depth, 0px))
+    rotate(var(--world-card-rotation, 0deg))
+    scale(var(--world-card-scale, 1)) !important;
+  box-shadow: 0 8px 24px rgba(15, 23, 42, 0.12) !important;
 }
 
 [data-theme="light"] .world-shell.reference-showcase .reference-world-card .world-card-title {
