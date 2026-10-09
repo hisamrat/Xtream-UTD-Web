@@ -8,7 +8,7 @@ import { useStoredString } from "@/shared/lib/stored-value";
 
 const STORAGE_KEY = "xtream-recent-products";
 const STORED_LIMIT = 8;
-const SHOWN_LIMIT = 4;
+const SHOWN_LIMIT = 3;
 
 const recentSlugsSchema = z.array(z.string());
 

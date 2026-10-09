@@ -9,7 +9,7 @@ type RelatedSource = Pick<Product, "slug" | "category">;
 export function getRelatedProducts<T extends RelatedSource>(
   product: Pick<Product, "slug" | "category" | "related_products">,
   all: readonly T[],
-  limit = 4
+  limit = 3
 ): T[] {
   const bySlug = new Map(all.map((item) => [item.slug, item]));
   const direct = product.related_products

@@ -180,7 +180,7 @@ function ProductShelf({ id, kicker, title, href, linkAriaLabel, products }: Prod
         </Link>
       </div>
       <div className="product-grid related-grid">
-        {products.map((product) => (
+        {products.slice(0, 3).map((product) => (
           <ProductCard key={product.id} product={product} />
         ))}
       </div>
