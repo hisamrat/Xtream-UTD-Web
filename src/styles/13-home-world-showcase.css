@@ -373,13 +373,15 @@ animation-play-state: paused;
 @keyframes world-fly-in-top {
   0% {
     transform:
-      translate3d(-50%, calc((-75vh / var(--world-stage-scale, 1)) - var(--world-card-y, 0px)), var(--world-card-depth, 0px))
+      translate3d(-50%, calc((-75vh / var(--world-stage-scale, 1)) - var(--world-card-y, 0px)), calc(var(--world-card-depth, 0px) - 60px))
       rotate(var(--world-card-rotation, 0deg))
-      scale(calc(var(--world-card-scale, 1) * 0.9));
+      scale(calc(var(--world-card-scale, 1) * 0.88));
     opacity: 0;
+    filter: blur(2px);
   }
-  15% {
+  25% {
     opacity: 1;
+    filter: blur(0px);
   }
   100% {
     transform:
@@ -387,19 +389,22 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
+    filter: blur(0px);
   }
 }
 
 @keyframes world-fly-in-bottom {
   0% {
     transform:
-      translate3d(-50%, calc((75vh / var(--world-stage-scale, 1)) - var(--world-card-y, 0px)), var(--world-card-depth, 0px))
+      translate3d(-50%, calc((75vh / var(--world-stage-scale, 1)) - var(--world-card-y, 0px)), calc(var(--world-card-depth, 0px) - 60px))
       rotate(var(--world-card-rotation, 0deg))
-      scale(calc(var(--world-card-scale, 1) * 0.9));
+      scale(calc(var(--world-card-scale, 1) * 0.88));
     opacity: 0;
+    filter: blur(2px);
   }
-  15% {
+  25% {
     opacity: 1;
+    filter: blur(0px);
   }
   100% {
     transform:
@@ -407,19 +412,22 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
+    filter: blur(0px);
   }
 }
 
 @keyframes world-fly-in-left {
   0% {
     transform:
-      translate3d(calc((-75vw / var(--world-stage-scale, 1)) - var(--world-card-x, 0px)), -50%, var(--world-card-depth, 0px))
+      translate3d(calc((-75vw / var(--world-stage-scale, 1)) - var(--world-card-x, 0px)), -50%, calc(var(--world-card-depth, 0px) - 60px))
       rotate(var(--world-card-rotation, 0deg))
-      scale(calc(var(--world-card-scale, 1) * 0.9));
+      scale(calc(var(--world-card-scale, 1) * 0.88));
     opacity: 0;
+    filter: blur(2px);
   }
-  15% {
+  25% {
     opacity: 1;
+    filter: blur(0px);
   }
   100% {
     transform:
@@ -427,19 +435,22 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
+    filter: blur(0px);
   }
 }
 
 @keyframes world-fly-in-right {
   0% {
     transform:
-      translate3d(calc((75vw / var(--world-stage-scale, 1)) - var(--world-card-x, 0px)), -50%, var(--world-card-depth, 0px))
+      translate3d(calc((75vw / var(--world-stage-scale, 1)) - var(--world-card-x, 0px)), -50%, calc(var(--world-card-depth, 0px) - 60px))
       rotate(var(--world-card-rotation, 0deg))
-      scale(calc(var(--world-card-scale, 1) * 0.9));
+      scale(calc(var(--world-card-scale, 1) * 0.88));
     opacity: 0;
+    filter: blur(2px);
   }
-  15% {
+  25% {
     opacity: 1;
+    filter: blur(0px);
   }
   100% {
     transform:
@@ -447,40 +458,163 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
+    filter: blur(0px);
+  }
+}
+
+/* ============================================================
+   REVERSE FLY-OUT EXIT ANIMATION SYSTEM
+   Exact reverse of fly-in entrance: cards accelerate smoothly
+   back toward the off-screen edges where they entered from.
+   ============================================================ */
+
+@keyframes world-fly-out-top {
+  0% {
+    transform:
+      translate3d(-50%, -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(var(--world-card-scale, 1));
+    opacity: 1;
+    filter: blur(0px);
+  }
+  65% {
+    opacity: 0.75;
+  }
+  100% {
+    transform:
+      translate3d(-50%, calc((-75vh / var(--world-stage-scale, 1)) - var(--world-card-y, 0px)), calc(var(--world-card-depth, 0px) - 80px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(calc(var(--world-card-scale, 1) * 0.86));
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+@keyframes world-fly-out-bottom {
+  0% {
+    transform:
+      translate3d(-50%, -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(var(--world-card-scale, 1));
+    opacity: 1;
+    filter: blur(0px);
+  }
+  65% {
+    opacity: 0.75;
+  }
+  100% {
+    transform:
+      translate3d(-50%, calc((75vh / var(--world-stage-scale, 1)) - var(--world-card-y, 0px)), calc(var(--world-card-depth, 0px) - 80px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(calc(var(--world-card-scale, 1) * 0.86));
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+@keyframes world-fly-out-left {
+  0% {
+    transform:
+      translate3d(-50%, -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(var(--world-card-scale, 1));
+    opacity: 1;
+    filter: blur(0px);
+  }
+  65% {
+    opacity: 0.75;
+  }
+  100% {
+    transform:
+      translate3d(calc((-75vw / var(--world-stage-scale, 1)) - var(--world-card-x, 0px)), -50%, calc(var(--world-card-depth, 0px) - 80px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(calc(var(--world-card-scale, 1) * 0.86));
+    opacity: 0;
+    filter: blur(2px);
+  }
+}
+
+@keyframes world-fly-out-right {
+  0% {
+    transform:
+      translate3d(-50%, -50%, var(--world-card-depth, 0px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(var(--world-card-scale, 1));
+    opacity: 1;
+    filter: blur(0px);
+  }
+  65% {
+    opacity: 0.75;
+  }
+  100% {
+    transform:
+      translate3d(calc((75vw / var(--world-stage-scale, 1)) - var(--world-card-x, 0px)), -50%, calc(var(--world-card-depth, 0px) - 80px))
+      rotate(var(--world-card-rotation, 0deg))
+      scale(calc(var(--world-card-scale, 1) * 0.86));
+    opacity: 0;
+    filter: blur(2px);
   }
 }
 
 /* Disable base card transition during fly-in so it doesn't fight the animation */
 .reference-world-card.is-flying-in {
   transition: none !important;
-  will-change: transform, opacity;
+  will-change: transform, opacity, filter;
   backface-visibility: hidden;
   transform: translateZ(0);
   pointer-events: none;
 }
 
-/* Fly-in animation: smooth 1200ms spring deceleration */
+/* Fly-in animation: smooth 950ms spring deceleration */
 .reference-world-card.is-flying-in[data-fly-in-origin="top"] {
-  animation: world-fly-in-top 1200ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: world-fly-in-top 950ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.28, 1) both;
 }
 
 .reference-world-card.is-flying-in[data-fly-in-origin="bottom"] {
-  animation: world-fly-in-bottom 1200ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: world-fly-in-bottom 950ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.28, 1) both;
 }
 
 .reference-world-card.is-flying-in[data-fly-in-origin="left"] {
-  animation: world-fly-in-left 1200ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: world-fly-in-left 950ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.28, 1) both;
 }
 
 .reference-world-card.is-flying-in[data-fly-in-origin="right"] {
-  animation: world-fly-in-right 1200ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.3, 1) both;
+  animation: world-fly-in-right 950ms var(--fly-in-delay, 0ms) cubic-bezier(0.16, 1, 0.28, 1) both;
 }
 
-/* Reduced motion: skip fly-in, appear instantly */
+/* Exit Fly-out animation: smooth 460ms acceleration back to off-screen origin */
+.world-shell.is-navigating-to-explore .reference-world-card {
+  transition: none !important;
+  will-change: transform, opacity, filter;
+  backface-visibility: hidden;
+  pointer-events: none !important;
+}
+
+.world-shell.is-navigating-to-explore .reference-world-card[data-fly-in-origin="top"] {
+  animation: world-fly-out-top 460ms var(--fly-out-delay, 0ms) cubic-bezier(0.38, 0, 0.25, 1) forwards !important;
+}
+
+.world-shell.is-navigating-to-explore .reference-world-card[data-fly-in-origin="bottom"] {
+  animation: world-fly-out-bottom 460ms var(--fly-out-delay, 0ms) cubic-bezier(0.38, 0, 0.25, 1) forwards !important;
+}
+
+.world-shell.is-navigating-to-explore .reference-world-card[data-fly-in-origin="left"] {
+  animation: world-fly-out-left 460ms var(--fly-out-delay, 0ms) cubic-bezier(0.38, 0, 0.25, 1) forwards !important;
+}
+
+.world-shell.is-navigating-to-explore .reference-world-card[data-fly-in-origin="right"] {
+  animation: world-fly-out-right 460ms var(--fly-out-delay, 0ms) cubic-bezier(0.38, 0, 0.25, 1) forwards !important;
+}
+
+/* Reduced motion: skip fly-in and fly-out, appear/disappear instantly */
 @media (prefers-reduced-motion: reduce) {
   .reference-world-card.is-flying-in {
     animation: reference-card-float var(--world-card-float-duration, 7.5s) var(--world-card-float-delay, 0s) ease-in-out infinite !important;
     opacity: 1 !important;
+  }
+  .world-shell.is-navigating-to-explore .reference-world-card {
+    opacity: 0 !important;
+    animation: none !important;
   }
 }
 

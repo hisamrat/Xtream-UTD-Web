@@ -197,8 +197,8 @@ border: 0;
    ============================================================ */
 ::view-transition-old(root),
 ::view-transition-new(root) {
-  animation-duration: 700ms;
-  animation-timing-function: cubic-bezier(0.19, 1, 0.22, 1);
+  animation-duration: 240ms;
+  animation-timing-function: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

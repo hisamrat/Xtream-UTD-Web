@@ -32,37 +32,30 @@ will-change: transform, opacity;
 }
 
 .world-shell.is-navigating-to-explore {
-  opacity: 0 !important;
-  transform: perspective(1400px) translate3d(0, -40px, 360px) scale(1.18) !important;
   pointer-events: none !important;
 }
 
 .world-shell.is-navigating-to-explore .showcase-stage,
 .world-shell.is-navigating-to-explore .world-stage {
-  transform: scale(1.22) translateZ(120px) !important;
-  transition: transform 720ms cubic-bezier(0.19, 1, 0.22, 1) !important;
-}
-
-.world-shell.is-navigating-to-explore .world-card {
-  transition: transform 720ms cubic-bezier(0.19, 1, 0.22, 1), opacity 600ms ease !important;
+  pointer-events: none !important;
 }
 
 .world-shell.is-navigating-to-explore .world-set-controls {
   opacity: 0 !important;
-  transform: translateX(-50%) translateY(24px) scale(0.92) !important;
-  transition: transform 450ms cubic-bezier(0.19, 1, 0.22, 1), opacity 380ms ease !important;
+  transform: translateX(-50%) translateY(20px) !important;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 260ms ease !important;
 }
 
 .world-shell.is-navigating-to-explore .world-instructions {
   opacity: 0 !important;
-  transform: translateY(-50%) translateX(24px) !important;
-  transition: transform 450ms cubic-bezier(0.19, 1, 0.22, 1), opacity 380ms ease !important;
+  transform: translateY(-50%) translateX(20px) !important;
+  transition: transform 300ms cubic-bezier(0.16, 1, 0.3, 1), opacity 260ms ease !important;
 }
 
 .world-shell.is-navigating-to-explore .world-center-preview {
   opacity: 0 !important;
-  transform: translate(-50%, -50%) scale(0.92) !important;
-  transition: transform 380ms ease, opacity 320ms ease !important;
+  transform: translate(-50%, -50%) scale(0.94) !important;
+  transition: transform 260ms ease, opacity 220ms ease !important;
 }
 
 @media (prefers-reduced-motion: reduce) {

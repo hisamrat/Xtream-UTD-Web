@@ -235,18 +235,10 @@ export function HomeWorld({ products }: HomeWorldProps) {
       window.clearTimeout(navigationTimeoutRef.current);
     }
 
-    // Allow the 3D cinematic forward zoom exit animation to play smoothly (~700ms)
+    // Allow the reverse product fly-out animation (480ms) to play smoothly
     navigationTimeoutRef.current = window.setTimeout(() => {
-      if (
-        typeof document !== "undefined" &&
-        "startViewTransition" in document &&
-        typeof (document as Document & { startViewTransition?: (cb: () => void) => void }).startViewTransition === "function"
-      ) {
-        (document as Document & { startViewTransition: (cb: () => void) => void }).startViewTransition(performNavigation);
-      } else {
-        performNavigation();
-      }
-    }, 700);
+      performNavigation();
+    }, 480);
   }, [cancelHoverEnter, cancelHoverHide, reducedMotion, router]);
 
   const resetView = useCallback(() => {
@@ -587,7 +579,8 @@ const WorldCard = memo(function WorldCard({
 }: WorldCardProps) {
   const style = {
     ...getReferenceCardStyle(cardSlot, product.accent, flyInIndex),
-    "--fly-in-delay": `${flyInIndex * 24}ms`
+    "--fly-in-delay": `${flyInIndex * 24}ms`,
+    "--fly-out-delay": `${(flyInIndex % 5) * 16}ms`
   } as CSSProperties & Record<`--${string}`, string>;
 
   return (
