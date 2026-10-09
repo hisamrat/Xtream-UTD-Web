@@ -4,6 +4,7 @@ import Link from "next/link";
 import { Check, MessageCircle, Minus, Plus, Share2, ShieldCheck, ShoppingCart, Truck } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { commerceConfig } from "@/config/commerce";
+import { formatPrice } from "@/domain/commerce/money";
 import type { Product } from "@/domain/product/product-schema";
 import { getProductVariants } from "@/domain/product/product-summary";
 import { useCart, useCartPanel } from "@/features/cart/state/CartProvider";
@@ -11,23 +12,36 @@ import { PriceDisplay } from "@/features/product/components/PriceDisplay";
 import { StockBadge } from "@/features/product/components/StockBadge";
 import { useI18n } from "@/i18n/LanguageProvider";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
+import type { InquiryLine } from "./InquiryDialog";
 
 type BuyBoxProps = {
   product: Product;
-  selectedVariant: string;
-  onVariantChange: (variant: string) => void;
-  quantity: number;
-  onQuantityChange: (quantity: number) => void;
-  onInquiry: () => void;
+  onInquiry: (lines: InquiryLine[]) => void;
 };
 
-export function BuyBox({ product, selectedVariant, onVariantChange, quantity, onQuantityChange, onInquiry }: BuyBoxProps) {
+export function BuyBox({ product, onInquiry }: BuyBoxProps) {
   const { t, tCategory, formatNumber } = useI18n();
-  const { addItem } = useCart();
+  const { addItem, addItems } = useCart();
   const { openCheckout } = useCartPanel();
   const { copy, isCopied } = useCopyToClipboard();
   const [cartAdded, setCartAdded] = useState(false);
   const addedTimerRef = useRef<number | null>(null);
+
+  const variants = getProductVariants(product);
+  const hasVariants = variants.length > 0;
+
+  // Multi-variant quantities map: { [variantName]: quantity }
+  // Default: no variant selected ({}), default quantity is 0
+  const [variantQuantities, setVariantQuantities] = useState<Record<string, number>>(() => {
+    if (hasVariants) {
+      const initialMap: Record<string, number> = {};
+      return initialMap;
+    }
+    return { "": 1 };
+  });
+
+  // Currently focused variant for the quantity stepper (default: none / "")
+  const [activeVariant, setActiveVariant] = useState<string>("");
 
   useEffect(
     () => () => {
@@ -36,25 +50,114 @@ export function BuyBox({ product, selectedVariant, onVariantChange, quantity, on
     []
   );
 
-  const variants = getProductVariants(product);
   const isOutOfStock = product.stock === "Out of stock";
   const categoryHref = `/products?category=${encodeURIComponent(product.category)}`;
   const { nationwideDeliveryDays } = commerceConfig;
 
+  // Selected entries with quantity > 0
+  const selectedEntries: [string, number][] = hasVariants
+    ? Object.entries(variantQuantities).filter(([, qty]) => qty > 0)
+    : [["", variantQuantities[""] ?? 1]];
+
+  const totalSelectedCount = selectedEntries.reduce((sum, [, qty]) => sum + qty, 0);
+  const currentStepperQty = hasVariants ? (activeVariant ? (variantQuantities[activeVariant] ?? 0) : 0) : (variantQuantities[""] ?? 1);
+  const isNoQuantity = hasVariants && totalSelectedCount <= 0;
+  const isActionsDisabled = isOutOfStock || isNoQuantity;
+
+  const handleVariantClick = (variant: string) => {
+    setActiveVariant(variant);
+  };
+
+  const handleIncrease = () => {
+    if (hasVariants) {
+      const targetVariant = activeVariant || (variants[0] ?? "");
+      if (!targetVariant) return;
+      if (!activeVariant) setActiveVariant(targetVariant);
+      setVariantQuantities((prev) => {
+        const currentQty = prev[targetVariant] ?? 0;
+        return {
+          ...prev,
+          [targetVariant]: currentQty + 1
+        };
+      });
+    } else {
+      setVariantQuantities((prev) => {
+        const currentQty = prev[""] ?? 1;
+        return { "": currentQty + 1 };
+      });
+    }
+  };
+
+  const handleDecrease = () => {
+    if (hasVariants) {
+      if (!activeVariant) return;
+      setVariantQuantities((prev) => {
+        const currentQty = prev[activeVariant] ?? 0;
+        return {
+          ...prev,
+          [activeVariant]: Math.max(0, currentQty - 1)
+        };
+      });
+    } else {
+      setVariantQuantities((prev) => {
+        const currentQty = prev[""] ?? 1;
+        return { "": Math.max(1, currentQty - 1) };
+      });
+    }
+  };
+
+  const resetSelection = () => {
+    if (hasVariants) {
+      setVariantQuantities({});
+      setActiveVariant("");
+    } else {
+      setVariantQuantities({ "": 1 });
+    }
+  };
+
   const handleAddToCart = () => {
-    if (isOutOfStock) return;
-    addItem(product, selectedVariant, quantity);
-    onQuantityChange(1);
+    if (isActionsDisabled) return;
+    if (hasVariants) {
+      const itemsToAdd = selectedEntries.map(([v, qty]) => ({
+        product,
+        variant: v,
+        quantity: qty
+      }));
+      addItems(itemsToAdd);
+    } else {
+      addItem(product, "", currentStepperQty);
+    }
+    resetSelection();
     setCartAdded(true);
     if (addedTimerRef.current !== null) window.clearTimeout(addedTimerRef.current);
     addedTimerRef.current = window.setTimeout(() => setCartAdded(false), 1400);
   };
 
   const handleBuyNow = () => {
-    if (isOutOfStock) return;
-    addItem(product, selectedVariant, quantity);
-    onQuantityChange(1);
+    if (isActionsDisabled) return;
+    if (hasVariants) {
+      const itemsToAdd = selectedEntries.map(([v, qty]) => ({
+        product,
+        variant: v,
+        quantity: qty
+      }));
+      addItems(itemsToAdd);
+    } else {
+      addItem(product, "", currentStepperQty);
+    }
+    resetSelection();
     openCheckout();
+  };
+
+  const handleInquiryClick = () => {
+    const lines: InquiryLine[] =
+      selectedEntries.length > 0
+        ? selectedEntries.map(([v, qty]) => ({
+            variant: v,
+            quantity: qty
+          }))
+        : [{ variant: "", quantity: 1 }];
+    onInquiry(lines);
   };
 
   const shareProduct = async () => {
@@ -83,24 +186,28 @@ export function BuyBox({ product, selectedVariant, onVariantChange, quantity, on
 
       <PriceDisplay product={product} showDiscount size="lg" />
 
-      {variants.length > 0 ? (
+      {hasVariants ? (
         <div className="filter-section">
-          <span className="filter-heading" id="variant-heading">
-            {t("product.details.selectVariant")}
-          </span>
+          <div className="filter-heading-row">
+            <span className="filter-heading" id="variant-heading">
+              {t("product.details.selectVariant")}
+            </span>
+          </div>
           <div className="variant-row" role="group" aria-labelledby="variant-heading">
             {variants.map((variant) => {
-              const isSelected = selectedVariant === variant;
+              const qty = variantQuantities[variant] ?? 0;
+              const isSelected = qty > 0;
+              const isActive = activeVariant === variant;
               return (
                 <button
                   key={variant}
-                  className={`variant-chip ${isSelected ? "is-selected" : ""}`}
+                  className={`variant-chip ${isSelected ? "is-selected" : ""} ${isActive ? "is-active" : ""}`}
                   type="button"
                   aria-pressed={isSelected}
-                  onClick={() => onVariantChange(variant)}
+                  onClick={() => handleVariantClick(variant)}
                 >
-                  <span>{variant}</span>
-                  {isSelected ? <Check size={14} className="variant-check-icon" aria-hidden="true" /> : null}
+                  <span className="variant-chip-label">{variant}</span>
+                  {qty > 0 ? <span className="variant-qty-badge">×{formatNumber(qty)}</span> : null}
                 </button>
               );
             })}
@@ -109,23 +216,25 @@ export function BuyBox({ product, selectedVariant, onVariantChange, quantity, on
       ) : null}
 
       <div className="filter-section">
-        <span className="filter-heading">{t("product.details.quantity")}</span>
+        <div className="filter-heading-row">
+          <span className="filter-heading">{t("product.details.quantity")}</span>
+        </div>
         <div className="quantity-row">
           <button
             className="quantity-button"
             type="button"
-            onClick={() => onQuantityChange(Math.max(1, quantity - 1))}
+            onClick={handleDecrease}
             aria-label={t("product.details.decreaseQuantity")}
           >
             <Minus size={16} aria-hidden="true" />
           </button>
           <span className="quantity-value" aria-live="polite">
-            {formatNumber(quantity)}
+            {formatNumber(currentStepperQty)}
           </span>
           <button
             className="quantity-button"
             type="button"
-            onClick={() => onQuantityChange(quantity + 1)}
+            onClick={handleIncrease}
             aria-label={t("product.details.increaseQuantity")}
           >
             <Plus size={16} aria-hidden="true" />
@@ -133,12 +242,20 @@ export function BuyBox({ product, selectedVariant, onVariantChange, quantity, on
         </div>
       </div>
 
+      {totalSelectedCount > 0 ? (
+        <div className="selected-total-row">
+          <span className="selected-total-amount">
+            {t("product.details.totalAmount", { amount: formatPrice(totalSelectedCount * product.price) })}
+          </span>
+        </div>
+      ) : null}
+
       <div className="details-main-actions">
         <button
           className={`button primary add-to-cart-btn-main ${cartAdded ? "is-added" : ""}`}
           type="button"
           onClick={handleAddToCart}
-          disabled={isOutOfStock}
+          disabled={isActionsDisabled}
         >
           {cartAdded ? (
             <>
@@ -153,13 +270,13 @@ export function BuyBox({ product, selectedVariant, onVariantChange, quantity, on
           )}
         </button>
 
-        <button className="button buy-now-btn-main" type="button" onClick={handleBuyNow} disabled={isOutOfStock}>
+        <button className="button buy-now-btn-main" type="button" onClick={handleBuyNow} disabled={isActionsDisabled}>
           <span>{t("product.details.orderNow")}</span>
         </button>
       </div>
 
       <div className="details-secondary-actions">
-        <button className="button light details-inquiry-btn" type="button" onClick={onInquiry}>
+        <button className="button light details-inquiry-btn" type="button" onClick={handleInquiryClick}>
           <MessageCircle size={16} aria-hidden="true" />
           <span>{t("product.details.messengerInquiry")}</span>
         </button>

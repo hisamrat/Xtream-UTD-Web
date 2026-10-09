@@ -4,24 +4,16 @@ display: none;
 }
 
 .world-shell.reference-showcase {
-cursor: default;
-touch-action: manipulation;
-background:
-radial-gradient(circle at 50% 44%, rgb(25 33 43 / 78%), transparent 32rem),
-radial-gradient(circle at 33% 50%, rgb(0 228 208 / 13%), transparent 21rem),
-radial-gradient(circle at 67% 50%, rgb(255 92 69 / 11%), transparent 22rem),
-radial-gradient(circle at 51% 72%, rgb(21 80 170 / 15%), transparent 24rem),
-linear-gradient(180deg, #04080a 0%, #030608 60%, #010203 100%);
-  perspective: 1400px;
-  perspective-origin: 50% 50%;
   cursor: grab;
   touch-action: none;
+  perspective: 1400px;
+  perspective-origin: 50% 50%;
   background:
-    radial-gradient(circle at 50% 44%, rgb(25 33 43 / 78%), transparent 32rem),
-    radial-gradient(circle at 33% 50%, rgb(0 228 208 / 13%), transparent 21rem),
-    radial-gradient(circle at 67% 50%, rgb(255 92 69 / 11%), transparent 22rem),
-    radial-gradient(circle at 51% 72%, rgb(21 80 170 / 15%), transparent 24rem),
-    linear-gradient(180deg, #04080a 0%, #030608 60%, #010203 100%);
+    radial-gradient(circle at 50% 44%, rgba(60, 3, 102, 0.75), transparent 32rem),
+    radial-gradient(circle at 34% 52%, rgba(126, 34, 206, 0.18), transparent 22rem),
+    radial-gradient(circle at 68% 51%, rgba(168, 85, 247, 0.15), transparent 23rem),
+    radial-gradient(circle at 51% 73%, rgba(88, 28, 135, 0.15), transparent 23rem),
+    linear-gradient(180deg, #05020a 0%, #030106 62%, #010003 100%);
 }
 
 .world-shell.is-dragging {
@@ -671,10 +663,11 @@ min-height: 100dvh;
 height: 100vh;
 height: 100dvh;
 background:
-radial-gradient(circle at 50% 42%, rgb(27 35 45 / 78%), transparent 19rem),
-radial-gradient(circle at 32% 48%, rgb(0 228 208 / 13%), transparent 14rem),
-radial-gradient(circle at 70% 52%, rgb(255 92 69 / 11%), transparent 14rem),
-linear-gradient(180deg, #04080a 0%, #030608 66%, #010203 100%);
+radial-gradient(circle at 50% 44%, rgba(60, 3, 102, 0.75), transparent 22rem),
+radial-gradient(circle at 34% 52%, rgba(126, 34, 206, 0.18), transparent 15rem),
+radial-gradient(circle at 68% 51%, rgba(168, 85, 247, 0.15), transparent 16rem),
+radial-gradient(circle at 51% 73%, rgba(88, 28, 135, 0.15), transparent 17rem),
+linear-gradient(180deg, #05020a 0%, #030106 66%, #010003 100%);
 }
 
 .reference-world-card {

@@ -101,6 +101,8 @@ test.describe("product to checkout", () => {
     await expect(page.locator(".spec-list")).toContainText("Sensor");
     await expect(page.locator(".feature-list")).not.toContainText("Suitable for desks");
 
+    await page.getByRole("button", { name: /Black/ }).click();
+    await page.getByRole("button", { name: "Increase quantity" }).click();
     await page.locator(".add-to-cart-btn-main").click();
     const drawer = page.getByRole("dialog", { name: "Shopping Cart" });
     await expect(drawer).toBeVisible();
@@ -155,33 +157,80 @@ test.describe("product to checkout", () => {
     await expect(trigger).toBeFocused();
   });
 
-  test("variant change and add to cart resets quantity to 1", async ({ page }) => {
+  test("variant selection and quantity resets after cart addition", async ({ page }) => {
     await page.goto(`/products/${PRODUCT_SLUG}`);
 
-    // Increase quantity to 3
+    // Default quantity is 0
+    await expect(page.locator(".quantity-value")).toHaveText("0");
+
+    // Click Black variant and increase quantity to 3
+    const blackChip = page.getByRole("button", { name: /Black/ });
+    await blackChip.click();
     const increaseBtn = page.getByRole("button", { name: "Increase quantity" });
+    await increaseBtn.click();
+    await expect(page.locator(".quantity-value")).toHaveText("1");
     await increaseBtn.click();
     await increaseBtn.click();
     await expect(page.locator(".quantity-value")).toHaveText("3");
 
-    // Switching variant resets quantity back to 1
-    const silverChip = page.getByRole("button", { name: "Silver" });
+    // Switching variant activates Silver with quantity 0 until increased
+    const silverChip = page.getByRole("button", { name: /Silver/ });
     if (await silverChip.isVisible()) {
       await silverChip.click();
+      await expect(page.locator(".quantity-value")).toHaveText("0");
+      await increaseBtn.click();
       await expect(page.locator(".quantity-value")).toHaveText("1");
     }
 
-    // Increase quantity to 2 and add to cart
-    await increaseBtn.click();
-    await expect(page.locator(".quantity-value")).toHaveText("2");
+    // Add to cart resets selection and quantity to 0
     await page.locator(".add-to-cart-btn-main").click();
 
-    // Drawer opens, and buy box quantity resets to 1
+    // Drawer opens, and buy box quantity resets to 0
     const drawer = page.getByRole("dialog", { name: "Shopping Cart" });
     await expect(drawer).toBeVisible();
     await page.keyboard.press("Escape");
     await expect(drawer).toHaveCount(0);
-    await expect(page.locator(".quantity-value")).toHaveText("1");
+    await expect(page.locator(".quantity-value")).toHaveText("0");
+  });
+
+  test("multi-variant selection with independent quantities adds all lines to cart", async ({ page }) => {
+    await page.goto(`/products/${PRODUCT_SLUG}`);
+
+    const increaseBtn = page.getByRole("button", { name: "Increase quantity" });
+    const silverChip = page.getByRole("button", { name: /Silver/ });
+
+    if (await silverChip.isVisible()) {
+      // Focus first variant (Black) and set to 2
+      await page.getByRole("button", { name: /Black/ }).click();
+      await increaseBtn.click();
+      await increaseBtn.click();
+      await expect(page.locator(".quantity-value")).toHaveText("2");
+
+      // Focus second variant (Silver) and set to 3
+      await silverChip.click();
+      await expect(page.locator(".quantity-value")).toHaveText("0");
+      await increaseBtn.click();
+      await increaseBtn.click();
+      await increaseBtn.click();
+      await expect(page.locator(".quantity-value")).toHaveText("3");
+
+      // Both chips display multiplier badges
+      await expect(page.getByRole("button", { name: /Black/ })).toContainText("×2");
+      await expect(silverChip).toContainText("×3");
+
+      // Total row is visible
+      await expect(page.locator(".selected-total-amount")).toBeVisible();
+
+      // Add to cart adds both lines
+      await page.locator(".add-to-cart-btn-main").click();
+      const drawer = page.getByRole("dialog", { name: "Shopping Cart" });
+      await expect(drawer).toBeVisible();
+
+      // Drawer contains both lines
+      await expect(drawer.locator(".cart-item-title")).toHaveCount(2);
+
+      await page.keyboard.press("Escape");
+    }
   });
 
   test("product gallery shows zoom badge and hover magnifier", async ({ page }) => {

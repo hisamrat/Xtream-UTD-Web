@@ -24,22 +24,96 @@ export function ProductGallery({ product }: { product: Product }) {
   // Gallery images in sheet order, falling back to the cover image.
   const galleryItems = product.gallery_images.length > 0 ? product.gallery_images : [product.cover_image];
 
-  const handleMouseEnter = useCallback(() => {
-    setIsHoverZoomed(true);
-  }, []);
+  const touchStartRef = useRef<{ x: number; y: number; time: number } | null>(null);
 
-  const handleMouseMove = useCallback((e: MouseEvent<HTMLDivElement>) => {
+  const updateZoomPosition = useCallback((clientX: number, clientY: number) => {
     const el = galleryMainRef.current;
     if (!el) return;
     const rect = el.getBoundingClientRect();
     if (rect.width <= 0 || rect.height <= 0) return;
 
-    const x = Math.max(0, Math.min(100, ((e.clientX - rect.left) / rect.width) * 100));
-    const y = Math.max(0, Math.min(100, ((e.clientY - rect.top) / rect.height) * 100));
+    const x = Math.max(0, Math.min(100, ((clientX - rect.left) / rect.width) * 100));
+    const y = Math.max(0, Math.min(100, ((clientY - rect.top) / rect.height) * 100));
     setZoomOrigin({ x, y });
   }, []);
 
+  const handleMouseEnter = useCallback(() => {
+    setIsHoverZoomed(true);
+  }, []);
+
+  const handleMouseMove = useCallback(
+    (e: MouseEvent<HTMLDivElement>) => {
+      updateZoomPosition(e.clientX, e.clientY);
+    },
+    [updateZoomPosition]
+  );
+
   const handleMouseLeave = useCallback(() => {
+    setIsHoverZoomed(false);
+    setZoomOrigin({ x: 50, y: 50 });
+  }, []);
+
+  const handleClick = useCallback(() => {
+    setIsHoverZoomed((prev) => {
+      if (prev) {
+        setZoomOrigin({ x: 50, y: 50 });
+        return false;
+      }
+      return true;
+    });
+  }, []);
+
+  const handleTouchStart = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      touchStartRef.current = { x: touch.clientX, y: touch.clientY, time: Date.now() };
+      updateZoomPosition(touch.clientX, touch.clientY);
+      setIsHoverZoomed(true);
+    },
+    [updateZoomPosition]
+  );
+
+  const handleTouchMove = useCallback(
+    (e: React.TouchEvent<HTMLDivElement>) => {
+      const touch = e.touches[0];
+      if (!touch) return;
+      updateZoomPosition(touch.clientX, touch.clientY);
+      if (!isHoverZoomed) {
+        setIsHoverZoomed(true);
+      }
+    },
+    [isHoverZoomed, updateZoomPosition]
+  );
+
+  const handleTouchEnd = useCallback((e: React.TouchEvent<HTMLDivElement>) => {
+    const touch = e.changedTouches[0];
+    const start = touchStartRef.current;
+    if (touch && start) {
+      const dx = Math.abs(touch.clientX - start.x);
+      const dy = Math.abs(touch.clientY - start.y);
+      const dt = Date.now() - start.time;
+      // Quick stationary tap: toggle zoom
+      if (dx < 8 && dy < 8 && dt < 300) {
+        setIsHoverZoomed((prev) => {
+          if (prev) {
+            setZoomOrigin({ x: 50, y: 50 });
+            return false;
+          }
+          return true;
+        });
+      } else {
+        // Drag-to-zoom loupe gesture: reset smoothly upon lifting finger
+        setIsHoverZoomed(false);
+        setZoomOrigin({ x: 50, y: 50 });
+      }
+    } else {
+      setIsHoverZoomed(false);
+      setZoomOrigin({ x: 50, y: 50 });
+    }
+  }, []);
+
+  const handleTouchCancel = useCallback(() => {
     setIsHoverZoomed(false);
     setZoomOrigin({ x: 50, y: 50 });
   }, []);
@@ -52,6 +126,11 @@ export function ProductGallery({ product }: { product: Product }) {
         onMouseEnter={handleMouseEnter}
         onMouseMove={handleMouseMove}
         onMouseLeave={handleMouseLeave}
+        onClick={handleClick}
+        onTouchStart={handleTouchStart}
+        onTouchMove={handleTouchMove}
+        onTouchEnd={handleTouchEnd}
+        onTouchCancel={handleTouchCancel}
         aria-label={t("product.details.previewAria", { title: product.title })}
         style={{
           width: "100%",
@@ -63,7 +142,8 @@ export function ProductGallery({ product }: { product: Product }) {
           justifyContent: "center",
           overflow: "hidden",
           position: "relative",
-          cursor: "zoom-in"
+          cursor: isHoverZoomed ? "zoom-out" : "zoom-in",
+          touchAction: isHoverZoomed ? "none" : "pan-y"
         }}
       >
         <div

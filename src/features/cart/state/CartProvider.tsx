@@ -17,6 +17,7 @@ type CartContextValue = {
   /** Lines resolved against the current catalogue (unknown products are hidden, not deleted). */
   items: CartItem[];
   addItem: (product: Pick<ProductSummary, "slug" | "colours" | "sizes_or_variants">, variant?: string, quantity?: number) => void;
+  addItems: (items: Array<{ product: Pick<ProductSummary, "slug" | "colours" | "sizes_or_variants">; variant?: string; quantity?: number }>) => void;
   removeItem: (slug: string, variant: string) => void;
   updateQuantity: (slug: string, variant: string, quantity: number) => void;
   clearCart: () => void;
@@ -51,10 +52,23 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   const [isCartOpen, setIsCartOpen] = useState(false);
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
 
-  const addItem = useCallback<CartContextValue["addItem"]>((product, variant, quantity = 1) => {
-    setLines((current) => addLine(current, product.slug, variant || getDefaultVariant(product), quantity));
+  const addItems = useCallback<CartContextValue["addItems"]>((itemsToAdd) => {
+    setLines((current) => {
+      let next = current;
+      for (const item of itemsToAdd) {
+        next = addLine(next, item.product.slug, item.variant || getDefaultVariant(item.product), item.quantity ?? 1);
+      }
+      return next;
+    });
     setIsCartOpen(true);
   }, []);
+
+  const addItem = useCallback<CartContextValue["addItem"]>(
+    (product, variant, quantity = 1) => {
+      addItems([{ product, variant, quantity }]);
+    },
+    [addItems]
+  );
 
   const removeItem = useCallback((slug: string, variant: string) => {
     setLines((current) => setLineQuantity(current, slug, variant, 0));
@@ -76,6 +90,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     return {
       items,
       addItem,
+      addItems,
       removeItem,
       updateQuantity,
       clearCart,
@@ -88,7 +103,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
         unitPrice: item.product.price
       }))
     };
-  }, [catalogue, lines, addItem, removeItem, updateQuantity, clearCart]);
+  }, [catalogue, lines, addItem, addItems, removeItem, updateQuantity, clearCart]);
 
   const panel = useMemo<CartPanelContextValue>(
     () => ({

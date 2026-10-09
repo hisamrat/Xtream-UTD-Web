@@ -20,11 +20,11 @@ cursor: grab;
 user-select: none;
 color: #f6f1e8;
 background:
-radial-gradient(circle at 50% 48%, rgb(33 44 56 / 72%), transparent 34rem),
-radial-gradient(circle at 31% 48%, rgb(10 210 190 / 12%), transparent 20rem),
-radial-gradient(circle at 69% 50%, rgb(255 91 62 / 10%), transparent 22rem),
-radial-gradient(circle at 47% 70%, rgb(28 82 170 / 13%), transparent 22rem),
-linear-gradient(180deg, #060a0d 0%, #030608 58%, #010203 100%);
+radial-gradient(circle at 50% 44%, rgba(60, 3, 102, 0.75), transparent 32rem),
+radial-gradient(circle at 34% 52%, rgba(126, 34, 206, 0.18), transparent 22rem),
+radial-gradient(circle at 68% 51%, rgba(168, 85, 247, 0.15), transparent 23rem),
+radial-gradient(circle at 51% 73%, rgba(88, 28, 135, 0.15), transparent 23rem),
+linear-gradient(180deg, #05020a 0%, #030106 62%, #010003 100%);
 transition: opacity 650ms cubic-bezier(0.19, 1, 0.22, 1), transform 720ms cubic-bezier(0.19, 1, 0.22, 1);
 perspective: 1400px;
 perspective-origin: 50% 50%;

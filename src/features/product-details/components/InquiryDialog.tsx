@@ -13,10 +13,16 @@ import { useI18n } from "@/i18n/LanguageProvider";
 import { useCopyToClipboard } from "@/shared/hooks/useCopyToClipboard";
 import { useDialog } from "@/shared/hooks/useDialog";
 
-type InquiryDialogProps = {
-  product: Product;
+export type InquiryLine = {
   variant: string;
   quantity: number;
+};
+
+type InquiryDialogProps = {
+  product: Product;
+  variant?: string;
+  quantity?: number;
+  lines?: InquiryLine[];
   open: boolean;
   onClose: () => void;
 };
@@ -33,14 +39,22 @@ const errorKeys: Record<(typeof requiredFields)[number], { required: Translation
   address: { required: "product.inquiry.errorAddress", invalidPhone: "product.inquiry.errorAddress" }
 };
 
-/** Single-product inquiry. Prepares a Messenger message; nothing is sent by this website. */
-export function InquiryDialog({ product, variant, quantity, open, onClose }: InquiryDialogProps) {
-  const { t } = useI18n();
+/** Product inquiry. Prepares a Messenger message; nothing is sent by this website. */
+export function InquiryDialog({ product, variant = "", quantity = 1, lines, open, onClose }: InquiryDialogProps) {
+  const { t, formatNumber } = useI18n();
   const closeRef = useRef<HTMLButtonElement>(null);
   const { copy, isCopied } = useCopyToClipboard();
   const [form, setForm] = useState<InquiryForm>(initialForm);
   const [errors, setErrors] = useState<CustomerFieldErrors<InquiryField>>({});
   const [ready, setReady] = useState(false);
+
+  const selectedLines = useMemo<InquiryLine[]>(() => {
+    if (lines && lines.length > 0) return lines;
+    return [{ variant, quantity }];
+  }, [lines, variant, quantity]);
+
+  const totalQuantity = useMemo(() => selectedLines.reduce((sum, line) => sum + line.quantity, 0), [selectedLines]);
+  const totalPrice = totalQuantity * product.price;
 
   const close = () => {
     setReady(false);
@@ -51,10 +65,15 @@ export function InquiryDialog({ product, variant, quantity, open, onClose }: Inq
   const message = useMemo(
     () =>
       buildOrderMessage({
-        lines: [{ title: product.title, variant, quantity, unitPrice: product.price }],
+        lines: selectedLines.map((line) => ({
+          title: product.title,
+          variant: line.variant,
+          quantity: line.quantity,
+          unitPrice: product.price
+        })),
         customer: form
       }),
-    [form, product, quantity, variant]
+    [form, product, selectedLines]
   );
 
   if (!open) {
@@ -92,8 +111,15 @@ export function InquiryDialog({ product, variant, quantity, open, onClose }: Inq
             <div className="order-summary">
               <p className="section-kicker">{t("product.inquiry.product")}</p>
               <strong>{product.title}</strong>
-              <br />
-              <span>{formatPrice(product.price)}</span>
+              <div className="order-summary-variant-breakdown">
+                {selectedLines.map((line) => (
+                  <div key={line.variant} className="order-summary-var-row">
+                    <span>{line.variant ? `${line.variant} (×${formatNumber(line.quantity)})` : `Qty: ${formatNumber(line.quantity)}`}</span>
+                    <span>{formatPrice(product.price * line.quantity)}</span>
+                  </div>
+                ))}
+              </div>
+              <strong className="order-summary-total-price">{formatPrice(totalPrice)}</strong>
             </div>
             <div className="action-row success-actions">
               <button ref={closeRef} className="button light" type="button" onClick={close}>
@@ -132,16 +158,35 @@ export function InquiryDialog({ product, variant, quantity, open, onClose }: Inq
                 submit();
               }}
             >
-              <div className="form-grid">
-                <label className="field-label">
-                  {t("product.inquiry.selectedVariant")}
-                  <input className="field" value={variant} readOnly />
-                </label>
-                <label className="field-label">
-                  {t("product.inquiry.quantity")}
-                  <input className="field" value={quantity} readOnly />
-                </label>
-              </div>
+              {selectedLines.length > 1 ? (
+                <div className="inquiry-multi-variant-card">
+                  <span className="field-label">{t("product.inquiry.selectedVariants")}</span>
+                  <div className="inquiry-variant-pill-list">
+                    {selectedLines.map((line) => (
+                      <div key={line.variant} className="inquiry-variant-pill-item">
+                        <span className="pill-name">{line.variant}</span>
+                        <span className="pill-qty">×{formatNumber(line.quantity)}</span>
+                        <span className="pill-price">{formatPrice(product.price * line.quantity)}</span>
+                      </div>
+                    ))}
+                  </div>
+                  <div className="inquiry-variant-total-row">
+                    <span>{t("product.inquiry.totalQuantity")}: <strong>{formatNumber(totalQuantity)}</strong></span>
+                    <strong>{formatPrice(totalPrice)}</strong>
+                  </div>
+                </div>
+              ) : (
+                <div className="form-grid">
+                  <label className="field-label">
+                    {t("product.inquiry.selectedVariant")}
+                    <input className="field" value={selectedLines[0].variant || "Standard"} readOnly />
+                  </label>
+                  <label className="field-label">
+                    {t("product.inquiry.quantity")}
+                    <input className="field" value={formatNumber(selectedLines[0].quantity)} readOnly />
+                  </label>
+                </div>
+              )}
               <div className="form-grid">
                 <label className="field-label">
                   {t("product.inquiry.name")}

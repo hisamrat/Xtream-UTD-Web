@@ -5,13 +5,13 @@ import { ArrowRight, CheckCircle2, FileText, ShieldCheck } from "lucide-react";
 import { useState } from "react";
 import { commerceConfig } from "@/config/commerce";
 import type { Product } from "@/domain/product/product-schema";
-import { getDefaultVariant, getProductVariants, type ProductSummary } from "@/domain/product/product-summary";
+import { getProductVariants, type ProductSummary } from "@/domain/product/product-summary";
 import { ProductCard } from "@/features/product/components/ProductCard";
 import { useI18n } from "@/i18n/LanguageProvider";
 import { Breadcrumb } from "@/shared/ui/Breadcrumb";
 import { useRecentlyViewed } from "../hooks/useRecentlyViewed";
 import { BuyBox } from "./BuyBox";
-import { InquiryDialog } from "./InquiryDialog";
+import { InquiryDialog, type InquiryLine } from "./InquiryDialog";
 import { ProductGallery } from "./ProductGallery";
 
 type ProductDetailsViewProps = {
@@ -21,8 +21,7 @@ type ProductDetailsViewProps = {
 
 export function ProductDetailsView({ product, relatedProducts }: ProductDetailsViewProps) {
   const { t, tCategory, tStock } = useI18n();
-  const [selectedVariant, setSelectedVariant] = useState(() => getDefaultVariant(product));
-  const [quantity, setQuantity] = useState(1);
+  const [inquiryLines, setInquiryLines] = useState<InquiryLine[]>([]);
   const [inquiryOpen, setInquiryOpen] = useState(false);
   const recentlyViewed = useRecentlyViewed(product.slug);
 
@@ -31,9 +30,9 @@ export function ProductDetailsView({ product, relatedProducts }: ProductDetailsV
   const specifications = Object.entries(product.specifications);
   const { nationwideDeliveryDays } = commerceConfig;
 
-  const handleVariantChange = (variant: string) => {
-    setSelectedVariant(variant);
-    setQuantity(1);
+  const handleOpenInquiry = (lines: InquiryLine[]) => {
+    setInquiryLines(lines);
+    setInquiryOpen(true);
   };
 
   return (
@@ -51,14 +50,7 @@ export function ProductDetailsView({ product, relatedProducts }: ProductDetailsV
 
         <div className="details-layout">
           <ProductGallery product={product} />
-          <BuyBox
-            product={product}
-            selectedVariant={selectedVariant}
-            onVariantChange={handleVariantChange}
-            quantity={quantity}
-            onQuantityChange={setQuantity}
-            onInquiry={() => setInquiryOpen(true)}
-          />
+          <BuyBox product={product} onInquiry={handleOpenInquiry} />
         </div>
 
         {product.short ? (
@@ -145,8 +137,7 @@ export function ProductDetailsView({ product, relatedProducts }: ProductDetailsV
 
       <InquiryDialog
         product={product}
-        variant={selectedVariant}
-        quantity={quantity}
+        lines={inquiryLines}
         open={inquiryOpen}
         onClose={() => setInquiryOpen(false)}
       />
