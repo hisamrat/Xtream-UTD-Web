@@ -45,7 +45,7 @@ export function getCell(table: SheetTable, row: SheetRow, ...aliases: string[]):
   for (const alias of aliases) {
     const column = table.columns.get(alias);
     if (column !== undefined && row[column] !== undefined) {
-      return row[column].trim();
+      return String(row[column] ?? "").trim();
     }
   }
   return "";

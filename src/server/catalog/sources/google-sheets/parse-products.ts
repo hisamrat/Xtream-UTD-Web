@@ -39,7 +39,12 @@ const GALLERY_COLUMNS = [
 ];
 // "ppecifications" is a known typo in the live sheet header.
 const SPECIFICATION_COLUMNS = ["specifications", "ppecifications", "specs"];
-const VARIANT_COLUMNS = ["colours_or_sizes_or_variants", "sizes_or_variants", "variants"];
+const VARIANT_COLUMNS = [
+  "colours_or_sizes_or_variants",
+  "colors_or_sizes_or_variants",
+  "sizes_or_variants",
+  "variants"
+];
 
 function isProductHeader(headers: readonly string[]): boolean {
   return (
@@ -74,14 +79,14 @@ export function rowToProductInput(table: SheetTable, row: SheetRow): ProductInpu
     title: cell("title") || slug,
     category: cell("category") || "General",
     price: parseLooseNumber(cell("price"), 0),
-    old_price: parseLooseNumber(cell("old_price"), 0),
+    old_price: parseLooseNumber(cell("old_price", "oldprice"), 0),
     stock: parseStock(cell("stock")),
     badge: cell("badge"),
     accent: cell("accent") || undefined,
     short: cell("short"),
     featured: parseBoolean(cell("featured")),
-    new_arrival: parseBoolean(cell("new_arrival")),
-    best_seller: parseBoolean(cell("best_seller")),
+    new_arrival: parseBoolean(cell("new_arrival", "newarrival")),
+    best_seller: parseBoolean(cell("best_seller", "bestseller")),
     cover_image: posterImage || undefined,
     main_image: mainImageRaw ? toEmbeddableImageUrl(mainImageRaw) : posterImage || galleryImages[0] || "",
     gallery_images: galleryImages,
@@ -89,7 +94,7 @@ export function rowToProductInput(table: SheetTable, row: SheetRow): ProductInpu
     specifications: parseKeyValueList(cell(...SPECIFICATION_COLUMNS)),
     colours: [],
     sizes_or_variants: pipeSplit(cell(...VARIANT_COLUMNS)),
-    tags: pipeSplit(cell("tags")),
+    tags: pipeSplit(cell("tags", "tag")),
     related_products: pipeSplit(cell("related_products", "related"))
   };
 }

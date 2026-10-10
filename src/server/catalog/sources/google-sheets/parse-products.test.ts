@@ -80,6 +80,137 @@ describe("parseProductsSheet", () => {
   it("fails clearly when no header row exists", () => {
     expect(() => parseProductsSheet([["just", "text"]])).toThrow(/header row/);
   });
+
+  it("accurately parses user renamed sheet columns with or without Kind and Sr No", () => {
+    const renamedRowsWithAll = [
+      [
+        "Sr No ",
+        "Product No 📍",
+        "Slug 📍",
+        "Title",
+        "Category",
+        "Price",
+        "Old Price",
+        "Stock",
+        "Badge",
+        "Accent",
+        "Kind",
+        "Short",
+        "Featured",
+        "New Arrival",
+        "Best Seller",
+        "Poster Image URL",
+        "Gallery Images URL",
+        "Features",
+        "Specifications",
+        "Colours Or Sizes Or Variants",
+        "Tags",
+        "Related Products"
+      ],
+      [
+        "1",
+        "101",
+        "tulip-mirror",
+        "Cloud Tulip Mirror Light",
+        "Night Lights",
+        "1490",
+        "1990",
+        "In stock",
+        "Trending",
+        "#FF69B4",
+        "decor",
+        "Handmade flower night lamp.",
+        "TRUE",
+        "TRUE",
+        "TRUE",
+        `https://drive.google.com/file/d/${DRIVE_ID}/view?usp=sharing`,
+        `https://drive.google.com/file/d/${DRIVE_ID}/view?usp=sharing`,
+        "DIY Tulip | 20 Flowers | Ambient Glow",
+        "Material: Acrylic | LED: Warm",
+        "Pink | Blue | Purple",
+        "mirror | tulip | light",
+        "desk-lamp"
+      ]
+    ];
+
+    const resultWithAll = parseProductsSheet(renamedRowsWithAll);
+    expect(resultWithAll.products).toHaveLength(1);
+    expect(resultWithAll.products[0]).toMatchObject({
+      id: "101",
+      slug: "tulip-mirror",
+      title: "Cloud Tulip Mirror Light",
+      category: "Night Lights",
+      price: 1490,
+      old_price: 1990,
+      stock: "In stock",
+      badge: "Trending",
+      accent: "#FF69B4",
+      short: "Handmade flower night lamp.",
+      featured: true,
+      new_arrival: true,
+      best_seller: true,
+      cover_image: `https://lh3.googleusercontent.com/d/${DRIVE_ID}`,
+      features: ["DIY Tulip", "20 Flowers", "Ambient Glow"],
+      specifications: { Material: "Acrylic", LED: "Warm" },
+      sizes_or_variants: ["Pink", "Blue", "Purple"],
+      tags: ["mirror", "tulip", "light"],
+      related_products: ["desk-lamp"]
+    });
+
+    // Test with Kind and Sr No REMOVED:
+    const renamedRowsWithoutKindAndSrNo = [
+      [
+        "Product No 📍",
+        "Slug 📍",
+        "Title",
+        "Category",
+        "Price",
+        "Old Price",
+        "Stock",
+        "Badge",
+        "Accent",
+        "Short",
+        "Featured",
+        "New Arrival",
+        "Best Seller",
+        "Poster Image URL",
+        "Gallery Images URL",
+        "Features",
+        "Specifications",
+        "Colours Or Sizes Or Variants",
+        "Tags",
+        "Related Products"
+      ],
+      [
+        "102",
+        "tulip-mirror-clean",
+        "Cloud Tulip Mirror Light Clean",
+        "Night Lights",
+        "1490",
+        "1990",
+        "In stock",
+        "Trending",
+        "#FF69B4",
+        "Handmade flower night lamp.",
+        "TRUE",
+        "TRUE",
+        "TRUE",
+        `https://drive.google.com/file/d/${DRIVE_ID}/view?usp=sharing`,
+        `https://drive.google.com/file/d/${DRIVE_ID}/view?usp=sharing`,
+        "DIY Tulip | 20 Flowers",
+        "Material: Acrylic",
+        "Pink | Blue",
+        "mirror | tulip",
+        "desk-lamp"
+      ]
+    ];
+
+    const resultClean = parseProductsSheet(renamedRowsWithoutKindAndSrNo);
+    expect(resultClean.products).toHaveLength(1);
+    expect(resultClean.products[0].slug).toBe("tulip-mirror-clean");
+    expect(resultClean.products[0].id).toBe("102");
+    expect(resultClean.products[0].sizes_or_variants).toEqual(["Pink", "Blue"]);
+  });
 });
 
 describe("parseStock", () => {

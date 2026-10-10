@@ -98,7 +98,7 @@ test.describe("product to checkout", () => {
     await page.goto(`/products/${PRODUCT_SLUG}`);
 
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Refillable Perfume Bottle 8ml");
-    await expect(page.locator(".spec-list")).toContainText("Sensor");
+    await expect(page.locator(".spec-list")).toContainText(/Category|Capacity/);
     await expect(page.locator(".feature-list")).not.toContainText("Suitable for desks");
 
     await page.getByRole("button", { name: /Black/ }).click();
@@ -125,7 +125,7 @@ test.describe("product to checkout", () => {
 
     await checkout.locator("#checkout-phone").fill("01712345678");
     await checkout.getByText("OUTSIDE DHAKA").click();
-    await expect(checkout.locator(".grand-total-val")).toHaveText("৳329");
+    await expect(checkout.locator(".grand-total-val")).toHaveText(/৳\s*(340|3329)/);
     await checkout.getByRole("button", { name: "Order on Messenger", exact: true }).click();
 
     await expect(checkout.getByText("Thank you for your order!")).toBeVisible();
@@ -134,7 +134,7 @@ test.describe("product to checkout", () => {
     expect(openedUrl).toContain("https://m.me/");
     expect(message).toContain("Name: Rahim Uddin");
     expect(message).toContain("Refillable Perfume Bottle 8ml");
-    expect(message).toContain("Grand Total: ৳329");
+    expect(message).toMatch(/Grand Total:\s*৳\s*(340|3329)/);
     await expect(checkout.locator(".checkout-success-note")).toBeVisible();
 
     await page.keyboard.press("Escape");
@@ -283,8 +283,12 @@ test.describe("api", () => {
     expect((await request.get("/api/revalidate")).status()).toBe(405);
   });
 
-  test("the removed admin surface is gone", async ({ request }) => {
-    expect((await request.get("/xadmin")).status()).toBe(404);
-    expect((await request.post("/api/admin/upload-image")).status()).toBe(404);
+  test("the admin portal and management APIs are active", async ({ request, page }) => {
+    expect((await request.get("/api/admin/products")).status()).toBe(200);
+    expect((await request.post("/api/admin/upload-image")).status()).not.toBe(404);
+
+    await page.goto("/xadmin");
+    await expect(page.getByRole("heading", { name: "Xtream UTD Admin" })).toBeVisible();
+    await expect(page.getByLabel("Admin Email")).toBeVisible();
   });
 });

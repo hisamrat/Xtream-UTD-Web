@@ -869,34 +869,35 @@ justify-content: center;
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  background: rgba(0, 0, 0, 0.35) !important;
-  border: 1px solid rgba(255, 255, 255, 0.25) !important;
-  border-radius: 50% !important;
-  width: 38px;
-  height: 38px;
-  padding: 0;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.35) !important;
+  background: transparent !important;
+  border: none !important;
+  outline: none !important;
+  border-radius: 0 !important;
+  width: auto !important;
+  height: auto !important;
+  padding: 0 !important;
+  box-shadow: none !important;
   filter: none !important;
   text-shadow: none !important;
   color: #ffffff !important;
   pointer-events: auto;
   cursor: pointer;
   user-select: none;
-  backdrop-filter: blur(8px);
-  -webkit-backdrop-filter: blur(8px);
-  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), background 0.2s ease, opacity 0.2s ease;
+  backdrop-filter: none !important;
+  -webkit-backdrop-filter: none !important;
+  transition: transform 0.22s cubic-bezier(0.16, 1, 0.3, 1), opacity 0.2s ease;
 }
 
 .gallery-zoom-badge:hover {
-  transform: scale(1.1);
-  background: rgba(0, 0, 0, 0.6) !important;
+  transform: scale(1.18);
+  background: transparent !important;
 }
 
 .gallery-main.is-hover-zoomed .gallery-zoom-badge {
   opacity: 0.95;
   transform: scale(1);
   pointer-events: auto;
-  background: rgba(0, 0, 0, 0.65) !important;
+  background: transparent !important;
 }
 
 .gallery-zoom-badge .zoom-icon {
@@ -911,17 +912,21 @@ justify-content: center;
 [data-theme="light"] .gallery-zoom-badge .zoom-icon {
   color: #ffffff !important;
   filter: none !important;
-  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.2) !important;
+  box-shadow: none !important;
+  text-shadow: none !important;
+  background: transparent !important;
 }
 
 [data-theme="light"] .gallery-zoom-badge:hover {
-  transform: scale(1.1);
+  transform: scale(1.18);
+  background: transparent !important;
 }
 
 [data-theme="light"] .gallery-main.is-hover-zoomed .gallery-zoom-badge {
   opacity: 0.95;
   transform: scale(1);
   pointer-events: auto;
+  background: transparent !important;
 }
 
 @media (max-width: 600px) {
