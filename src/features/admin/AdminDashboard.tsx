@@ -3,17 +3,19 @@
 import { useState, useEffect, useMemo } from "react";
 import Link from "next/link";
 import {
-  AlignLeft,
   ArrowLeft,
   Check,
   ChevronLeft,
   ChevronRight,
+  Menu,
+  Moon,
   Package,
   Plus,
   RefreshCw,
   Save,
   Search,
   Share2,
+  Sun,
   Trash2,
   Truck,
   Edit,
@@ -33,6 +35,9 @@ type AdminDashboardProps = {
 
 export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   const [activeTab, setActiveTab] = useState<"products" | "general" | "delivery" | "socials">("products");
+
+  // Theme toggle state (defaults to clean light theme)
+  const [theme, setTheme] = useState<"light" | "dark">("light");
 
   // Sidebar collapse toggle state
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
@@ -152,9 +157,9 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
     return max > 0 ? String(max + 1) : String(products.length + 1);
   }, [products]);
 
-  // Filter products
+  // Filter and sort products by numeric PRO ID
   const filteredProducts = useMemo(() => {
-    return products.filter((p) => {
+    const list = products.filter((p) => {
       const q = productSearch.toLowerCase().trim();
       const matchSearch =
         !q ||
@@ -167,6 +172,13 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
       const matchStock = stockFilter === "all" || p.stock === stockFilter;
 
       return matchSearch && matchCategory && matchStock;
+    });
+
+    return [...list].sort((a, b) => {
+      const numA = parseInt(a.id, 10);
+      const numB = parseInt(b.id, 10);
+      if (!isNaN(numA) && !isNaN(numB)) return numA - numB;
+      return a.id.localeCompare(b.id, undefined, { numeric: true });
     });
   }, [products, productSearch, categoryFilter, stockFilter]);
 
@@ -270,14 +282,14 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
   };
 
   return (
-    <div className="admin-saas-layout">
+    <div className={`admin-saas-layout theme-${theme}`}>
       {/* ------------------------------------------------------------- */}
       {/* Left Navigation Sidebar (Dashboard Theme)                      */}
       {/* ------------------------------------------------------------- */}
       <aside className={`admin-saas-sidebar ${isSidebarCollapsed ? "is-collapsed" : ""}`}>
         {/* Admin Profile Header */}
         <div className="admin-sidebar-header">
-          {!isSidebarCollapsed && (
+          {!isSidebarCollapsed ? (
             <div className="admin-sidebar-brand-wrap">
               <div className="admin-user-avatar">
                 <span>XS</span>
@@ -287,16 +299,11 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <span className="admin-user-email">xtreamutd@gmail.com</span>
               </div>
             </div>
+          ) : (
+            <div className="admin-user-avatar" title="Xtream Store Admin">
+              <span>XS</span>
+            </div>
           )}
-          <button
-            type="button"
-            className="admin-sidebar-toggle-btn"
-            onClick={() => setIsSidebarCollapsed((prev) => !prev)}
-            title={isSidebarCollapsed ? "Expand sidebar" : "Minimize sidebar"}
-            aria-label={isSidebarCollapsed ? "Expand sidebar" : "Minimize sidebar"}
-          >
-            <AlignLeft size={18} />
-          </button>
         </div>
 
         {/* Navigation Menu */}
@@ -367,25 +374,47 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
         {/* Top Navbar */}
         <header className="admin-saas-topbar">
           <div className="admin-topbar-left">
-            <h1 className="admin-topbar-title">
-              {activeTab === "products" && "Product Catalog & Inventory"}
-              {activeTab === "general" && "Store Profile & Contact Settings"}
-              {activeTab === "delivery" && "Fulfillment, Shipping & Hub"}
-              {activeTab === "socials" && "Social Communities & Links"}
-            </h1>
-            <div className="admin-topbar-breadcrumb">
-              <span>Admin</span>
-              <span>/</span>
-              <span className="current">
-                {activeTab === "products" && "Website Product Information"}
-                {activeTab === "general" && "General Settings"}
-                {activeTab === "delivery" && "Fulfillment"}
-                {activeTab === "socials" && "Social Channels"}
-              </span>
+            <button
+              type="button"
+              className="admin-sidebar-collapse-btn"
+              onClick={() => setIsSidebarCollapsed((prev) => !prev)}
+              title={isSidebarCollapsed ? "Expand sidebar" : "Minimize sidebar"}
+              aria-label={isSidebarCollapsed ? "Expand sidebar" : "Minimize sidebar"}
+            >
+              <Menu size={22} />
+            </button>
+
+            <div className="admin-topbar-title-wrap">
+              <h1 className="admin-topbar-title">
+                {activeTab === "products" && "Product Catalog & Inventory"}
+                {activeTab === "general" && "Store Profile & Contact Settings"}
+                {activeTab === "delivery" && "Fulfillment, Shipping & Hub"}
+                {activeTab === "socials" && "Social Communities & Links"}
+              </h1>
+              <div className="admin-topbar-breadcrumb">
+                <span>Admin</span>
+                <span>/</span>
+                <span className="current">
+                  {activeTab === "products" && "Website Product Information"}
+                  {activeTab === "general" && "General Settings"}
+                  {activeTab === "delivery" && "Fulfillment"}
+                  {activeTab === "socials" && "Social Channels"}
+                </span>
+              </div>
             </div>
           </div>
 
           <div className="admin-topbar-right">
+            <button
+              type="button"
+              onClick={() => setTheme((t) => (t === "light" ? "dark" : "light"))}
+              className="admin-theme-toggle-btn"
+              title={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+              aria-label={theme === "light" ? "Switch to Dark Mode" : "Switch to Light Mode"}
+            >
+              {theme === "light" ? <Moon size={18} /> : <Sun size={18} />}
+            </button>
+
             {activeTab === "products" && (
               <button
                 type="button"
@@ -523,20 +552,19 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                 <table className="admin-saas-table">
                   <thead>
                     <tr>
-                      <th style={{ width: "60px", textAlign: "center", whiteSpace: "nowrap" }}>Sr No</th>
-                      <th style={{ width: "115px", whiteSpace: "nowrap" }}>Product No 📍</th>
+                      <th style={{ width: "55px", textAlign: "center", whiteSpace: "nowrap" }}>Sr No</th>
+                      <th style={{ width: "95px", textAlign: "center", whiteSpace: "nowrap" }}>PRO ID</th>
                       <th>Product Details</th>
-                      <th>Category</th>
-                      <th>Price (BDT)</th>
-                      <th>Stock</th>
-                      <th>Badge</th>
-                      <th style={{ textAlign: "right", width: "110px", whiteSpace: "nowrap" }}>Actions</th>
+                      <th style={{ width: "160px", textAlign: "left", whiteSpace: "nowrap" }}>Category</th>
+                      <th style={{ width: "120px", textAlign: "center", whiteSpace: "nowrap" }}>Price (BDT)</th>
+                      <th style={{ width: "130px", textAlign: "center", whiteSpace: "nowrap" }}>Stock</th>
+                      <th style={{ textAlign: "center", width: "95px", whiteSpace: "nowrap" }}>Actions</th>
                     </tr>
                   </thead>
                   <tbody>
                     {paginatedProducts.length === 0 ? (
                       <tr>
-                        <td colSpan={8} className="admin-empty-cell">
+                        <td colSpan={7} className="admin-empty-cell">
                           {loadingProducts ? "Loading catalog from database..." : "No products found matching criteria."}
                         </td>
                       </tr>
@@ -550,109 +578,108 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                               {srNo}
                             </td>
 
-                            {/* Product ID */}
-                            <td style={{ whiteSpace: "nowrap" }}>
+                            {/* Product ID (PRO ID) */}
+                            <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>
                               <span className="admin-id-pill">{p.id}</span>
                             </td>
 
-                          {/* Product Name & Thumbnail */}
-                          <td>
-                            <div className="admin-product-cell">
-                              <div className="admin-prod-thumb">
-                                {p.cover_image ? (
-                                  /* eslint-disable-next-line @next/next/no-img-element */
-                                  <img src={p.cover_image} alt={p.title} />
-                                ) : (
-                                  <Package size={18} className="placeholder-icon" />
+                            {/* Product Name & Thumbnail */}
+                            <td>
+                              <div className="admin-product-cell">
+                                <div className="admin-prod-thumb">
+                                  {p.cover_image ? (
+                                    /* eslint-disable-next-line @next/next/no-img-element */
+                                    <img src={p.cover_image} alt={p.title} />
+                                  ) : (
+                                    <Package size={18} className="placeholder-icon" />
+                                  )}
+                                </div>
+                                <div className="admin-prod-info">
+                                  <span className="admin-prod-title">{p.title}</span>
+                                  <span className="admin-prod-slug">{p.slug}</span>
+                                </div>
+                              </div>
+                            </td>
+
+                            {/* Category */}
+                            <td style={{ textAlign: "left" }}>
+                              <span className="admin-cat-pill">{p.category}</span>
+                            </td>
+
+                            {/* Price */}
+                            <td style={{ textAlign: "center" }}>
+                              <div className="admin-price-box" style={{ alignItems: "center" }}>
+                                <span className="admin-price-current">৳{p.price.toLocaleString("en-BD")}</span>
+                                {p.old_price > p.price && (
+                                  <span className="admin-price-old">৳{p.old_price.toLocaleString("en-BD")}</span>
                                 )}
                               </div>
-                              <div className="admin-prod-info">
-                                <span className="admin-prod-title">{p.title}</span>
-                                <span className="admin-prod-slug">{p.slug}</span>
+                            </td>
+
+                            {/* Stock Status */}
+                            <td style={{ textAlign: "center" }}>
+                              <span
+                                className={`admin-status-badge ${
+                                  p.stock === "In stock"
+                                    ? "badge-in-stock"
+                                    : p.stock === "Low stock"
+                                    ? "badge-low-stock"
+                                    : "badge-out-stock"
+                                }`}
+                              >
+                                <span className="status-dot" />
+                                {p.stock}
+                              </span>
+                            </td>
+
+                            {/* Actions */}
+                            <td style={{ textAlign: "center", whiteSpace: "nowrap" }}>
+                              <div className="admin-actions-group" style={{ justifyContent: "center" }}>
+                                <button
+                                  type="button"
+                                  onClick={() => {
+                                    setEditingProduct(p);
+                                    setIsModalOpen(true);
+                                  }}
+                                  className="admin-action-btn edit"
+                                  title="Edit Product Info"
+                                >
+                                  <Edit size={15} />
+                                </button>
+                                <button
+                                  type="button"
+                                  onClick={() => handleDeleteProduct(p.id, p.title)}
+                                  className="admin-action-btn delete"
+                                  title="Delete Product"
+                                >
+                                  <Trash2 size={15} />
+                                </button>
                               </div>
-                            </div>
-                          </td>
-
-                          {/* Category */}
-                          <td>
-                            <span className="admin-cat-pill">{p.category}</span>
-                          </td>
-
-                          {/* Price */}
-                          <td>
-                            <div className="admin-price-box">
-                              <span className="admin-price-current">৳{p.price.toLocaleString("en-BD")}</span>
-                              {p.old_price > p.price && (
-                                <span className="admin-price-old">৳{p.old_price.toLocaleString("en-BD")}</span>
-                              )}
-                            </div>
-                          </td>
-
-                          {/* Stock Status */}
-                          <td>
-                            <span
-                              className={`admin-status-badge ${
-                                p.stock === "In stock"
-                                  ? "badge-in-stock"
-                                  : p.stock === "Low stock"
-                                  ? "badge-low-stock"
-                                  : "badge-out-stock"
-                              }`}
-                            >
-                              <span className="status-dot" />
-                              {p.stock}
-                            </span>
-                          </td>
-
-                          {/* Badge */}
-                          <td>
-                            {p.badge ? <span className="admin-badge-label">{p.badge}</span> : <span className="text-muted">-</span>}
-                          </td>
-
-                          {/* Actions */}
-                          <td style={{ textAlign: "right", whiteSpace: "nowrap" }}>
-                            <div className="admin-actions-group">
-                              <button
-                                type="button"
-                                onClick={() => {
-                                  setEditingProduct(p);
-                                  setIsModalOpen(true);
-                                }}
-                                className="admin-action-btn edit"
-                                title="Edit Product Info"
-                              >
-                                <Edit size={15} />
-                              </button>
-                              <button
-                                type="button"
-                                onClick={() => handleDeleteProduct(p.id, p.title)}
-                                className="admin-action-btn delete"
-                                title="Delete Product"
-                              >
-                                <Trash2 size={15} />
-                              </button>
-                            </div>
-                          </td>
-                        </tr>
-                      );
-                    })
+                            </td>
+                          </tr>
+                        );
+                      })
                   )}
                 </tbody>
               </table>
             </div>
 
-            {/* Table Pagination */}
+            {/* Table Pagination Bar */}
             <div className="admin-pagination-container">
               <div className="admin-pagination-info">
                 Showing{" "}
-                <strong>
+                <span className="admin-page-count-highlight">
                   {filteredProducts.length === 0 ? 0 : (safeCurrentPage - 1) * pageSize + 1}
-                </strong>{" "}
+                </span>{" "}
                 to{" "}
-                <strong>
+                <span className="admin-page-count-highlight">
                   {Math.min(safeCurrentPage * pageSize, filteredProducts.length)}
-                </strong>{" "}
-                of <strong>{filteredProducts.length}</strong> products
+                </span>{" "}
+                of{" "}
+                <span className="admin-page-count-highlight">
+                  {filteredProducts.length}
+                </span>{" "}
+                products
               </div>
 
               <div className="admin-pagination-controls">
@@ -674,6 +701,8 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   </select>
                 </div>
 
+                <div className="admin-pagination-divider" />
+
                 <div className="admin-pagination-nav">
                   <button
                     type="button"
@@ -682,20 +711,22 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     className="admin-page-btn nav-btn"
                     title="Previous Page"
                   >
-                    <ChevronLeft size={15} />
+                    <ChevronLeft size={16} />
                     <span>Prev</span>
                   </button>
 
-                  {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
-                    <button
-                      key={pageNum}
-                      type="button"
-                      onClick={() => setCurrentPage(pageNum)}
-                      className={`admin-page-btn num-btn ${safeCurrentPage === pageNum ? "active" : ""}`}
-                    >
-                      {pageNum}
-                    </button>
-                  ))}
+                  <div className="admin-page-numbers-group">
+                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                      <button
+                        key={pageNum}
+                        type="button"
+                        onClick={() => setCurrentPage(pageNum)}
+                        className={`admin-page-btn num-btn ${safeCurrentPage === pageNum ? "active" : ""}`}
+                      >
+                        {pageNum}
+                      </button>
+                    ))}
+                  </div>
 
                   <button
                     type="button"
@@ -705,16 +736,10 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     title="Next Page"
                   >
                     <span>Next</span>
-                    <ChevronRight size={15} />
+                    <ChevronRight size={16} />
                   </button>
                 </div>
               </div>
-            </div>
-
-            {/* Table Footer info */}
-            <div className="admin-table-footer">
-              <span>Total catalog: {products.length} products</span>
-              <span className="sheet-sync-status">🟢 Google Sheet Connected (`Website Product Information`)</span>
             </div>
             </div>
           </div>
@@ -729,10 +754,6 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   <h2 className="form-card-title">General Store & Contact Information</h2>
                   <p className="form-card-desc">Configure brand bio, helpline numbers, email and business hours.</p>
                 </div>
-                <button type="submit" disabled={savingSettings} className="admin-primary-add-btn">
-                  {saveSuccess ? <Check size={16} /> : <Save size={16} />}
-                  <span>{saveSuccess ? "Saved!" : savingSettings ? "Saving..." : "Save Changes"}</span>
-                </button>
               </div>
 
               <div className="admin-form-grid">
@@ -802,6 +823,13 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   />
                 </div>
               </div>
+
+              <div className="form-card-footer">
+                <button type="submit" disabled={savingSettings} className="admin-primary-add-btn">
+                  {saveSuccess ? <Check size={16} /> : <Save size={16} />}
+                  <span>{saveSuccess ? "Saved!" : savingSettings ? "Saving..." : "Save Changes"}</span>
+                </button>
+              </div>
             </div>
           </form>
         )}
@@ -815,10 +843,6 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   <h2 className="form-card-title">Fulfillment & Physical Hub Settings</h2>
                   <p className="form-card-desc">Configure dispatch hub location, coverage terms, and flat shipping rates.</p>
                 </div>
-                <button type="submit" disabled={savingSettings} className="admin-primary-add-btn">
-                  {saveSuccess ? <Check size={16} /> : <Save size={16} />}
-                  <span>{saveSuccess ? "Saved!" : savingSettings ? "Saving..." : "Save Changes"}</span>
-                </button>
               </div>
 
               <div className="admin-form-grid">
@@ -858,6 +882,13 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   />
                 </div>
               </div>
+
+              <div className="form-card-footer">
+                <button type="submit" disabled={savingSettings} className="admin-primary-add-btn">
+                  {saveSuccess ? <Check size={16} /> : <Save size={16} />}
+                  <span>{saveSuccess ? "Saved!" : savingSettings ? "Saving..." : "Save Changes"}</span>
+                </button>
+              </div>
             </div>
           </form>
         )}
@@ -871,10 +902,6 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                   <h2 className="form-card-title">Social Media & Communication Channels</h2>
                   <p className="form-card-desc">Update brand handles and social community links displayed in the footer and contact hubs.</p>
                 </div>
-                <button type="submit" disabled={savingSettings} className="admin-primary-add-btn">
-                  {saveSuccess ? <Check size={16} /> : <Save size={16} />}
-                  <span>{saveSuccess ? "Saved!" : savingSettings ? "Saving..." : "Save Changes"}</span>
-                </button>
               </div>
 
               <div className="admin-form-grid">
@@ -913,6 +940,13 @@ export function AdminDashboard({ onLogout }: AdminDashboardProps) {
                     onChange={(e) => setSettings({ ...settings, ytUrl: e.target.value })}
                   />
                 </div>
+              </div>
+
+              <div className="form-card-footer">
+                <button type="submit" disabled={savingSettings} className="admin-primary-add-btn">
+                  {saveSuccess ? <Check size={16} /> : <Save size={16} />}
+                  <span>{saveSuccess ? "Saved!" : savingSettings ? "Saving..." : "Save Changes"}</span>
+                </button>
               </div>
             </div>
           </form>

@@ -22,7 +22,12 @@ async function readProducts(): Promise<Product[]> {
 
 async function writeProducts(products: Product[]): Promise<void> {
   await fs.mkdir(path.dirname(PRODUCTS_FILE_PATH), { recursive: true });
-  await fs.writeFile(PRODUCTS_FILE_PATH, JSON.stringify(products, null, 2), "utf-8");
+  const allSlugs = new Set(products.map((p) => p.slug));
+  const sanitized = products.map((p) => ({
+    ...p,
+    related_products: (p.related_products || []).filter((slug) => allSlugs.has(slug))
+  }));
+  await fs.writeFile(PRODUCTS_FILE_PATH, JSON.stringify(sanitized, null, 2), "utf-8");
   try {
     revalidateTag(CATALOG_CACHE_TAG, { expire: 0 });
     revalidatePath("/", "layout");

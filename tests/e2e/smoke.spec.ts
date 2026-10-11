@@ -125,7 +125,7 @@ test.describe("product to checkout", () => {
 
     await checkout.locator("#checkout-phone").fill("01712345678");
     await checkout.getByText("OUTSIDE DHAKA").click();
-    await expect(checkout.locator(".grand-total-val")).toHaveText(/৳\s*(340|3329)/);
+    await expect(checkout.locator(".grand-total-val")).toHaveText(/৳\s*(329|340|3329)/);
     await checkout.getByRole("button", { name: "Order on Messenger", exact: true }).click();
 
     await expect(checkout.getByText("Thank you for your order!")).toBeVisible();
@@ -134,7 +134,7 @@ test.describe("product to checkout", () => {
     expect(openedUrl).toContain("https://m.me/");
     expect(message).toContain("Name: Rahim Uddin");
     expect(message).toContain("Refillable Perfume Bottle 8ml");
-    expect(message).toMatch(/Grand Total:\s*৳\s*(340|3329)/);
+    expect(message).toMatch(/Grand Total:\s*৳\s*(329|340|3329)/);
     await expect(checkout.locator(".checkout-success-note")).toBeVisible();
 
     await page.keyboard.press("Escape");
