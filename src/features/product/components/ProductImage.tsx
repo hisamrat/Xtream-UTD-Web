@@ -3,7 +3,7 @@
 import { useMemo, useState } from "react";
 import { Package } from "lucide-react";
 import type { Product } from "@/domain/product/product-schema";
-import { collectImageCandidates } from "@/shared/media/google-drive";
+import { collectImageCandidates, IMAGE_WIDTHS } from "@/shared/media/google-drive";
 
 export type ProductImageSource = Pick<Product, "title" | "cover_image" | "main_image"> & {
   gallery_images?: readonly string[];
@@ -34,7 +34,13 @@ function resolveSources(
 ): string[] {
   const targetWidth =
     customTargetWidth ??
-    (isThumbnail ? 240 : compact ? 360 : imageRole === "gallery" ? 1000 : 640);
+    (isThumbnail
+      ? IMAGE_WIDTHS.thumbnail
+      : compact
+        ? IMAGE_WIDTHS.compact
+        : imageRole === "gallery" || imageRole === "main"
+          ? IMAGE_WIDTHS.detail
+          : IMAGE_WIDTHS.card);
 
   if (imageSrc) {
     return collectImageCandidates([imageSrc], targetWidth);

@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
+import { preconnect } from "react-dom";
 import "./globals.css";
 import { hasProductionUrl, siteConfig } from "@/config/site";
 import { AppShell } from "@/features/shell/components/AppShell";
@@ -29,6 +30,8 @@ export const metadata: Metadata = {
 };
 
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  // Product photos are served by Google's image CDN; open the connection before the first <img> asks.
+  preconnect("https://lh3.googleusercontent.com");
   const catalogue = await getProductSummaries();
 
   return (

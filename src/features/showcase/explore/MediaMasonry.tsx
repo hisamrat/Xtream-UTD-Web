@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GalleryShowcaseItem } from "@/domain/gallery/gallery-schema";
 import type { ProductSummary } from "@/domain/product/product-summary";
 import { useI18n } from "@/i18n/LanguageProvider";
-import { collectImageCandidates } from "@/shared/media/google-drive";
+import { collectImageCandidates, IMAGE_WIDTHS } from "@/shared/media/google-drive";
 import { extractYouTubeVideoId, getYouTubeEmbedUrl, getYouTubeThumbnailCandidates } from "@/shared/media/youtube";
 import { layoutMasonry } from "./masonry-layout";
 
@@ -41,9 +41,9 @@ function ShowcaseCardMedia({ item, isVideo, isActiveVideo, videoRefCallback }: M
     () =>
       Array.from(
         new Set([
-          ...collectImageCandidates([item.posterUrl], 640),
+          ...collectImageCandidates([item.posterUrl], IMAGE_WIDTHS.card),
           ...(youtubeId ? getYouTubeThumbnailCandidates(youtubeId) : []),
-          ...(!isVideo ? collectImageCandidates([item.mediaUrl], 640) : [])
+          ...(!isVideo ? collectImageCandidates([item.mediaUrl], IMAGE_WIDTHS.card) : [])
         ])
       ),
     [item.posterUrl, item.mediaUrl, isVideo, youtubeId]

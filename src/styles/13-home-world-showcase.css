@@ -93,6 +93,8 @@ pointer-events: none;
   border-radius: 0;
   backface-visibility: hidden;
   will-change: transform, opacity;
+  /* Isolates each card's layout and painting so a hover or float frame never invalidates its neighbours. */
+  contain: layout paint style;
   background: #0d1117;
   box-shadow:
     rgba(17, 17, 26, 0.1) 0px 4px 16px,
@@ -235,26 +237,24 @@ pointer-events: none;
   aspect-ratio: 1.14;
 }
 
+/* No own compositing layer per image: the card is already a GPU layer, and an extra layer per
+   card (x40) costs memory and compositing time while the world animates. */
 .reference-world-card .product-art {
   width: 100%;
   height: 100%;
   display: flex;
   align-items: center;
   justify-content: center;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: transform;
-  transition: transform 320ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .world-stage .reference-world-card.hovered .product-art,
 .reference-world-card:hover .product-art {
-  transform: translate3d(0, 0, 0) scale(1);
+  transform: none;
 }
 
 .world-stage .reference-world-card.kind-mini.hovered .product-art,
 .reference-world-card.kind-mini:hover .product-art {
-  transform: translate3d(0, 0, 0) scale(1);
+  transform: none;
 }
 
 .reference-world-card .world-card-copy {
@@ -267,9 +267,6 @@ pointer-events: none;
   padding: 5px 8px 7px;
   position: relative;
   z-index: 2;
-  transform: translate3d(0, 0, 0);
-  backface-visibility: hidden;
-  will-change: opacity, transform;
   transition: opacity 180ms ease, transform 180ms ease;
 }
 
@@ -368,11 +365,9 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(calc(var(--world-card-scale, 1) * 0.88));
     opacity: 0;
-    filter: blur(2px);
   }
   25% {
     opacity: 1;
-    filter: blur(0px);
   }
   100% {
     transform:
@@ -380,7 +375,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
-    filter: blur(0px);
   }
 }
 
@@ -391,11 +385,9 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(calc(var(--world-card-scale, 1) * 0.88));
     opacity: 0;
-    filter: blur(2px);
   }
   25% {
     opacity: 1;
-    filter: blur(0px);
   }
   100% {
     transform:
@@ -403,7 +395,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
-    filter: blur(0px);
   }
 }
 
@@ -414,11 +405,9 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(calc(var(--world-card-scale, 1) * 0.88));
     opacity: 0;
-    filter: blur(2px);
   }
   25% {
     opacity: 1;
-    filter: blur(0px);
   }
   100% {
     transform:
@@ -426,7 +415,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
-    filter: blur(0px);
   }
 }
 
@@ -437,11 +425,9 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(calc(var(--world-card-scale, 1) * 0.88));
     opacity: 0;
-    filter: blur(2px);
   }
   25% {
     opacity: 1;
-    filter: blur(0px);
   }
   100% {
     transform:
@@ -449,7 +435,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
-    filter: blur(0px);
   }
 }
 
@@ -466,7 +451,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
-    filter: blur(0px);
   }
   65% {
     opacity: 0.75;
@@ -477,7 +461,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(calc(var(--world-card-scale, 1) * 0.86));
     opacity: 0;
-    filter: blur(2px);
   }
 }
 
@@ -488,7 +471,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
-    filter: blur(0px);
   }
   65% {
     opacity: 0.75;
@@ -499,7 +481,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(calc(var(--world-card-scale, 1) * 0.86));
     opacity: 0;
-    filter: blur(2px);
   }
 }
 
@@ -510,7 +491,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
-    filter: blur(0px);
   }
   65% {
     opacity: 0.75;
@@ -521,7 +501,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(calc(var(--world-card-scale, 1) * 0.86));
     opacity: 0;
-    filter: blur(2px);
   }
 }
 
@@ -532,7 +511,6 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(var(--world-card-scale, 1));
     opacity: 1;
-    filter: blur(0px);
   }
   65% {
     opacity: 0.75;
@@ -543,14 +521,13 @@ animation-play-state: paused;
       rotate(var(--world-card-rotation, 0deg))
       scale(calc(var(--world-card-scale, 1) * 0.86));
     opacity: 0;
-    filter: blur(2px);
   }
 }
 
 /* Disable base card transition during fly-in so it doesn't fight the animation */
 .reference-world-card.is-flying-in {
   transition: none !important;
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
   backface-visibility: hidden;
   transform: translateZ(0);
   pointer-events: none;
@@ -576,7 +553,7 @@ animation-play-state: paused;
 /* Exit Fly-out animation: smooth 460ms acceleration back to off-screen origin */
 .world-shell.is-navigating-to-explore .reference-world-card {
   transition: none !important;
-  will-change: transform, opacity, filter;
+  will-change: transform, opacity;
   backface-visibility: hidden;
   pointer-events: none !important;
 }
@@ -889,6 +866,8 @@ transition-duration: 40ms;
   border-radius: 0;
   backface-visibility: hidden;
   will-change: transform, opacity;
+  /* Isolates each card's layout and painting so a hover or float frame never invalidates its neighbours. */
+  contain: layout paint style;
   background: #0d1117;
   transform:
     translate3d(-50%, -50%, var(--world-card-depth, 0px))
@@ -1011,8 +990,9 @@ transition-duration: 40ms;
   display: none !important;
 }
 
+/* Light-theme card depth comes from the card box-shadow; a drop-shadow on the clipped image was invisible. */
 [data-theme="light"] .world-shell.reference-showcase .reference-world-card .product-art {
-  filter: drop-shadow(0 10px 18px rgba(0, 0, 0, 0.12));
+  filter: none;
 }
 
 [data-theme="light"] .world-shell.reference-showcase .reference-world-card.kind-hero {

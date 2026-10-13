@@ -186,3 +186,10 @@ body:has(.home-main) .world-alternating-indicator {
     animation: none !important;
   }
 }
+
+/* On the home page this pill floats over the continuously animating 3D world; a backdrop blur there is
+   recomputed every frame. Its background is already 85% opaque, so the blur is not missed. */
+body:has(.home-main) .world-alternating-indicator {
+  backdrop-filter: none;
+  -webkit-backdrop-filter: none;
+}

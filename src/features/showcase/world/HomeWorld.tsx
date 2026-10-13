@@ -14,6 +14,7 @@ import { useDocumentHidden, useHydrated, useViewportSize } from "@/shared/hooks/
 import { usePrefersReducedMotion } from "@/shared/hooks/useMediaQuery";
 import { useAnyModalOpen } from "@/shared/hooks/useModalLayer";
 import { readStored, useStoredString, writeStored } from "@/shared/lib/stored-value";
+import { IMAGE_WIDTHS } from "@/shared/media/google-drive";
 import { emitShowcase, useShowcaseEvent } from "../lib/showcase-events";
 import { ScrollHint } from "../ScrollHint";
 import {
@@ -35,6 +36,20 @@ type HomeWorldProps = {
 };
 
 const RESTING_VIEW: WorldViewState = { rotateX: 0, rotateY: 0, zoom: 1, parallaxX: 0, parallaxY: 0, dragging: false };
+
+/**
+ * Stage CSS variables managed by React. The rotation variables (`--world-rotate-x/y`) are left out on
+ * purpose: they change on every pointer move and are written straight to the stage element (see
+ * `applyRotation`) so dragging never re-renders the component tree.
+ */
+function stageLayoutStyle(viewport: { width: number; height: number }, scale: number): CSSProperties {
+  const {
+    "--world-rotate-x": _rotateX,
+    "--world-rotate-y": _rotateY,
+    ...layout
+  } = getShowcaseStageStyle(scale, viewport, RESTING_VIEW);
+  return layout;
+}
 const IDLE_POINTER: PointerState = { active: false, x: 0, y: 0, startX: 0, startY: 0, distance: 0, startRotateX: 0, startRotateY: 0 };
 
 const SHUFFLE_STORAGE_KEY = "xtream-utd:home-swap-offset";
@@ -83,21 +98,47 @@ export function HomeWorld({ products }: HomeWorldProps) {
   const documentHidden = useDocumentHidden();
   const [showUI, setShowUI] = useState(false);
   const [hoveredSlug, setHoveredSlug] = useState<string | null>(null);
-  const [worldView, setWorldView] = useState<WorldViewState>(RESTING_VIEW);
+  const [isDragging, setIsDragging] = useState(false);
   const [productSetIndex, setProductSetIndex] = useState(0);
   const [indicatorPhase, setIndicatorPhase] = useState<"pages" | "scroll">("pages");
   const [isNavigatingToExplore, setIsNavigatingToExplore] = useState(false);
 
-  const worldViewRef = useRef(worldView);
+  const stageRef = useRef<HTMLDivElement | null>(null);
+  /** Current world rotation in degrees; the source of truth for the stage's rotation variables. */
+  const rotationRef = useRef(0);
+  const rotationFrameRef = useRef<number | null>(null);
+  const draggingRef = useRef(false);
   const pointerRef = useRef<PointerState>(IDLE_POINTER);
   const isNavigatingRef = useRef(false);
   const hoverEnterTimerRef = useRef<number | null>(null);
   const hoverHideTimerRef = useRef<number | null>(null);
   const closeCooldownUntilRef = useRef(0);
 
-  useEffect(() => {
-    worldViewRef.current = worldView;
-  }, [worldView]);
+  /** Writes the rotation to the stage at most once per animation frame (no React render). */
+  const applyRotation = useCallback((rotateY: number) => {
+    rotationRef.current = rotateY;
+    if (rotationFrameRef.current !== null) return;
+    rotationFrameRef.current = window.requestAnimationFrame(() => {
+      rotationFrameRef.current = null;
+      const stage = stageRef.current;
+      if (!stage) return;
+      stage.style.setProperty("--world-rotate-y", `${rotationRef.current}deg`);
+      stage.style.setProperty("--world-rotate-x", "0deg");
+    });
+  }, []);
+
+  useEffect(
+    () => () => {
+      if (rotationFrameRef.current !== null) window.cancelAnimationFrame(rotationFrameRef.current);
+    },
+    []
+  );
+
+  const setDragging = useCallback((dragging: boolean) => {
+    if (draggingRef.current === dragging) return;
+    draggingRef.current = dragging;
+    setIsDragging(dragging);
+  }, []);
 
   const swapOffset = useHomeShuffleOffset(products.length);
   const orderedProducts = useMemo(() => {
@@ -122,7 +163,8 @@ export function HomeWorld({ products }: HomeWorldProps) {
   );
 
   const activeSlots = showcaseSlots.slice(0, worldProducts.length);
-  const stageStyle = getShowcaseStageStyle(getShowcaseStageScale(viewportSize, showcaseSlots), viewportSize, worldView);
+  const stageScale = getShowcaseStageScale(viewportSize, showcaseSlots);
+  const stageStyle = useMemo(() => stageLayoutStyle(viewportSize, stageScale), [viewportSize, stageScale]);
   const worldPaused = documentHidden || anyModalOpen;
   const visibleHoveredSlug = hoveredSlug && worldProducts.some((product) => product.slug === hoveredSlug) ? hoveredSlug : null;
 
@@ -194,7 +236,7 @@ export function HomeWorld({ products }: HomeWorldProps) {
 
   const handleCardPreviewEnter = useCallback(
     (slug: string) => {
-      if (worldViewRef.current.dragging) return;
+      if (draggingRef.current) return;
       cancelHoverEnter();
       if (Date.now() < closeCooldownUntilRef.current) return;
       hoverEnterTimerRef.current = window.setTimeout(() => {
@@ -246,9 +288,10 @@ export function HomeWorld({ products }: HomeWorldProps) {
     cancelHoverHide();
     cancelHoverEnter();
     setHoveredSlug(null);
-    setWorldView(RESTING_VIEW);
+    setDragging(false);
+    applyRotation(0);
     pointerRef.current = IDLE_POINTER;
-  }, [cancelHoverEnter, cancelHoverHide]);
+  }, [applyRotation, cancelHoverEnter, cancelHoverHide, setDragging]);
 
   const showNextProductSet = useCallback(() => {
     resetView();
@@ -287,7 +330,7 @@ export function HomeWorld({ products }: HomeWorldProps) {
         startY: event.clientY,
         distance: 0,
         startRotateX: 0,
-        startRotateY: worldViewRef.current.rotateY
+        startRotateY: rotationRef.current
       };
     },
     [showUI]
@@ -301,29 +344,22 @@ export function HomeWorld({ products }: HomeWorldProps) {
       pointer.distance += Math.abs(event.clientX - pointer.x) + Math.abs(event.clientY - pointer.y);
       pointer.x = event.clientX;
       pointer.y = event.clientY;
-      const isDragging = pointer.distance > dragThreshold;
 
-      if (isDragging) {
+      // Crossing the drag threshold happens once per gesture: only then touch React state.
+      if (pointer.distance > dragThreshold && !draggingRef.current) {
+        cancelHoverEnter();
         cancelHoverHide();
         setHoveredSlug(null);
+        setDragging(true);
         if (!event.currentTarget.hasPointerCapture(event.pointerId)) {
           event.currentTarget.setPointerCapture(event.pointerId);
         }
       }
 
       // Horizontal sweep ±65°, vertical tilt disabled (rotateX = 0)
-      const rotateY = clamp(pointer.startRotateY + (event.clientX - pointer.startX) * 0.32, -65, 65);
-
-      setWorldView((current) => ({
-        ...current,
-        rotateX: 0,
-        rotateY,
-        parallaxY: 0,
-        zoom: 1,
-        dragging: isDragging
-      }));
+      applyRotation(clamp(pointer.startRotateY + (event.clientX - pointer.startX) * 0.32, -65, 65));
     },
-    [showUI, cancelHoverHide]
+    [showUI, applyRotation, cancelHoverEnter, cancelHoverHide, setDragging]
   );
 
   const endPointer = useCallback(
@@ -337,17 +373,16 @@ export function HomeWorld({ products }: HomeWorldProps) {
 
       // On mobile/small screen or touch, always spring back to default upright orientation
       if (viewportSize.width < 700 || event.pointerType === "touch") {
-        setWorldView(RESTING_VIEW);
-      } else {
-        setWorldView((current) => (current.dragging ? { ...current, dragging: false } : current));
+        applyRotation(0);
       }
+      setDragging(false);
 
       // A touch swipe up continues to the explore page smoothly
       if (event.pointerType === "touch" && dragUpward > 36) {
         navigateToExplore();
       }
     },
-    [navigateToExplore, viewportSize.width]
+    [applyRotation, navigateToExplore, setDragging, viewportSize.width]
   );
 
   // Wheel over the world smoothly transitions to explore on downward scroll
@@ -362,13 +397,9 @@ export function HomeWorld({ products }: HomeWorldProps) {
   );
 
   const leaveWorld = useCallback(() => {
-    if (pointerRef.current.active) return;
-    setWorldView((current) =>
-      current.rotateX === 0 && current.rotateY === 0 && current.parallaxX === 0 && current.parallaxY === 0
-        ? current
-        : { ...current, rotateX: 0, rotateY: 0, parallaxX: 0, parallaxY: 0 }
-    );
-  }, []);
+    if (pointerRef.current.active || rotationRef.current === 0) return;
+    applyRotation(0);
+  }, [applyRotation]);
 
   /** A click opens the preview; a drag (movement beyond the threshold) does not. */
   const openProduct = useCallback(
@@ -408,7 +439,7 @@ export function HomeWorld({ products }: HomeWorldProps) {
         isNavigatingToExplore ? "is-navigating-to-explore" : "",
         visibleHoveredSlug ? "is-hovering" : "",
         worldPaused ? "is-paused" : "",
-        worldView.dragging ? "is-dragging" : "",
+        isDragging ? "is-dragging" : "",
         showUI ? "ui-ready" : "ui-hidden"
       ]
         .filter(Boolean)
@@ -425,7 +456,7 @@ export function HomeWorld({ products }: HomeWorldProps) {
       // Product photos would otherwise start a native image drag, which cancels the pointer gesture.
       onDragStart={(event) => event.preventDefault()}
     >
-      <div className="world-stage showcase-stage" style={{ ...stageStyle, opacity: 1, pointerEvents: "auto" }}>
+      <div ref={stageRef} className="world-stage showcase-stage" style={{ ...stageStyle, opacity: 1, pointerEvents: "auto" }}>
         {activeSlots.map((cardSlot, index) => {
           const product = worldProducts[index];
           if (!product) return null;
@@ -444,9 +475,6 @@ export function HomeWorld({ products }: HomeWorldProps) {
               openLabel={t("showcase.world.openProductAria", { title: product.title })}
               onPreviewEnter={handleCardPreviewEnter}
               onPreviewLeave={cancelHoverEnter}
-              onPointerDown={beginPointer}
-              onPointerMove={movePointer}
-              onPointerEnd={endPointer}
               onOpen={openProduct}
             />
           );
@@ -479,7 +507,7 @@ export function HomeWorld({ products }: HomeWorldProps) {
             </div>
 
             <div className="center-preview-media">
-              <ProductImage product={hoveredProduct} priority />
+              <ProductImage product={hoveredProduct} targetWidth={IMAGE_WIDTHS.hero} priority />
             </div>
 
             <div className="center-preview-bottom-hud">
@@ -517,17 +545,22 @@ export function HomeWorld({ products }: HomeWorldProps) {
           }
           title={t("showcase.scrollToExplore")}
         >
-          {indicatorPhase === "pages" ? (
-            <span key="indicator-pages" className="indicator-slide-content is-pages is-active">
-              {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} /{" "}
-              {formatNumber(String(productSetCount).padStart(2, "0"))} {t("label.pages")} •{" "}
-              {formatNumber(products.length)} {t("label.products")}
-            </span>
-          ) : (
-            <span key="indicator-scroll" className="indicator-slide-content is-scroll is-active">
-              <ScrollHint label={t("showcase.scrollToExplore")} />
-            </span>
-          )}
+          {/* Both layers stay mounted and only switch class: mounting/unmounting nodes here forced a
+              full-page style recalculation (the stylesheet relies on body:has(...) selectors). */}
+          <span
+            className={`indicator-slide-content is-pages ${indicatorPhase === "pages" ? "is-active" : "is-inactive"}`}
+            aria-hidden={indicatorPhase !== "pages"}
+          >
+            {formatNumber(String(safeProductSetIndex + 1).padStart(2, "0"))} /{" "}
+            {formatNumber(String(productSetCount).padStart(2, "0"))} {t("label.pages")} •{" "}
+            {formatNumber(products.length)} {t("label.products")}
+          </span>
+          <span
+            className={`indicator-slide-content is-scroll ${indicatorPhase === "scroll" ? "is-active" : "is-inactive"}`}
+            aria-hidden={indicatorPhase !== "scroll"}
+          >
+            <ScrollHint label={t("showcase.scrollToExplore")} />
+          </span>
         </button>
       </div>
 
@@ -547,13 +580,13 @@ type WorldCardProps = {
   openLabel: string;
   onPreviewEnter: (slug: string) => void;
   onPreviewLeave: () => void;
-  onPointerDown: (event: ReactPointerEvent<HTMLElement>) => void;
-  onPointerMove: (event: ReactPointerEvent<HTMLElement>) => void;
-  onPointerEnd: (event: ReactPointerEvent<HTMLElement>) => void;
   onOpen: (slug: string) => void;
 };
 
-/** Memoized so dragging the world (which re-renders the stage) does not re-render every card. */
+/**
+ * Memoized so hover changes only re-render the cards whose state changed. Pointer down/move/up
+ * bubble to the world section, which handles dragging for every card in one place.
+ */
 const WorldCard = memo(function WorldCard({
   product,
   slot: cardSlot,
@@ -565,9 +598,6 @@ const WorldCard = memo(function WorldCard({
   openLabel,
   onPreviewEnter,
   onPreviewLeave,
-  onPointerDown,
-  onPointerMove,
-  onPointerEnd,
   onOpen
 }: WorldCardProps) {
   const style = {
@@ -596,15 +626,16 @@ const WorldCard = memo(function WorldCard({
       onPointerLeave={onPreviewLeave}
       onFocus={() => onPreviewEnter(product.slug)}
       onBlur={onPreviewLeave}
-      onPointerDown={onPointerDown}
-      onPointerMove={onPointerMove}
-      onPointerUp={onPointerEnd}
-      onPointerCancel={onPointerEnd}
       onClick={() => onOpen(product.slug)}
       aria-label={openLabel}
     >
       <div className="product-media world-product-media">
-        <ProductImage product={product} compact={cardSlot.kind === "mini"} priority={cardSlot.kind === "hero"} />
+        <ProductImage
+          product={product}
+          compact={cardSlot.kind === "mini"}
+          targetWidth={cardSlot.kind === "hero" ? IMAGE_WIDTHS.hero : undefined}
+          priority={cardSlot.kind === "hero"}
+        />
       </div>
       {cardSlot.kind !== "mini" ? (
         <span className="world-card-copy" aria-hidden="true">

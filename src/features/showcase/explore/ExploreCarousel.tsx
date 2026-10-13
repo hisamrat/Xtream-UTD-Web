@@ -5,6 +5,7 @@ import { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } fr
 import type { CSSProperties } from "react";
 import type { ProductSummary } from "@/domain/product/product-summary";
 import { ProductImage } from "@/features/product/components/ProductImage";
+import { IMAGE_WIDTHS } from "@/shared/media/google-drive";
 import { useI18n } from "@/i18n/LanguageProvider";
 import { useDocumentHidden, useHydrated, useViewportSize } from "@/shared/hooks/useBrowserState";
 import { usePrefersReducedMotion } from "@/shared/hooks/useMediaQuery";
@@ -412,7 +413,7 @@ export function ExploreCarousel({ products }: { products: ProductSummary[] }) {
               >
                 <div className="scale-carousel-media">
                   <div className="scale-carousel-art-wrap">
-                    <ProductImage product={product} />
+                    <ProductImage product={product} targetWidth={IMAGE_WIDTHS.hero} />
                   </div>
                 </div>
               </div>

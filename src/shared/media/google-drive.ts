@@ -38,8 +38,22 @@ export function toEmbeddableImageUrl(url: string): string {
   return trimmed.includes("/folders/") ? "" : trimmed;
 }
 
-/** Ordered list of URLs to try for an image; Drive files get several mirrors with CDN sizing. */
-export function getImageCandidates(urlOrId?: string | null, targetWidth: number = 600): string[] {
+/** Default display widths (CSS px × ~2 for high-DPI screens) used when requesting Drive images. */
+export const IMAGE_WIDTHS = {
+  thumbnail: 240,
+  compact: 360,
+  card: 600,
+  hero: 800,
+  detail: 800
+} as const;
+
+/**
+ * Ordered list of URLs to try for an image. Drive files are requested from Google's image CDN
+ * resized to `targetWidth` and re-encoded as JPEG (`-rj`): uploads are usually multi-megabyte PNGs,
+ * and a 600px JPEG is ~95% smaller (≈55 KB instead of ≈1.2 MB). The resized PNG, the Drive thumbnail
+ * service and the original file follow as fallbacks.
+ */
+export function getImageCandidates(urlOrId?: string | null, targetWidth: number = IMAGE_WIDTHS.card): string[] {
   const trimmed = urlOrId?.trim() ?? "";
   if (!trimmed || trimmed.includes("/folders/")) return [];
 
@@ -47,6 +61,7 @@ export function getImageCandidates(urlOrId?: string | null, targetWidth: number 
   if (fileId) {
     const candidates: string[] = [];
     if (targetWidth > 0) {
+      candidates.push(`https://lh3.googleusercontent.com/d/${fileId}=w${targetWidth}-rj`);
       candidates.push(`https://lh3.googleusercontent.com/d/${fileId}=w${targetWidth}`);
       candidates.push(`https://drive.google.com/thumbnail?id=${fileId}&sz=w${targetWidth}`);
     }
@@ -61,7 +76,7 @@ export function getImageCandidates(urlOrId?: string | null, targetWidth: number 
 /** Flattens several source URLs into one de-duplicated candidate list with CDN sizing. */
 export function collectImageCandidates(
   urls: ReadonlyArray<string | null | undefined>,
-  targetWidth: number = 600
+  targetWidth: number = IMAGE_WIDTHS.card
 ): string[] {
   return Array.from(new Set(urls.flatMap((url) => getImageCandidates(url, targetWidth))));
 }
