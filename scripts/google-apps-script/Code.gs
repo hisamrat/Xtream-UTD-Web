@@ -18,8 +18,50 @@
 const CONFIG = {
   PRODUCTS_TAB: "Website Product Information",
   ORDERS_TAB: "WebSite Selling Information",
-  GALLERY_TAB: "Product Image and Video Gallery"
+  GALLERY_TAB: "Website Product Image & Video Gallery"
 };
+
+/**
+ * Robust sheet finder:
+ * 1. Checks exact match
+ * 2. Checks aliases list
+ * 3. Checks case-insensitive / trimmed name
+ * 4. Checks regex pattern
+ */
+function findSheet(ss, preferredName, aliases, pattern) {
+  if (preferredName) {
+    var exact = ss.getSheetByName(preferredName);
+    if (exact) return exact;
+  }
+
+  if (aliases && Array.isArray(aliases)) {
+    for (var i = 0; i < aliases.length; i++) {
+      var s = ss.getSheetByName(aliases[i]);
+      if (s) return s;
+    }
+  }
+
+  var sheets = ss.getSheets();
+  var lowerPreferred = preferredName ? preferredName.toLowerCase().trim() : "";
+
+  if (lowerPreferred) {
+    for (var j = 0; j < sheets.length; j++) {
+      if (sheets[j].getName().toLowerCase().trim() === lowerPreferred) {
+        return sheets[j];
+      }
+    }
+  }
+
+  if (pattern) {
+    for (var k = 0; k < sheets.length; k++) {
+      if (pattern.test(sheets[k].getName().trim())) {
+        return sheets[k];
+      }
+    }
+  }
+
+  return null;
+}
 
 /**
  * Handle GET Requests
@@ -33,17 +75,39 @@ function doGet(e) {
       timestamp: new Date().toISOString()
     };
 
-    const productSheet = ss.getSheetByName(CONFIG.PRODUCTS_TAB);
+    const productSheet = findSheet(
+      ss,
+      CONFIG.PRODUCTS_TAB,
+      ["Website Product Information", "Product Information", "Products"],
+      /product/i
+    );
     if (productSheet) {
       result.productsRows = productSheet.getDataRange().getValues();
     } else {
       result.productsRows = [];
     }
 
-    const gallerySheet = ss.getSheetByName(CONFIG.GALLERY_TAB);
+    const gallerySheet = findSheet(
+      ss,
+      CONFIG.GALLERY_TAB,
+      [
+        "Website Product Image & Video Gallery",
+        "Website Product Image and Video Gallery",
+        "Product Image and Video Gallery",
+        "Product Image & Video Gallery",
+        "Image & Video Gallery",
+        "Image and Video Gallery",
+        "Gallery"
+      ],
+      /gallery|showcase/i
+    );
     if (gallerySheet) {
       result.galleryRows = gallerySheet.getDataRange().getValues();
+    } else {
+      result.galleryRows = [];
     }
+
+    result.tabNames = ss.getSheets().map(function(s) { return s.getName(); });
 
     return ContentService
       .createTextOutput(JSON.stringify(result))

@@ -6,7 +6,7 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { GalleryShowcaseItem } from "@/domain/gallery/gallery-schema";
 import type { ProductSummary } from "@/domain/product/product-summary";
 import { useI18n } from "@/i18n/LanguageProvider";
-import { collectImageCandidates, IMAGE_WIDTHS } from "@/shared/media/google-drive";
+import { collectImageCandidates, extractGoogleDriveFileId, IMAGE_WIDTHS } from "@/shared/media/google-drive";
 import { extractYouTubeVideoId, getYouTubeEmbedUrl, getYouTubeThumbnailCandidates } from "@/shared/media/youtube";
 import { layoutMasonry } from "./masonry-layout";
 
@@ -37,16 +37,18 @@ type MediaProps = {
 
 function ShowcaseCardMedia({ item, isVideo, isActiveVideo, videoRefCallback }: MediaProps) {
   const youtubeId = extractYouTubeVideoId(item.mediaUrl) ?? extractYouTubeVideoId(item.posterUrl);
+  const driveFileId = extractGoogleDriveFileId(item.mediaUrl) ?? extractGoogleDriveFileId(item.posterUrl);
   const candidates = useMemo(
     () =>
       Array.from(
         new Set([
           ...collectImageCandidates([item.posterUrl], IMAGE_WIDTHS.card),
           ...(youtubeId ? getYouTubeThumbnailCandidates(youtubeId) : []),
+          ...(driveFileId ? collectImageCandidates([item.mediaUrl], IMAGE_WIDTHS.card) : []),
           ...(!isVideo ? collectImageCandidates([item.mediaUrl], IMAGE_WIDTHS.card) : [])
         ])
       ),
-    [item.posterUrl, item.mediaUrl, isVideo, youtubeId]
+    [item.posterUrl, item.mediaUrl, isVideo, youtubeId, driveFileId]
   );
   const candidateKey = candidates.join("|");
   const [failure, setFailure] = useState({ key: candidateKey, failedCount: 0 });
@@ -91,6 +93,51 @@ function ShowcaseCardMedia({ item, isVideo, isActiveVideo, videoRefCallback }: M
             className="showcase-media-content showcase-youtube-iframe"
             style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
             allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+            allowFullScreen
+          />
+        ) : null}
+
+        <div className="showcase-card-scrim" aria-hidden="true" />
+      </div>
+    );
+  }
+
+  if (isVideo && driveFileId && !youtubeId) {
+    const embedUrl = isActiveVideo ? `https://drive.google.com/file/d/${driveFileId}/preview` : "";
+    return (
+      <div className="showcase-card-media" style={{ position: "relative", width: "100%", height: "100%" }}>
+        {activeSrc ? (
+          // eslint-disable-next-line @next/next/no-img-element -- remote thumbnails with a fallback chain
+          <img
+            src={activeSrc}
+            alt={item.title}
+            className="showcase-media-content showcase-poster-underlay"
+            style={{
+              position: "absolute",
+              inset: 0,
+              width: "100%",
+              height: "100%",
+              objectFit: "cover",
+              objectPosition: "center",
+              display: "block",
+              opacity: isActiveVideo ? 0 : 1,
+              transition: "opacity 300ms ease"
+            }}
+            referrerPolicy="no-referrer"
+            loading="lazy"
+            decoding="async"
+            draggable={false}
+            onError={handleImageError}
+          />
+        ) : null}
+
+        {embedUrl ? (
+          <iframe
+            src={embedUrl}
+            title={item.title}
+            className="showcase-media-content showcase-youtube-iframe"
+            style={{ position: "absolute", inset: 0, width: "100%", height: "100%", border: 0 }}
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
             allowFullScreen
           />
         ) : null}

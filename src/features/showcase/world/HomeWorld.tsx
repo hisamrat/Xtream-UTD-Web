@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { ArrowUpRight } from "lucide-react";
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { memo, useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, PointerEvent as ReactPointerEvent, WheelEvent as ReactWheelEvent } from "react";
 import { formatPrice } from "@/domain/commerce/money";
 import { hasValidOldPrice } from "@/domain/product/pricing";
@@ -13,7 +13,7 @@ import { useI18n } from "@/i18n/LanguageProvider";
 import { useDocumentHidden, useHydrated, useViewportSize } from "@/shared/hooks/useBrowserState";
 import { usePrefersReducedMotion } from "@/shared/hooks/useMediaQuery";
 import { useAnyModalOpen } from "@/shared/hooks/useModalLayer";
-import { readStored, useStoredString, writeStored } from "@/shared/lib/stored-value";
+import { readStored } from "@/shared/lib/stored-value";
 import { IMAGE_WIDTHS } from "@/shared/media/google-drive";
 import { emitShowcase, useShowcaseEvent } from "../lib/showcase-events";
 import { ScrollHint } from "../ScrollHint";
@@ -72,20 +72,30 @@ function isEditableTarget(target: EventTarget | null): boolean {
 /**
  * Rotates the product order on every visit to the home page (persisted per tab session, so
  * consecutive visits always start from a different product).
+ * Initialized once on mount without triggering re-renders during active animation.
  */
 function useHomeShuffleOffset(productCount: number): number {
-  const [stored] = useStoredString("session", SHUFFLE_STORAGE_KEY);
-
-  useLayoutEffect(() => {
+  const [offset] = useState(() => {
+    if (typeof window === "undefined" || productCount <= 0) return 0;
+    const raw = readStored("session", SHUFFLE_STORAGE_KEY);
+    const previous = Number.parseInt(raw ?? "", 10);
     const total = Math.max(1, productCount);
-    const previous = Number.parseInt(readStored("session", SHUFFLE_STORAGE_KEY) ?? "", 10);
-    const step = 1 + Math.floor(Math.random() * Math.max(1, productCount - 1));
-    const next = Number.isNaN(previous) ? Math.floor(Math.random() * total) : (previous + step) % total;
-    writeStored("session", SHUFFLE_STORAGE_KEY, String(next));
-  }, [productCount]);
+    return Number.isNaN(previous) ? 0 : previous % total;
+  });
 
-  const offset = Number.parseInt(stored ?? "", 10);
-  return Number.isNaN(offset) ? 0 : offset;
+  useEffect(() => {
+    if (typeof window === "undefined" || productCount <= 1) return;
+    const total = Math.max(1, productCount);
+    const step = 1 + Math.floor(Math.random() * (total - 1));
+    const next = (offset + step) % total;
+    try {
+      window.sessionStorage.setItem(SHUFFLE_STORAGE_KEY, String(next));
+    } catch {
+      // Storage unavailable or quota exceeded
+    }
+  }, [offset, productCount]);
+
+  return offset;
 }
 
 export function HomeWorld({ products }: HomeWorldProps) {
@@ -464,7 +474,7 @@ export function HomeWorld({ products }: HomeWorldProps) {
 
           return (
             <WorldCard
-              key={`showcase-card-${safeProductSetIndex}-${product.id}-${index}`}
+              key={`showcase-card-${safeProductSetIndex}-${index}`}
               product={product}
               slot={cardSlot}
               isFlyingIn={!showUI}
@@ -602,7 +612,7 @@ const WorldCard = memo(function WorldCard({
 }: WorldCardProps) {
   const style = {
     ...getReferenceCardStyle(cardSlot, product.accent, flyInIndex),
-    "--fly-in-delay": `${flyInIndex * 24}ms`,
+    "--fly-in-delay": `${flyInIndex * 12}ms`,
     "--fly-out-delay": `${(flyInIndex % 5) * 16}ms`
   } as CSSProperties & Record<`--${string}`, string>;
 

@@ -15,7 +15,7 @@ describe("parseGallerySheet", () => {
     const items = parseGallerySheet(rows);
     expect(items).toHaveLength(2);
     expect(items[0]).toMatchObject({
-      id: "gallery-desk-lamp",
+      id: "gallery-desk-lamp-1",
       mediaType: "video",
       mediaUrl: "https://youtu.be/dQw4w9WgXcQ",
       aspectRatio: 9 / 16

@@ -9,7 +9,17 @@ function isGalleryHeader(headers: readonly string[]): boolean {
   return (
     headers.includes("media_type") ||
     headers.includes("media_url") ||
-    (headers.includes("slug") && headers.includes("title"))
+    headers.includes("media_urls") ||
+    headers.includes("media_link") ||
+    headers.includes("video_url") ||
+    headers.includes("video_link") ||
+    headers.includes("image_url") ||
+    headers.includes("youtube_url") ||
+    headers.includes("poster_image_url") ||
+    headers.includes("poster_url") ||
+    headers.some((h) => h.includes("media") || h.includes("gallery") || h.includes("video") || h.includes("poster")) ||
+    ((headers.includes("slug") || headers.includes("product_no") || headers.includes("id")) &&
+      (headers.includes("title") || headers.includes("name") || headers.includes("product_name") || headers.includes("product_title")))
   );
 }
 
@@ -32,6 +42,7 @@ export function parseAspectRatio(value: string): number {
 export function parseMediaType(typeValue: string, mediaUrl: string): GalleryMediaType {
   const normalized = typeValue.trim().toLowerCase();
   if (normalized.includes("video") || normalized.includes("mp4")) return "video";
+  if (normalized.includes("image") || normalized.includes("photo") || normalized.includes("img")) return "image";
   if (mediaUrl && /(?:youtube\.com|youtu\.be|\.mp4|\.webm|\.mov)/i.test(mediaUrl)) return "video";
   return "image";
 }
@@ -47,9 +58,23 @@ export function parseGallerySheet(values: readonly SheetRow[]): GalleryShowcaseI
 
   table.rows.forEach((row, index) => {
     const cell = (...aliases: string[]) => getCell(table, row, ...aliases);
-    const slug = cell("slug", "product_slug");
-    const title = cell("title", "name", "media_title", "product_title");
-    const mediaUrlRaw = cell("media_url", "media_urls", "media_link", "url", "video_url", "youtube_url", "image_url", "video", "media");
+    const slug = cell("slug", "product_slug", "product_no", "id");
+    const title = cell("title", "name", "media_title", "product_title", "product_name");
+    const mediaUrlRaw = cell(
+      "media_url",
+      "media_urls",
+      "media_link",
+      "url",
+      "video_url",
+      "video_link",
+      "youtube_url",
+      "image_url",
+      "video",
+      "media",
+      "image_video_url",
+      "gallery_images_url",
+      "gallery_image_url"
+    );
     const posterUrlRaw = cell(
       "poster_image_url",
       "poster_images_url",
@@ -59,14 +84,15 @@ export function parseGallerySheet(values: readonly SheetRow[]): GalleryShowcaseI
       "thumbnail",
       "cover_url",
       "cover_image_url",
-      "cover_image"
+      "cover_image",
+      "product_image"
     );
 
     if (!slug && !title && !mediaUrlRaw && !posterUrlRaw) return;
     if (!parseBoolean(cell("active", "enabled", "published", "status"), true)) return;
 
     const result = galleryItemSchema.safeParse({
-      id: `gallery-${slug || index + 1}`,
+      id: `gallery-${slug ? `${slug}-${index + 1}` : index + 1}`,
       slug,
       title: title || slug || "Showcase Item",
       mediaType: parseMediaType(cell("media_type", "media", "type", "kind"), mediaUrlRaw),

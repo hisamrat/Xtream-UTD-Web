@@ -54,36 +54,46 @@ async function fetchFromWebhook(): Promise<{ products: Product[]; gallery: Galle
     if (!url) return null;
 
     try {
-      const res = await fetch(url, {
-        redirect: "follow",
-        cache: "no-store",
-        signal: AbortSignal.timeout(6000)
-      });
-      if (!res.ok) return null;
-      const data = (await res.json()) as WebhookCatalogResponse;
-      if (!data || data.success === false) return null;
+      const timeoutMs = Math.max(10000, Number(process.env.CATALOG_FETCH_TIMEOUT_MS) || 25000);
+      const maxAttempts = 2;
 
-      let products: Product[] = [];
-      let gallery: GalleryShowcaseItem[] = [];
+    for (let attempt = 1; attempt <= maxAttempts; attempt++) {
+      try {
+        const res = await fetch(url, {
+          redirect: "follow",
+          cache: "no-store",
+          signal: AbortSignal.timeout(timeoutMs)
+        });
+        if (!res.ok) continue;
+        const data = (await res.json()) as WebhookCatalogResponse;
+        if (!data || data.success === false) continue;
 
-      if (Array.isArray(data.productsRows) && data.productsRows.length > 0) {
-        const { products: parsedProducts } = parseProductsSheet(normalize2dRows(data.productsRows));
-        products = parsedProducts;
+        let products: Product[] = [];
+        let gallery: GalleryShowcaseItem[] = [];
+
+        if (Array.isArray(data.productsRows) && data.productsRows.length > 0) {
+          const { products: parsedProducts } = parseProductsSheet(normalize2dRows(data.productsRows));
+          products = parsedProducts;
+        }
+
+        if (Array.isArray(data.galleryRows) && data.galleryRows.length > 0) {
+          gallery = parseGallerySheet(normalize2dRows(data.galleryRows));
+        }
+
+        if (products.length === 0) continue;
+
+        return { products, gallery };
+      } catch (error) {
+        if (attempt === maxAttempts) {
+          console.warn("[catalog] Webhook catalog fetch skipped or unavailable:", error);
+        }
       }
-
-      if (Array.isArray(data.galleryRows) && data.galleryRows.length > 0) {
-        gallery = parseGallerySheet(normalize2dRows(data.galleryRows));
-      }
-
-      if (products.length === 0) return null;
-
-      return { products, gallery };
-    } catch (error) {
-      console.warn("[catalog] Webhook catalog fetch skipped or unavailable:", error);
-      return null;
-    } finally {
-      inFlightWebhookPromise = null;
     }
+
+    return null;
+  } finally {
+    inFlightWebhookPromise = null;
+  }
   })();
 
   return inFlightWebhookPromise;
